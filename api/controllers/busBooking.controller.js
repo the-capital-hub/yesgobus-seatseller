@@ -55,7 +55,7 @@ export const getAliasesCityController = async (req, res) => {
 
 export const searchBusController = async (req, res) => {
   try {
-    const response = await searchBus(req.body);
+    const response = await searchBus(req.body.sourceCity, req.body.destinationCity, req.body.doj);
     res.status(200).send(response);
   } catch (error) {
     console.log(error);
