@@ -2,46 +2,46 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
-const boardingPointSchema = new Schema({
-  id: String,
-  location: String,
-  time: String,
-});
+// const boardingPointSchema = new Schema({
+//   id: String,
+//   location: String,
+//   time: String,
+// });
 
-const droppingPointSchema = new Schema({
-  id: String,
-  location: String,
-  time: String,
-});
+// const droppingPointSchema = new Schema({
+//   id: String,
+//   location: String,
+//   time: String,
+// });
 
-const seatDetailsSchema = new Schema({
-  age: String,
-  name: String,
-  seatNbr: String,
-  sex: String,
-  fare: Number,
-  totalFareWithTaxes: Number,
-  ladiesSeat: Boolean,
-  lastName: String,
-  mobile: String,
-  title: String,
-  email: String,
-  idType: String,
-  idNumber: String,
-  nameOnId: String,
-  primary: Boolean,
-  ac: Boolean,
-  sleeper: Boolean,
-});
+// const seatDetailsSchema = new Schema({
+//   age: String,
+//   name: String,
+//   seatNbr: String,
+//   sex: String,
+//   fare: Number,
+//   totalFareWithTaxes: Number,
+//   ladiesSeat: Boolean,
+//   lastName: String,
+//   mobile: String,
+//   title: String,
+//   email: String,
+//   idType: String,
+//   idNumber: String,
+//   nameOnId: String,
+//   primary: Boolean,
+//   ac: Boolean,
+//   sleeper: Boolean,
+// });
 
 const busBookingSchema = new Schema({
   userId: String,
   sourceCity: String,
   destinationCity: String,
   doj: Date,
-  routeScheduleId: String,
-  boardingPoint: boardingPointSchema,
-  droppingPoint: droppingPointSchema,
+  tripId: String,
+  // boardingPoint: boardingPointSchema,
+  // droppingPoint: droppingPointSchema,
   busOperator: String,
   busType: String,
   selectedSeats: String,
@@ -50,7 +50,7 @@ const busBookingSchema = new Schema({
   customerEmail: String,
   customerPhone: String,
   emergencyPhNumber: String,
-  blockSeatPaxDetails: [seatDetailsSchema],
+  // blockSeatPaxDetails: [seatDetailsSchema],
   inventoryType: Number,
   totalAmount: Number,
   merchantTransactionId: String,
@@ -58,7 +58,7 @@ const busBookingSchema = new Schema({
     type: String,
     default: "pending"
   },
-  tid: String,
+  tin: String,
   buspnr: String,
   opPNR: String,
   totalRefundAmount: String,

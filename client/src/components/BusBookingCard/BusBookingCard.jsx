@@ -9,10 +9,12 @@ import { Spin } from "antd";
 import toast, { Toaster } from 'react-hot-toast';
 
 const BusBookingCard = ({
-  routeScheduleId,
+  tripId,
   inventoryType,
   sourceCity,
+  sourceCityId,
   destinationCity,
+  destinationCityId,
   doj,
   title,
   busName,
@@ -26,6 +28,7 @@ const BusBookingCard = ({
   reachLocation,
   price,
   seatsLeft,
+  avlWindowSeats,
   cancellationPolicy,
   pickUpTimes,
   pickUpLocationOne,
@@ -48,33 +51,25 @@ const BusBookingCard = ({
     }
     setSeatLoading(true);
     let seatData = [];
-    const requestBody = {
-      sourceCity: sourceCity,
-      destinationCity: destinationCity,
-      doj: doj,
-      inventoryType: inventoryType,
-      routeScheduleId: routeScheduleId,
-    }
+    // const requestBody = {
+    //   sourceCity: sourceCity,
+    //   destinationCity: destinationCity,
+    //   doj: doj,
+    //   inventoryType: inventoryType,
+    //   routeScheduleId: routeScheduleId,
+    // }
     try {
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/busBooking/getSeatLayout`, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
-      });
-      if (!response.ok) {
-        throw new Error(`Request failed with status: ${response.status}`);
-      }
-      const data = await response.json();
 
-      // const response = await axiosInstance.post(
-      //   `${import.meta.env.VITE_BASE_URL}/api/busBooking/getSeatLayout`,
-      //   requestBody,
-      // );
-      seatData = data?.seats;
+      const response = await axiosInstance.get(
+        `${import.meta.env.VITE_BASE_URL}/api/busBooking/getSeatLayout/${tripId}`,
+      );
+
+      // check if tripdetails is array?
+      seatData = response.data?.tripdetails.Seats;
+
+      // check if seat.available is boolean or string
       const availableSeats = seatData?.filter(seat => seat.available === true);
+
       setAvailableSeats(availableSeats?.length);
       setSeatDetails(seatData);
       setSeatLoading(false);
@@ -199,13 +194,18 @@ const BusBookingCard = ({
       </div>
       {showSeats && seatsLeft && seatDetails && (
         <Seats
-          travelTime={travelTime}
+          //tavell time to be calculated
+          // travelTime={travelTime}
+
           pickUpTime={pickUpTime}
           reachTime={reachTime}
-          routeScheduleId={routeScheduleId}
-          inventoryType={inventoryType}
+          tripId={tripId}
+          // routeScheduleId={routeScheduleId}
+          // inventoryType={inventoryType}
           sourceCity={sourceCity}
+          sourceCityId={sourceCityId}
           destinationCity={destinationCity}
+          destinationCityId={destinationCityId}
           doj={doj}
           // pickUpTimes={pickUpTimes}
           pickUpLocationOne={pickUpLocationOne}
