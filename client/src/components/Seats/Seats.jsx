@@ -22,10 +22,13 @@ import Button from "../Button/Button";
 import SingleSeat from "../SinlgeSeat/SingleSeat";
 
 const Seats = ({
-  routeScheduleId,
-  inventoryType,
+  // routeScheduleId,
+  // inventoryType,
   sourceCity,
+  sourceCityId,
   destinationCity,
+  destinationCityId,
+  tripId,
   doj,
   // pickUpTimes,
   pickUpLocationOne,
@@ -56,23 +59,26 @@ const Seats = ({
 
   const [bookingDetails, setBookingDetails] = useState({
     boardingPoint: {
-      id: "",
+      bpid: "",
       location: "",
+      address: "",
       time: "",
     },
     droppingPoint: {
-      id: "",
+      bpid: "",
       location: "",
+      address: "",
       time: "",
     },
     selectedSeats: [],
     seatFares: [],
     seatTotalFares: [],
     ladiesSeat: [],
-    ac: [],
-    sleeper: [],
+    // ac: [],
+    // sleeper: [],
     fare: 0,
-    tax: 0,
+    serviceTax: 0,
+    operatorTax: 0,
     totalFare: 0,
   });
 
@@ -80,22 +86,24 @@ const Seats = ({
   const seatSelectionHandler = (
     seatId,
     fare,
-    tax,
+    serviceTax,
+    operatorTax,
     totalFare,
     isLadiesSeat,
-    isAC,
-    isSleeper
+    // isAC,
+    // isSleeper
   ) => {
     return setBookingDetails((prev) => {
       let newSelected = [...prev.selectedSeats];
       let newFare = prev.fare;
-      let newTax = prev.tax;
+      let newTax = prev.serviceTax;
+      let newOperatorTax = prev.operatorTax;
       let newTotalFare = prev.totalFare;
       let newSeatFares = [...prev.seatFares];
       let newSeatTotalFares = [...prev.seatTotalFares];
       let newLadiesSeat = [...prev.ladiesSeat];
-      let newAC = [...prev.ac];
-      let newSleeper = [...prev.sleeper];
+      // let newAC = [...prev.ac];
+      // let newSleeper = [...prev.sleeper];
 
       const seatIndex = newSelected.indexOf(seatId);
 
@@ -103,12 +111,13 @@ const Seats = ({
         if (newSelected.length < 5) {
           newSelected.push(seatId);
           newFare += fare;
-          newTax += tax;
+          newTax += serviceTax;
+          newOperatorTax += operatorTax
           newTotalFare += totalFare;
           newSeatFares.push(fare);
           newSeatTotalFares.push(totalFare);
-          newAC.push(isAC);
-          newSleeper.push(isSleeper);
+          // newAC.push(isAC);
+          // newSleeper.push(isSleeper);
           newLadiesSeat.push(isLadiesSeat);
         } else {
           alert("Maximum 5 seats are allowed.");
@@ -116,12 +125,13 @@ const Seats = ({
       } else {
         newSelected.splice(seatIndex, 1);
         newFare -= fare;
-        newTax -= tax;
+        newTax -= serviceTax;
+        newOperatorTax -= operatorTax;
         newTotalFare -= totalFare;
         newSeatFares.splice(seatIndex, 1);
         newSeatTotalFares.splice(seatIndex, 1);
-        newAC.splice(seatIndex, 1);
-        newSleeper.splice(seatIndex, 1);
+        // newAC.splice(seatIndex, 1);
+        // newSleeper.splice(seatIndex, 1);
         newLadiesSeat.splice(seatIndex, 1);
       }
 
@@ -129,12 +139,13 @@ const Seats = ({
         ...prev,
         selectedSeats: newSelected,
         fare: newFare,
-        tax: newTax,
+        serviceTax: newTax,
+        operatorTax: newOperatorTax,
         totalFare: newTotalFare,
         seatFares: newSeatFares,
         seatTotalFares: newSeatTotalFares,
-        ac: newAC,
-        sleeper: newSleeper,
+        // ac: newAC,
+        // sleeper: newSleeper,
         ladiesSeat: newLadiesSeat,
       };
     });
@@ -145,7 +156,7 @@ const Seats = ({
 
   const renderSeatTable = (seats, selectedSeats) => {
     const filteredSeats = selectedPriceFilter
-      ? seats.filter(seat => seat.fare === selectedPriceFilter)
+      ? seats.filter(seat => seat.baseFare === selectedPriceFilter)
       : seats;
 
     const numRows = Math.max(...filteredSeats?.map((seat) => seat.row)) + 1;
@@ -161,22 +172,23 @@ const Seats = ({
 
         if (seat) {
           if (seat.available) {
-            if (selectedSeats.includes(seat.id)) {
+            if (selectedSeats.includes(seat.name)) {
               seatRow.push(
-                <td key={seat.id}>
+                <td key={seat.name}>
                   <img
                     onClick={() =>
                       seatSelectionHandler(
-                        seat.id,
-                        seat.fare,
+                        seat.name,
+                        seat.baseFare,
                         seat.serviceTaxAmount,
-                        seat.totalFareWithTaxes,
+                        seat.operatorServiceChargeAbsolute,
+                        seat.fare,
                         seat.ladiesSeat,
-                        seat.ac,
-                        seat.sleeper
+                        // seat.ac,
+                        // seat.sleeper
                       )
                     }
-                    title={`ID: ${seat.id}\nFare: ₹${seat.fare}`}
+                    title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
                     src={(seat.width !== 2 && seat.length !== 2) ? singleselected : selectedFill}
                     alt="selected seat"
                     className={(seat.width == 2) ? "vertical" : ""}
@@ -186,20 +198,21 @@ const Seats = ({
             } else {
               if (seat.ladiesSeat) {
                 seatRow.push(
-                  <td key={seat.id}>
+                  <td key={seat.name}>
                     <img
                       onClick={() =>
                         seatSelectionHandler(
-                          seat.id,
-                          seat.fare,
+                          seat.name,
+                          seat.baseFare,
                           seat.serviceTaxAmount,
-                          seat.totalFareWithTaxes,
+                          seat.operatorServiceChargeAbsolute,
+                          seat.fare,
                           seat.ladiesSeat,
-                          seat.ac,
-                          seat.sleeper
+                          // seat.ac,
+                          // seat.sleeper
                         )
                       }
-                      title={`ID: ${seat.id}\nFare: ₹${seat.fare}`}
+                      title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
                       src={(seat.width !== 2 && seat.length !== 2) ? singleladiesavailable : ladiesavailable}
                       alt="available ladies"
                       className={(seat.width == 2) ? "vertical" : ""}
@@ -208,20 +221,21 @@ const Seats = ({
                 );
               } else {
                 seatRow.push(
-                  <td key={seat.id}>
+                  <td key={seat.name}>
                     <img
                       onClick={() =>
                         seatSelectionHandler(
-                          seat.id,
-                          seat.fare,
+                          seat.name,
+                          seat.baseFare,
                           seat.serviceTaxAmount,
-                          seat.totalFareWithTaxes,
+                          seat.operatorServiceChargeAbsolute,
+                          seat.fare,
                           seat.ladiesSeat,
-                          seat.ac,
-                          seat.sleeper
+                          // seat.ac,
+                          // seat.sleeper
                         )
                       }
-                      title={`ID: ${seat.id}\nFare: ₹${seat.fare}`}
+                      title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
                       src={(seat.width !== 2 && seat.length !== 2) ? singleavailable : available}
                       alt="available"
                       className={(seat.width == 2) ? "vertical" : ""}
@@ -233,9 +247,9 @@ const Seats = ({
           } else {
             if (seat.ladiesSeat) {
               seatRow.push(
-                <td key={seat.id}>
+                <td key={seat.name}>
                   <img
-                    title={`ID: ${seat.id}\nFare: ₹${seat.fare}`}
+                    title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
                     src={(seat.width !== 2 && seat.length !== 2) ? singleladiesbooked : ladiesbooked}
                     alt="ladiesbooked"
                     className={(seat.width == 2) ? "vertical" : ""}
@@ -244,9 +258,9 @@ const Seats = ({
               );
             } else {
               seatRow.push(
-                <td key={seat.id}>
+                <td key={seat.name}>
                   <img
-                    title={`ID: ${seat.id}\nFare: ₹${seat.fare}`}
+                    title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
                     src={(seat.width !== 2 && seat.length !== 2) ? singlebooked : booked}
                     alt="booked"
                     className={(seat.width == 2) ? "vertical" : ""}
@@ -296,15 +310,18 @@ const Seats = ({
   const handleContinue = () => {
     if (
       bookingDetails.boardingPoint.id &&
-      bookingDetails.droppingPoint &&
+      bookingDetails.droppingPoint.id &&
       bookingDetails.selectedSeats.length !== 0
     ) {
       navigate("/busbooking/payment", {
         state: {
+          tripId,
           sourceCity,
+          sourceCityId,
           destinationCity,
-          routeScheduleId,
-          inventoryType,
+          destinationCityId,
+          // routeScheduleId,
+          // inventoryType,
           doj,
           pickUpTime,
           reachTime,
@@ -329,10 +346,11 @@ const Seats = ({
             <span className="title">PICKUP POINT</span>
             {pickUpLocationOne?.map((boardingPoint, index) => (
               <PickUpAndDropPoints
-                key={boardingPoint.id}
+                key={boardingPoint.bpid}
                 time={boardingPoint.time}
                 locationOne={boardingPoint.location}
-                highlight={bookingDetails.boardingPoint.id === boardingPoint.id}
+                locationTwo={boardingPoint.address}
+                highlight={bookingDetails.boardingPoint.bpid === boardingPoint.bpid}
                 onClick={() =>
                   setBookingDetails((prev) => {
                     return {
@@ -348,11 +366,11 @@ const Seats = ({
             <span className="title">DROP POINT</span>
             {dropLocationOne?.map((droppingPoint, index) => (
               <PickUpAndDropPoints
-                highlight={bookingDetails.droppingPoint.id === droppingPoint.id}
-                key={droppingPoint.id}
+                highlight={bookingDetails.droppingPoint.bpid === droppingPoint.bpid}
+                key={droppingPoint.bpid}
                 time={droppingPoint.time}
                 locationOne={droppingPoint.location}
-                // locationTwo={droppingPoint.location}
+                locationTwo={droppingPoint.address}
                 onClick={() =>
                   setBookingDetails((prev) => {
                     return {

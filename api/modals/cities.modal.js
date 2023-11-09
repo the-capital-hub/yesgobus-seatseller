@@ -4,11 +4,18 @@ const { Schema } = mongoose;
 
 const citySchema = new Schema(
   {
-    city_name: {
+    CityName: {
       type: String,
       required: true
     },
-  },
+    Id: {
+      type: Number, 
+      required: true
+    },
+    aliasNames: [{
+      type: String 
+    }]
+  }
 );
 
 const City = mongoose.model("City", citySchema);

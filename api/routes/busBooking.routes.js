@@ -4,16 +4,25 @@ import {
     getAliasesCityController,
     searchBusController,
     getSeatLayoutController,
+    getBpDpDetailsController,
+    getSeatLayoutV2Controller,
+    getRTCFareBreakupController,
     blockSeatController,
     bookSeatController,
+    cancelTicketDataController,
     cancelTicketController,
-    getBusFiltersController,
-    getBusDetailsController,
+    getTicketController,
+    checkBookedTicketController,
+    busCancellationInfoController,
     bookBusController,
-    searchCityController,
     updateBookingsController,
     getBookingByIdController,
     getAllBookingsController,
+
+
+    getBusFiltersController,
+    getBusDetailsController,
+    searchCityController,
     sendBookingConfirmationMessage,
     sendBookingConfirmationEmail,
     sendCancelTicketMessage,
@@ -53,6 +62,13 @@ const router = express.Router();
 // router.post("/sendCancelTicketEmail", sendCancelTicketEmail);
 
 
+//search city api
+router.get("/searchCity/:searchParam", searchCityController);
+
+
+
+router.use(authenticateUser);
+
 //seatseller apis 
 
 //location routes
@@ -60,7 +76,51 @@ router.get("/getCityList", getCityListController);
 router.get("/getAliasesCity", getAliasesCityController);
 
 //booking routes
-router.post("/searchBus", searchBusController);
+router.get("/searchBus", searchBusController);
+router.get("/getSeatLayout/:id", getSeatLayoutController);
 
+// for getting updated fare of gov buses if bpDpSeatLayout is set to true
+router.get("/getBpDpDetails/:id", getBpDpDetailsController);
+router.post("/getSeatLayoutV2/", getSeatLayoutV2Controller);
+
+// seat hold for 8mins
+router.post("/blockSeat", blockSeatController);
+
+// few operators (OSRTC, HRTC, UPSRTC, PEPSU, JKSRTC, VRL and GSRTC) there will be fare change after invoking the blockTicket() method
+// if callFareBreakupApi is set to true
+router.post("/getrtcfarebreakup", getRTCFareBreakupController);
+
+//confirm and book ticket
+router.post("/bookSeat/:blockKey", bookSeatController);
+
+//ticket cancellation routes
+router.get("/getCancelTicketData/:tin", cancelTicketDataController);
+router.post("/cancelTicket", cancelTicketController);
+
+//ticket information routes
+router.get("/getTicket/:tin", getTicketController);
+router.get("/checkBookedTicket/:blockKey", checkBookedTicketController);
+router.get("/busCancellationInfo/:from/:to", busCancellationInfoController);
+
+
+// yesgobus APIs
+
+// bookings data
+router.post("/bookBus", bookBusController);
+router.patch("/updateBooking/:bookingId", updateBookingsController);
+router.get("/getBookingById/:bookingId", getBookingByIdController);
+router.get("/getAllBookings/:userId", getAllBookingsController);
+
+
+//get filter and bus with filters
+router.get("/getFilters", getBusFiltersController);
+router.post("/getBusDetails", getBusDetailsController);
+
+
+//message and email
+router.post("/sendBookingConfirmationMessage", sendBookingConfirmationMessage);
+router.post("/sendCancelTicketMessage", sendCancelTicketMessage);
+router.post("/sendBookingConfirmationEmail", sendBookingConfirmationEmail);
+router.post("/sendCancelTicketEmail", sendCancelTicketEmail);
 
 export default router;
