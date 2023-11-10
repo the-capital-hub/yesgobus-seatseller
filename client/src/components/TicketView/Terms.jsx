@@ -1,15 +1,23 @@
 import "./Terms.scss";
+import { useState, useEffect } from "react";
 
 export default function Terms({ cancellationPolicy }) {
-  let sortedPolicy = [];
-  if (cancellationPolicy) {
-    const policyArray = JSON.parse(cancellationPolicy.replace(/\\/g, ''));;
-    sortedPolicy = policyArray.sort((a, b) => {
-      const cutoffA = parseInt(a.cutoffTime.split('-')[0]);
-      const cutoffB = parseInt(b.cutoffTime.split('-')[0]);
-      return cutoffA - cutoffB;
+
+  const decodeCancellationPolicy = () => {
+    const policyParts = cancellationPolicy.split(';');
+    return policyParts.map(part => {
+      const [fromTime, toTime, cancellationRate, percentageOrAbsolute] = part.split(':');
+      console.log("fff", typeof (fromTime));
+      return (
+        <li key={part}>
+          <p>
+            {fromTime.trim() === '0' ? 'Within' : 'Before'} {toTime === '-1' ? `${fromTime} hours` : `${toTime} hours`}:
+            Cancellation Rate: {cancellationRate}%, Type: {percentageOrAbsolute === '0' ? 'Percentage' : 'Absolute'}
+          </p>
+        </li>
+      );
     });
-  }
+  };
 
   return (
     <div className="terms">
@@ -38,16 +46,15 @@ export default function Terms({ cancellationPolicy }) {
         </li>
         <li>
           <p>
-            Cancellation charges are applicable on original fare but not available on discount.
+            Cancellation charges are applicable on the original fare but not available on discount.
           </p>
         </li>
-        {sortedPolicy?.map((policy, index) => (
-          <li key={index}>
-            <p>
-              {`If cancelled ${policy.cutoffTime} hours before departure, a refund of ${policy.refundInPercentage}% will be provided.`}
-            </p>
-          </li>
-        ))}
+        <li>
+          <h3>Cancellation Policy:</h3>
+          <ul>
+            {decodeCancellationPolicy()}
+          </ul>
+        </li>
       </ul>
     </div>
   );

@@ -18,6 +18,7 @@ export default function TicketView() {
   const urlSearchParams = new URLSearchParams(window.location.search);
   const bookingId = urlSearchParams.get("bookingId");
   const [bookingDetails, setBookingDetails] = useState(null);
+  const [ticketDetails, setTicketDetails] = useState(null);
   const downloadParam = urlSearchParams.get("download");
   const [travellers, setTravellers] = useState("");
   const [travellersAge, setTravellersAge] = useState("");
@@ -70,9 +71,10 @@ export default function TicketView() {
           `${import.meta.env.VITE_BASE_URL
           }/api/busBooking/getBookingById/${bookingId}`
         );
-        setBookingDetails(getBookingDetails.data);
-        const joinedNames = getBookingDetails.data.blockSeatPaxDetails?.map(seat => seat.name).join(", ");
-        const joinedAges = getBookingDetails.data.blockSeatPaxDetails?.map(seat => seat.age).join(", ");
+        setTicketDetails(getBookingDetails.data)
+        setBookingDetails(getBookingDetails.booking);
+        const joinedNames = getBookingDetails.data.inventoryItems?.map(seat => seat.passengers.name).join(", ");
+        const joinedAges = getBookingDetails.data.inventoryItems?.map(seat => seat.passengers.age).join(", ");
         setTravellers(joinedNames);
         setTravellersAge(joinedAges);
         if (downloadParam === "1" && downloaded === false) {
@@ -121,8 +123,8 @@ export default function TicketView() {
               {bookingDetails?.pickUpTime}
             </p>
             <div>
-              {/* <p className="location">{bookingDetails?.boardingPoint.location}</p> */}
-              <p className="sub-location">{bookingDetails?.boardingPoint?.location}</p>
+              <p className="location">{ticketDetails?.pickUpLocation}</p>
+              <p className="sub-location">{ticketDetails?.pickUpLocationAddress}</p>
             </div>
           </div>
 
@@ -132,8 +134,8 @@ export default function TicketView() {
               {bookingDetails?.reachTime}
             </p>
             <div>
-              {/* <p className="location">{bookingData.dropping.location}</p> */}
-              <p className="sub-location">{bookingDetails?.droppingPoint?.location}</p>
+              <p className="location">{ticketDetails?.dropLocation}</p>
+              <p className="sub-location">{ticketDetails?.dropLocationAddress}</p>
             </div>
           </div>
         </div>
@@ -197,8 +199,8 @@ export default function TicketView() {
                   className="font-24"
                   style={{ width: "50%", minWidth: "40ch" }}
                 >
-                  <p>Yesgobus Booking ID {bookingDetails?.tid}</p>
-                  <p>Operator PNR :{bookingDetails?.opPNR}</p>
+                  <p>Yesgobus Booking ID {bookingDetails?.tin}</p>
+                  <p>Operator PNR :{ticketDetails?.pnr}</p>
                   <div className="price">
                     <p>₹ {bookingDetails?.totalAmount}</p>
                   </div>
@@ -217,7 +219,7 @@ export default function TicketView() {
 
         <CustomerSupport contactNumber={contactNumber} />
 
-        <Terms cancellationPolicy={bookingDetails?.cancellationPolicy} />
+        <Terms cancellationPolicy={ticketDetails?.cancellationPolicy || " 8:24:50:0;24:48:25:0;48:-1:10:0"} />
       </section>
 
       <div className="action__buttons">

@@ -14,25 +14,25 @@ const { Schema } = mongoose;
 //   time: String,
 // });
 
-// const seatDetailsSchema = new Schema({
-//   age: String,
-//   name: String,
-//   seatNbr: String,
-//   sex: String,
-//   fare: Number,
-//   totalFareWithTaxes: Number,
-//   ladiesSeat: Boolean,
-//   lastName: String,
-//   mobile: String,
-//   title: String,
-//   email: String,
-//   idType: String,
-//   idNumber: String,
-//   nameOnId: String,
-//   primary: Boolean,
-//   ac: Boolean,
-//   sleeper: Boolean,
-// });
+const seatDetailsSchema = new Schema({
+  age: String,
+  name: String,
+  seatNbr: String,
+  sex: String,
+  fare: Number,
+  totalFareWithTaxes: Number,
+  ladiesSeat: Boolean,
+  lastName: String,
+  mobile: String,
+  title: String,
+  email: String,
+  idType: String,
+  idNumber: String,
+  nameOnId: String,
+  primary: Boolean,
+  ac: Boolean,
+  sleeper: Boolean,
+});
 
 const busBookingSchema = new Schema({
   userId: String,
@@ -50,7 +50,7 @@ const busBookingSchema = new Schema({
   customerEmail: String,
   customerPhone: String,
   emergencyPhNumber: String,
-  // blockSeatPaxDetails: [seatDetailsSchema],
+  blockSeatPaxDetails: [seatDetailsSchema],
   inventoryType: Number,
   totalAmount: Number,
   merchantTransactionId: String,
