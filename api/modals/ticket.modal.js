@@ -9,7 +9,7 @@ const inventoryItemsSchema = new Schema({
   operatorServiceCharge: Number,
   seatName: String,
   serviceTax: Number,
-  passengers: [{
+  passengers: {
     address: String,
     age: Number,
     email: String,
@@ -21,7 +21,7 @@ const inventoryItemsSchema = new Schema({
     primary: String,
     title: String,
     singleLadies: String,
-  }],
+  },
 });
 
 const ticketSchema = new Schema({

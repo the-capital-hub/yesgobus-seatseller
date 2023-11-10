@@ -295,6 +295,7 @@ export const getBookingById = async (bookingId) => {
         status: 200,
         message: "Booking retrieved",
         data: ticket,
+        booking : booking,
       };
     }
   } catch (error) {

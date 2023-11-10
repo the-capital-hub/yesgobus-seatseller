@@ -186,13 +186,13 @@ const BusBooking = () => {
     }
   };
 
-  const formatTravelTime = (durationInMins) => {
-    const hours = Math.floor(durationInMins / 60);
-    const minutes = durationInMins % 60;
-    const formattedHours = hours > 0 ? `${hours}hr` : "";
-    const formattedMinutes = minutes > 0 ? ` ${minutes}min` : "";
-    return `${formattedHours}${formattedMinutes}`;
-  };
+  // const formatTravelTime = (durationInMins) => {
+  //   const hours = Math.floor(durationInMins / 60);
+  //   const minutes = durationInMins % 60;
+  //   const formattedHours = hours > 0 ? `${hours}hr` : "";
+  //   const formattedMinutes = minutes > 0 ? ` ${minutes}min` : "";
+  //   return `${formattedHours}${formattedMinutes}`;
+  // };
 
   const handleFilter = (filters) => {
     handleSearch(fromLocation, toLocation, selectedDate, filters);
@@ -203,6 +203,28 @@ const BusBooking = () => {
   };
 
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+
+  function convertMinutesToTime(minutes) {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    const journeyDay = Math.floor(hours / 24);
+    const hour = hours % 24;
+    const ampm = hour < 12 ? 'am' : 'pm';
+    const displayHour = hour > 12 ? hour - 12 : hour;
+    const formattedTime = `${displayHour.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')} ${ampm}`;
+    return formattedTime;
+  }
+
+  function calculateTravelTime(departureTime, arrivalTime) {
+    if (arrivalTime < departureTime) {
+      arrivalTime += 1440;
+    }
+    const travelTimeInMinutes = arrivalTime - departureTime;
+    const travelHours = Math.floor(travelTimeInMinutes / 60);
+    const travelMinutes = travelTimeInMinutes % 60;
+    const totalTimeTaken = travelHours + "hr " + travelMinutes + "min";
+    return totalTimeTaken;
+  }
 
   return (
     <div className="busBooking">
@@ -318,13 +340,10 @@ const BusBooking = () => {
                     rating={(Math.random() * 1 + 4).toFixed(1)}
                     noOfReviews={Math.floor(Math.random() * 101) + 37}
                     pickUpLocation={bus.boardingTimes[0].location}
-                    pickUpTime={bus.departureTime}
+                    pickUpTime={convertMinutesToTime(bus.departureTime)}
                     reachLocation={bus.droppingTimes[0].location}
-                    reachTime={bus.arrivalTime}
-
-                    // travel time needs to be calculated
-                    // travelTime={formatTravelTime(bus.durationInMins)}
-
+                    reachTime={convertMinutesToTime(bus.arrivalTime)}
+                    travelTime={calculateTravelTime(bus.departureTime, bus.arrivalTime)}
                     seatsLeft={bus.availableSeats}
                     avlWindowSeats={bus.avlWindowSeats}
                     price={priceToDisplay(bus.fares)}

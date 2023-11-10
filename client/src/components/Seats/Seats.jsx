@@ -57,16 +57,27 @@ const Seats = ({
     setPrices(fare.split(",").map(parseFloat));
   }, [fare])
 
+  function convertMinutesToTime(minutes) {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    const journeyDay = Math.floor(hours / 24);
+    const hour = hours % 24;
+    const ampm = hour < 12 ? 'am' : 'pm';
+    const displayHour = hour > 12 ? hour - 12 : hour;
+    const formattedTime = `${displayHour.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')} ${ampm}`;
+    return formattedTime;
+  }
+
   const [bookingDetails, setBookingDetails] = useState({
     boardingPoint: {
       bpid: "",
-      location: "",
+      bpName: "",
       address: "",
       time: "",
     },
     droppingPoint: {
       bpid: "",
-      location: "",
+      bpName: "",
       address: "",
       time: "",
     },
@@ -309,8 +320,8 @@ const Seats = ({
 
   const handleContinue = () => {
     if (
-      bookingDetails.boardingPoint.id &&
-      bookingDetails.droppingPoint.id &&
+      bookingDetails.boardingPoint.bpid &&
+      bookingDetails.droppingPoint.bpid &&
       bookingDetails.selectedSeats.length !== 0
     ) {
       navigate("/busbooking/payment", {
@@ -347,8 +358,8 @@ const Seats = ({
             {pickUpLocationOne?.map((boardingPoint, index) => (
               <PickUpAndDropPoints
                 key={boardingPoint.bpid}
-                time={boardingPoint.time}
-                locationOne={boardingPoint.location}
+                time={convertMinutesToTime(boardingPoint.time)}
+                locationOne={boardingPoint.bpName}
                 locationTwo={boardingPoint.address}
                 highlight={bookingDetails.boardingPoint.bpid === boardingPoint.bpid}
                 onClick={() =>
@@ -368,8 +379,8 @@ const Seats = ({
               <PickUpAndDropPoints
                 highlight={bookingDetails.droppingPoint.bpid === droppingPoint.bpid}
                 key={droppingPoint.bpid}
-                time={droppingPoint.time}
-                locationOne={droppingPoint.location}
+                time={convertMinutesToTime(droppingPoint.time)}
+                locationOne={droppingPoint.bpName}
                 locationTwo={droppingPoint.address}
                 onClick={() =>
                   setBookingDetails((prev) => {

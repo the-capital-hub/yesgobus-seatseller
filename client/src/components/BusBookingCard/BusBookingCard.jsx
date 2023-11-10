@@ -10,7 +10,7 @@ import toast, { Toaster } from 'react-hot-toast';
 
 const BusBookingCard = ({
   tripId,
-  inventoryType,
+  // inventoryType,
   sourceCity,
   sourceCityId,
   destinationCity,
@@ -30,10 +30,10 @@ const BusBookingCard = ({
   seatsLeft,
   avlWindowSeats,
   cancellationPolicy,
-  pickUpTimes,
+  // pickUpTimes,
   pickUpLocationOne,
   // pickUpLocationTwo,
-  dropTimes,
+  // dropTimes,
   dropLocationOne,
   // dropLocationTwo,
   backSeat,
@@ -194,9 +194,7 @@ const BusBookingCard = ({
       </div>
       {showSeats && seatsLeft && seatDetails && (
         <Seats
-          //tavell time to be calculated
-          // travelTime={travelTime}
-
+          travelTime={travelTime}
           pickUpTime={pickUpTime}
           reachTime={reachTime}
           tripId={tripId}
