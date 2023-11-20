@@ -116,9 +116,10 @@ export const busCancellationInfo = async (from, to) => {
 export const getBusFilters = async (args) => {
   try {
     const [sourceCity, destinationCity] = await Promise.all([
-      City.findOne({ CityName: args.sourceCity }),
-      City.findOne({ CityName: args.destinationCity }),
+      City.findOne({ name: args.sourceCity }),
+      City.findOne({ name: args.destinationCity }),
     ]);
+
     const searchResponse = await searchBus(sourceCity.id, destinationCity.id, args.doj);
     const filters = {
       boardingPoints: [],
@@ -127,16 +128,30 @@ export const getBusFilters = async (args) => {
       busType: [],
     };
 
+    searchResponse.availableTrips = Array.isArray(searchResponse.availableTrips)
+      ? searchResponse.availableTrips
+      : [searchResponse.availableTrips]
+
     if (searchResponse.availableTrips && searchResponse.availableTrips.length > 0) {
       searchResponse.availableTrips.forEach((bus) => {
+
+        bus.boardingTimes = Array.isArray(bus.boardingTimes)
+          ? bus.boardingTimes
+          : [bus.boardingTimes]
+
+        bus.droppingTimes = Array.isArray(bus.droppingTimes)
+          ? bus.droppingTimes
+          : [bus.droppingTimes]
+
         if (bus.boardingTimes && bus.boardingTimes.length > 0) {
+
           bus.boardingTimes.forEach((point) => {
-            filters.boardingTimes.push(point.location);
+            filters.boardingPoints.push(point.bpName);
           });
         }
         if (bus.droppingTimes && bus.droppingTimes.length > 0) {
           bus.droppingTimes.forEach((point) => {
-            filters.droppingTimes.push(point.location);
+            filters.droppingPoints.push(point.bpName);
           });
         }
         filters.busPartners.push(bus.travels);
@@ -172,10 +187,15 @@ function hasFilters(filters) {
 export const getBusDetails = async (searchArgs, filters) => {
   try {
     const [sourceCity, destinationCity] = await Promise.all([
-      City.findOne({ CityName: args.sourceCity }),
-      City.findOne({ CityName: args.destinationCity }),
+      City.findOne({ name: searchArgs.sourceCity }),
+      City.findOne({ name: searchArgs.destinationCity }),
     ]);
+
     let searchResponse = await searchBus(sourceCity.id, destinationCity.id, searchArgs.doj);
+    searchResponse.availableTrips = Array.isArray(searchResponse.availableTrips)
+      ? searchResponse.availableTrips
+      : [searchResponse.availableTrips]
+
     searchResponse = searchResponse.availableTrips;
 
     if (!hasFilters(filters)) {
@@ -186,20 +206,33 @@ export const getBusDetails = async (searchArgs, filters) => {
     }
     const filteredBuses = searchResponse.filter((bus) => {
 
-      const fareValues = bus.fares.split(",").map(parseFloat);
+      bus.boardingTimes = Array.isArray(bus.boardingTimes)
+        ? bus.boardingTimes
+        : [bus.boardingTimes]
+
+      bus.droppingTimes = Array.isArray(bus.droppingTimes)
+        ? bus.droppingTimes
+        : [bus.droppingTimes]
+
+      const fareArray = Array.isArray(bus.fares) ? bus.fares : [bus.fares];
+
+      const fareValues = fareArray.map((price) => {
+        return parseInt(price, 10);
+      });
+
       const matchingPrice =
         (!filters.minPrice || fareValues.some((fare) => fare >= filters.minPrice)) &&
         (!filters.maxPrice || fareValues.some((fare) => fare <= filters.maxPrice));
 
       const matchingBoardingPoints = filters.boardingPoints
         ? filters.boardingPoints.some((point) =>
-          bus.boardingTimes.some((bPoint) => bPoint.location === point)
+          bus.boardingTimes.some((bPoint) => bPoint.bpName === point)
         )
         : true;
 
       const matchingDroppingPoints = filters.droppingPoints
         ? filters.droppingPoints.some((point) =>
-          bus.droppingTimes.some((dPoint) => dPoint.location === point)
+          bus.droppingTimes.some((dPoint) => dPoint.bpName === point)
         )
         : true;
 
@@ -248,7 +281,7 @@ export const bookBus = async (bookingDetails) => {
 export const searchCity = async (searchParam) => {
   try {
     const cities = await City.find({
-      CityName: { $regex: `^${searchParam}`, $options: 'i' }
+      name: { $regex: `^${searchParam}`, $options: 'i' }
     })
     return {
       status: 200,

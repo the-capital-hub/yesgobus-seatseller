@@ -135,8 +135,13 @@ const BusBooking = () => {
           ...filters,
         }
       );
-      setBusDetails(response.data.data);
-      setNoOfBuses(response.data.data.length);
+      if (response.data.data[0] !== null) {
+        setBusDetails(response.data.data);
+        setNoOfBuses(response.data.data.length);
+      } else {
+        setBusDetails([]);
+        setNoOfBuses(0);
+      }
       setSourceCityId(response.data.sourceCity);
       setDestinationCityId(response.data.destinationCity);
       setLoading(false);
@@ -176,7 +181,12 @@ const BusBooking = () => {
   };
 
   const priceToDisplay = (fare) => {
-    const prices = fare.split(",").map(parseFloat);
+    const fareArray = Array.isArray(fare) ? fare : [fare];
+
+    const prices = fareArray.map((price) => {
+      return parseInt(price, 10);
+    });
+
     if (prices.length === 1) {
       return prices[0].toFixed(2);
     } else {
@@ -185,6 +195,7 @@ const BusBooking = () => {
       return `${minPrice} - ${maxPrice}`;
     }
   };
+
 
   // const formatTravelTime = (durationInMins) => {
   //   const hours = Math.floor(durationInMins / 60);
@@ -324,38 +335,38 @@ const BusBooking = () => {
               <ColumnNames noOfBuses={noOfBuses} />
 
               {busDetails?.map((bus) => (
-                <div className="bus-card-container" key={bus.id}>
+                <div className="bus-card-container" key={bus?.id}>
                   <BusBookingCard
-                    key={bus.id}
-                    tripId={bus.id}
+                    key={bus?.id}
+                    tripId={bus?.id}
                     // inventoryType={bus.inventoryType}
                     sourceCity={fromLocation}
                     sourceCityId={sourceCityId}
                     destinationCity={toLocation}
                     destinationCityId={destinationCityId}
                     doj={selectedDate}
-                    title={bus.travels}
-                    busName={bus.travels}
-                    busType={bus.busType}
+                    title={bus?.travels}
+                    busName={bus?.travels}
+                    busType={bus?.busType}
                     rating={(Math.random() * 1 + 4).toFixed(1)}
                     noOfReviews={Math.floor(Math.random() * 101) + 37}
-                    pickUpLocation={bus.boardingTimes[0].location}
+                    pickUpLocation={bus?.boardingTimes[0]?.bpName || bus.boardingTimes?.bpName}
                     pickUpTime={convertMinutesToTime(bus.departureTime)}
-                    reachLocation={bus.droppingTimes[0].location}
-                    reachTime={convertMinutesToTime(bus.arrivalTime)}
-                    travelTime={calculateTravelTime(bus.departureTime, bus.arrivalTime)}
-                    seatsLeft={bus.availableSeats}
-                    avlWindowSeats={bus.avlWindowSeats}
-                    price={priceToDisplay(bus.fares)}
+                    reachLocation={bus?.droppingTimes[0]?.bpName}
+                    reachTime={convertMinutesToTime(bus?.arrivalTime)}
+                    travelTime={calculateTravelTime(bus?.departureTime, bus?.arrivalTime)}
+                    seatsLeft={bus?.availableSeats}
+                    avlWindowSeats={bus?.avlWindowSeats}
+                    price={priceToDisplay(bus?.fares)}
                     // pickUpTimes={pickUpTimes}
-                    pickUpLocationOne={bus.boardingTimes}
+                    pickUpLocationOne={bus?.boardingTimes}
                     // pickUpLocationTwo={pickUpLocationTwo}
                     // dropTimes={dropTimes}
-                    dropLocationOne={bus.droppingTimes}
+                    dropLocationOne={bus?.droppingTimes}
                     // dropLocationTwo={dropLocationTwo}
                     backSeat={true}
-                    cancellationPolicy={bus.cancellationPolicy}
-                    fare={bus.fares}
+                    cancellationPolicy={bus?.cancellationPolicy}
+                    fare={bus?.fares}
                   />
                 </div>
               ))}

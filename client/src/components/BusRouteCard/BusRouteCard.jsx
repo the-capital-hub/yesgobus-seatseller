@@ -82,9 +82,9 @@ const BusRouteCard = ({ title, location, setLocation, date, suggestions, loading
               .map((suggestion) => (
                 <li
                   key={suggestion._id}
-                  onClick={() => handleSuggestionClick(suggestion.CityName)}
+                  onClick={() => handleSuggestionClick(suggestion.name)}
                 >
-                  {suggestion.CityName}
+                  {suggestion.name}
                 </li>
               ))
           )}
