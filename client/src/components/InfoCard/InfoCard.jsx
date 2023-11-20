@@ -82,15 +82,15 @@ const InfoCard = ({
           <ul className="suggestion-list">
             {suggestions
               .filter(
-                ({ city_name }) =>
-                  !/\d/.test(city_name) && !city_name.includes(" ")
+                ({ name }) =>
+                  !/\d/.test(name) && !name.includes(" ")
               )
               .map((suggestion) => (
                 <li
                   key={suggestion._id}
-                  onClick={() => handleSuggestionClick(suggestion.city_name)}
+                  onClick={() => handleSuggestionClick(suggestion.name)}
                 >
-                  {suggestion.city_name}
+                  {suggestion.name}
                 </li>
               ))}
           </ul>

@@ -92,6 +92,17 @@ const Payment = () => {
     }, 100);
   }, []);
 
+  function convertMinutesToTime(minutes) {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    const journeyDay = Math.floor(hours / 24);
+    const hour = hours % 24;
+    const ampm = hour < 12 ? 'am' : 'pm';
+    const displayHour = hour > 12 ? hour - 12 : hour;
+    const formattedTime = `${displayHour.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')} ${ampm}`;
+    return formattedTime;
+  }
+
   //verify payment and book ticket
   useEffect(() => {
     try {
@@ -466,15 +477,15 @@ const Payment = () => {
           <div className="destinations">
             <SimpleCard
               text={"Boarding Pass Details"}
-              date={bookingDetails?.boardingPoint?.time}
+              date={convertMinutesToTime(bookingDetails?.boardingPoint?.time)}
               // locationOne={bookingDetails.boardingPoint.location}
-              locationTwo={bookingDetails?.boardingPoint?.location}
+              locationTwo={bookingDetails?.boardingPoint?.bpName}
             />
             <SimpleCard
               text={"Drop Point Details"}
-              date={bookingDetails?.droppingPoint?.time}
+              date={convertMinutesToTime(bookingDetails?.droppingPoint?.time)}
               // locationOne={bookingDetails.droppingPoint.location}
-              locationTwo={bookingDetails?.droppingPoint?.location}
+              locationTwo={bookingDetails?.droppingPoint?.bpName}
             />
           </div>
 
@@ -630,10 +641,20 @@ const Payment = () => {
                 <p>{"₹" + bookingDetails?.fare}</p>
               </div>
               <hr />
-              <div className="price">
-                <p>Tax</p>
-                <p>{bookingDetails?.tax}</p>
-              </div>
+              {bookingDetails?.serviceTax !== 0 &&
+                <div className="price">
+                  <p>Service Tax</p>
+                  <p>{bookingDetails?.serviceTax}</p>
+                </div>
+              }
+
+              {bookingDetails?.operatorTax !== 0 &&
+                <div className="price">
+                  <p>Operator Tax</p>
+                  <p>{bookingDetails?.operatorTax}</p>
+                </div>
+              }
+
               <hr />
               <div className="price">
                 <p>Total Basefare</p>

@@ -65,10 +65,9 @@ const BusBookingCard = ({
       );
 
       // check if tripdetails is array?
-      seatData = response.data?.tripdetails.Seats;
-
+      seatData = response.data?.seats;
       // check if seat.available is boolean or string
-      const availableSeats = seatData?.filter(seat => seat.available === true);
+      const availableSeats = seatData?.filter(seat => seat.available === "true");
 
       setAvailableSeats(availableSeats?.length);
       setSeatDetails(seatData);
@@ -206,10 +205,10 @@ const BusBookingCard = ({
           destinationCityId={destinationCityId}
           doj={doj}
           // pickUpTimes={pickUpTimes}
-          pickUpLocationOne={pickUpLocationOne}
+          pickUpLocationOne={Array.isArray(pickUpLocationOne) ? pickUpLocationOne : [pickUpLocationOne]}
           // pickUpLocationTwo={pickUpLocationTwo}
           // dropTimes={dropTimes}
-          dropLocationOne={dropLocationOne}
+          dropLocationOne={Array.isArray(dropLocationOne) ? dropLocationOne : [dropLocationOne]}
           // dropLocationTwo={dropLocationTwo}
           backSeat={backSeat}
           busName={busName}
