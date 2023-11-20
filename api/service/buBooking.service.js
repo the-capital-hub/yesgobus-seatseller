@@ -1,22 +1,40 @@
 import axios from "axios";
+import OAuth from "oauth-1.0a";
+import crypto from 'crypto';
 import BusBooking from "../modals/busBooking.modal.js";
 import City from "../modals/cities.modal.js";
 import Tickets from "../modals/ticket.modal.js";
 
 const sendRequest = async (url, method, data) => {
   try {
-    const headers = {
-      // 'Token': process.env.ZUELPAY_TOKEN,
-      // 'Accept': 'application/json',
-      // 'Content-Type': 'application/json',
+    const oauth = OAuth({
+      consumer: {
+        key: process.env.CUSTOMER_KEY,
+        secret: process.env.CUSTOMER_SECRET,
+      },
+      signature_method: 'HMAC-SHA1',
+      hash_function(base_string, key) {
+        return crypto.createHmac('sha1', key).update(base_string).digest('base64');
+      },
+    });
+
+    const requestData = {
+      url: url,
+      method: method,
+      data: data,
     };
+
+    const headers = oauth.toHeader(oauth.authorize(requestData));
+
     const response = await axios({
       method: method,
       url: url,
       headers: headers,
       data: data,
     });
+
     return response.data;
+
   } catch (error) {
     console.log(error);
     throw error.message;
