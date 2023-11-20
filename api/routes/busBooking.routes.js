@@ -76,7 +76,7 @@ router.get("/getCityList", getCityListController);
 router.get("/getAliasesCity", getAliasesCityController);
 
 //booking routes
-router.get("/searchBus", searchBusController);
+router.post("/searchBus", searchBusController);
 router.get("/getSeatLayout/:id", getSeatLayoutController);
 
 // for getting updated fare of gov buses if bpDpSeatLayout is set to true

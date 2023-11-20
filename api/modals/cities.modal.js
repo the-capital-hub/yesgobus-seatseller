@@ -4,17 +4,29 @@ const { Schema } = mongoose;
 
 const citySchema = new Schema(
   {
-    CityName: {
+    id: {
       type: String,
       required: true
     },
-    Id: {
-      type: Number, 
+    latitude: {
+      type: String
+    },
+    locationType: {
+      type: String
+    },
+    longitude: {
+      type: String
+    },
+    name: {
+      type: String,
       required: true
     },
-    aliasNames: [{
-      type: String 
-    }]
+    state: {
+      type: String
+    },
+    stateId: {
+      type: String
+    }
   }
 );
 
