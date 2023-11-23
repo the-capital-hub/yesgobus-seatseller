@@ -18,7 +18,6 @@ import { offer } from "../../assets/payment";
 import axiosInstance from "../../utils/service";
 import { useLocation, useNavigate, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { bookSeat } from "../../../../api/service/buBooking.service";
 import { Spin } from "antd";
 import { Modal } from "antd";
 
@@ -65,10 +64,11 @@ const Payment = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const {
+    tripId,
     sourceCity,
+    sourceCityId,
     destinationCity,
-    routeScheduleId,
-    inventoryType,
+    destinationCityId,
     doj,
     pickUpTime,
     reachTime,
@@ -92,6 +92,17 @@ const Payment = () => {
     }, 100);
   }, []);
 
+  function convertMinutesToTime(minutes) {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    const journeyDay = Math.floor(hours / 24);
+    const hour = hours % 24;
+    const ampm = hour < 12 ? 'am' : 'pm';
+    const displayHour = hour > 12 ? hour - 12 : hour;
+    const formattedTime = `${displayHour.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')} ${ampm}`;
+    return formattedTime;
+  }
+
   //verify payment and book ticket
   useEffect(() => {
     try {
@@ -111,10 +122,10 @@ const Payment = () => {
           );
 
           if (checkPaymentStatus.data.code === "PAYMENT_SUCCESS") {
-            console.log(`Block Ticket ID: ${blockTicketId}`);
+            // console.log(`Block Ticket ID: ${blockTicketId}`);
 
             // book seat
-            const bookSeat = await axiosInstance.get(
+            const bookSeat = await axiosInstance.post(
               `${import.meta.env.VITE_BASE_URL
               }/api/busBooking/bookSeat/${blockTicketId}`
             );
@@ -128,12 +139,16 @@ const Payment = () => {
                 }/api/busBooking/updateBooking/${bookingId}`,
                 {
                   bookingStatus: "paid",
-                  tid: bookSeat?.data.BookingDetail.etstnumber,
-                  buspnr: bookSeat?.data.buspnr,
-                  opPNR: bookSeat?.data.BookingDetail.opPNR,
+                  tin: bookSeat?.data.TIN,
+                  // buspnr: bookSeat?.data.buspnr,
+                  // opPNR: bookSeat?.data.BookingDetail.opPNR,
                 }
               );
-              if (updatePaymentDetails) {
+              const { data: ticketDetails } = await axiosInstance.get(
+                `${import.meta.env.VITE_BASE_URL}/api/busBooking/getBookingById/${bookingId}`
+              )
+
+              if (ticketDetails) {
                 // send mail
                 const mailBody = {
                   fullName: updatePaymentDetails?.data.customerName,
@@ -141,9 +156,9 @@ const Payment = () => {
                   destinationCity: updatePaymentDetails?.data.destinationCity,
                   seats: updatePaymentDetails?.data.selectedSeats,
                   amount: updatePaymentDetails?.data.totalAmount,
-                  pickUpLocation: updatePaymentDetails?.data.boardingPoint.location,
-                  opPNR: updatePaymentDetails?.data.opPNR,
-                  doj: formatDate(updatePaymentDetails?.data.doj),
+                  pickUpLocation: ticketDetails?.data.pickUpLocation,
+                  opPNR: ticketDetails?.data.pnr,
+                  doj: formatDate(updatePaymentDetails?.data.doj) + " " + updatePaymentDetails?.data.pickUpTime,
                   to: updatePaymentDetails?.data.customerEmail,
                 }
                 const sendMail = await axiosInstance.post(
@@ -159,8 +174,8 @@ const Payment = () => {
                   destinationCity: updatePaymentDetails?.data.destinationCity,
                   seats: updatePaymentDetails?.data.selectedSeats,
                   amount: updatePaymentDetails?.data.totalAmount,
-                  pickUpLocation: updatePaymentDetails?.data.boardingPoint.location,
-                  opPNR: updatePaymentDetails?.data.opPNR.split("/")[0],
+                  pickUpLocation: ticketDetails?.data.pickUpLocation,
+                  opPNR: ticketDetails?.data.pnr,
                   doj: formatDate(updatePaymentDetails?.data.doj) + " " + updatePaymentDetails?.data.pickUpTime,
                   to: updatePaymentDetails?.data.customerPhone,
                 }
@@ -222,54 +237,80 @@ const Payment = () => {
       const isPrimary = index === 0;
       const title = userData[`gender_${index}`] === 'M' ? "Mr" : "Ms";
       return {
-        seatNbr: seatId,
-        ladiesSeat: bookingDetails?.ladiesSeat[index],
-        ac: bookingDetails?.ac[index],
-        sleeper: bookingDetails?.sleeper[index],
+        // seatNbr: seatId,
+        // ladiesSeat: bookingDetails?.ladiesSeat[index],
+        // ac: bookingDetails?.ac[index],
+        // sleeper: bookingDetails?.sleeper[index],
+        // fare: bookingDetails?.seatFares[index],
+        // totalFareWithTaxes: bookingDetails?.seatTotalFares[index],
+        // name: userData[`firstName_${index}`],
+        // age: userData[`age_${index}`],
+        // sex: userData[`gender_${index}`],
+        // lastName: userData[`lastName_${index}`],
+        // mobile: userData.mobile,
+        // title: title,
+        // email: userData.email,
+        // idType: "3456",
+        // idNumber: userData.idNumber,
+        // nameOnId: userData[`firstName_${index}`],
+        // primary: isPrimary,
+
+        seatname: seatId,
         fare: bookingDetails?.seatFares[index],
-        totalFareWithTaxes: bookingDetails?.seatTotalFares[index],
-        name: userData[`firstName_${index}`],
-        age: userData[`age_${index}`],
-        sex: userData[`gender_${index}`],
-        lastName: userData[`lastName_${index}`],
-        mobile: userData.mobile,
-        title: title,
-        email: userData.email,
-        idType: "3456",
-        idNumber: userData.idNumber,
-        nameOnId: userData[`firstName_${index}`],
-        primary: isPrimary,
+        ladiesSeat: bookingDetails?.ladiesSeat[index],
+        passenger: {
+          address: userData.address,
+          age: userData[`age_${index}`],
+          email: userData.email,
+          gender: userData[`gender_${index}`],
+          idNumber: "23543" || userData.idNumber,
+          idType: "Pancard" || userData.idType,
+          mobile: userData.mobile,
+          name: userData[`firstName_${index}`] + " " + userData[`lastName_${index}`],
+          primary: isPrimary,
+          title: title,
+        }
+
       };
     });
     try {
       // block seat request body
       const blockSeatRequestBody = {
-        sourceCity: sourceCity,
-        destinationCity: destinationCity,
-        doj: doj,
-        routeScheduleId: routeScheduleId,
-        boardingPoint: bookingDetails?.boardingPoint,
-        customerName: firstName,
-        customerLastName: lastName,
-        customerEmail: userData.email,
-        customerPhone: userData.mobile,
-        emergencyPhNumber: userData.alternativeNumber,
-        customerAddress: userData.address,
-        blockSeatPaxDetails: seatObjects,
-        inventoryType: inventoryType,
+        // sourceCity: sourceCity,
+        // destinationCity: destinationCity,
+        // doj: doj,
+        // routeScheduleId: routeScheduleId,
+        // boardingPoint: bookingDetails?.boardingPoint,
+        // customerName: firstName,
+        // customerLastName: lastName,
+        // customerEmail: userData.email,
+        // customerPhone: userData.mobile,
+        // emergencyPhNumber: userData.alternativeNumber,
+        // customerAddress: userData.address,
+        // blockSeatPaxDetails: seatObjects,
+        // inventoryType: inventoryType,
+        availableTripID: tripId,
+        boardingPointId: bookingDetails.boardingPoint.bpid,
+        droppingPointId: bookingDetails.droppingPoint.bpid,
+        destination: destinationCityId,
+        source: sourceCityId,
+        inventoryItems: seatObjects,
       };
       // block seat
       const blockSeat = await axiosInstance.post(
         `${import.meta.env.VITE_BASE_URL}/api/busBooking/blockSeat`,
         blockSeatRequestBody
       );
-      if (blockSeat?.data?.apiStatus?.success === true) {
+
+      // change this when you get API key
+      if (blockSeat?.data?.blockKey) {
         // setLoading(false);
         setLoadingModalVisible(true);
         const { data: bookResponse } = await axiosInstance.post(
           `${import.meta.env.VITE_BASE_URL}/api/busBooking/bookBus`,
           {
-            ...blockSeatRequestBody,
+            // ...blockSeatRequestBody,
+            blockKey: blockSeat.data.blockKey,
             userId: loggedInUser._id,
             totalAmount: bookingDetails?.totalFare,
             busOperator: busName,
@@ -279,6 +320,14 @@ const Payment = () => {
             reachTime: reachTime,
             droppingPoint: bookingDetails.droppingPoint,
             cancellationPolicy: cancellationPolicy,
+            sourceCity: sourceCity,
+            destinationCity: destinationCity,
+            doj: doj,
+            customerName: firstName,
+            customerLastName: lastName,
+            customerEmail: userData.email,
+            customerPhone: userData.mobile,
+            customerAddress: userData.address,
           }
         );
 
@@ -287,7 +336,7 @@ const Payment = () => {
           `${import.meta.env.VITE_BASE_URL}/api/payment/initiatePayment`,
           {
             amount: bookingDetails?.totalFare,
-            redirectUrl: `https://yesgobus.com/busbooking/payment?blockTicketId=${blockSeat.data.blockTicketKey}&bookingId=${bookResponse.data._id}&paymentVerify=1`,
+            redirectUrl: `https://yesgobus.com/busbooking/payment?blockTicketId=${blockSeat.data.blockKey}&bookingId=${bookResponse.data._id}&paymentVerify=1`,
           }
         );
 
@@ -428,15 +477,15 @@ const Payment = () => {
           <div className="destinations">
             <SimpleCard
               text={"Boarding Pass Details"}
-              date={bookingDetails?.boardingPoint?.time}
+              date={convertMinutesToTime(bookingDetails?.boardingPoint?.time)}
               // locationOne={bookingDetails.boardingPoint.location}
-              locationTwo={bookingDetails?.boardingPoint?.location}
+              locationTwo={bookingDetails?.boardingPoint?.bpName}
             />
             <SimpleCard
               text={"Drop Point Details"}
-              date={bookingDetails?.droppingPoint?.time}
+              date={convertMinutesToTime(bookingDetails?.droppingPoint?.time)}
               // locationOne={bookingDetails.droppingPoint.location}
-              locationTwo={bookingDetails?.droppingPoint?.location}
+              locationTwo={bookingDetails?.droppingPoint?.bpName}
             />
           </div>
 
@@ -592,10 +641,20 @@ const Payment = () => {
                 <p>{"₹" + bookingDetails?.fare}</p>
               </div>
               <hr />
-              <div className="price">
-                <p>Tax</p>
-                <p>{bookingDetails?.tax}</p>
-              </div>
+              {bookingDetails?.serviceTax !== 0 &&
+                <div className="price">
+                  <p>Service Tax</p>
+                  <p>{bookingDetails?.serviceTax}</p>
+                </div>
+              }
+
+              {bookingDetails?.operatorTax !== 0 &&
+                <div className="price">
+                  <p>Operator Tax</p>
+                  <p>{bookingDetails?.operatorTax}</p>
+                </div>
+              }
+
               <hr />
               <div className="price">
                 <p>Total Basefare</p>
@@ -645,7 +704,7 @@ const Payment = () => {
           />
         </div>
       </div> */}
-      
+
       <Footer />
       {loading ? (
         <div className="loading-spinner">

@@ -30,16 +30,16 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange }) => {
   useEffect(() => {
     const getFilters = async () => {
 
-      if (sourceCity.trim().toLowerCase() in cityMapping) {
-        const mapping = cityMapping[sourceCity.trim().toLowerCase()];
-        sourceCity = mapping.sourceCity;
-        setSelectedBoardingPoints(mapping.boardingPoints);
-      }
-      if (destinationCity.trim().toLowerCase() in cityMapping) {
-        const mapping = cityMapping[destinationCity.trim().toLowerCase()];
-        destinationCity = mapping.sourceCity;
-        setSelectedDroppingPoints(mapping.boardingPoints);
-      }
+      // if (sourceCity.trim().toLowerCase() in cityMapping) {
+      //   const mapping = cityMapping[sourceCity.trim().toLowerCase()];
+      //   sourceCity = mapping.sourceCity;
+      //   setSelectedBoardingPoints(mapping.boardingPoints);
+      // }
+      // if (destinationCity.trim().toLowerCase() in cityMapping) {
+      //   const mapping = cityMapping[destinationCity.trim().toLowerCase()];
+      //   destinationCity = mapping.sourceCity;
+      //   setSelectedDroppingPoints(mapping.boardingPoints);
+      // }
 
       try {
         const response = await axiosInstance.get(
@@ -113,6 +113,13 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange }) => {
           name={"busPartners"}
           onFilterChange={handleFilterChange}
         />
+        {/* <LeftFilterBox
+          title={"Bus Type"}
+          points={filters.busType}
+          count={[12, 16, 78]}
+          name={"busTypes"}
+          onFilterChange={handleFilterChange}
+        /> */}
         <div className="priceRange">
           <Typography gutterBottom>Price Range</Typography>
           <Slider

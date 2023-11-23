@@ -3,9 +3,16 @@ import {
   getAliasesCity,
   searchBus,
   getSeatLayout,
+  getBpDpDetails,
+  getSeatLayoutV2,
   blockSeat,
+  getRTCFareBreakup,
   bookSeat,
+  cancelTicketData,
   cancelTicket,
+  getTicket,
+  checkBookedTicket,
+  busCancellationInfo,
   getBusFilters,
   getBusDetails,
   bookBus,
@@ -13,6 +20,10 @@ import {
   updateBookings,
   getBookingById,
   getAllBookings,
+  //vrl buses
+  sendVrlRequest,
+  getVrlFilters,
+  getVrlBusDetails
 } from "../service/buBooking.service.js";
 import { sendMessage, sendMail } from "../utils/helper.js";
 
@@ -24,7 +35,8 @@ export const getCityListController = async (req, res) => {
     console.log(error);
     return res.status(500).send({
       status: 500,
-      message: "An error occurred while getting city list"
+      message: "An error occurred while getting city list",
+      error: error,
     })
   }
 };
@@ -37,33 +49,65 @@ export const getAliasesCityController = async (req, res) => {
     console.log(error);
     return res.status(500).send({
       status: 500,
-      message: "An error occurred while getting aliases city list"
+      message: "An error occurred while getting aliases city list",
+      error: error,
     })
   }
 };
 
 export const searchBusController = async (req, res) => {
   try {
-    const response = await searchBus(req.body);
+    const response = await searchBus(req.body.sourceCity, req.body.destinationCity, req.body.doj);
     res.status(200).send(response);
   } catch (error) {
     console.log(error);
     return res.status(500).send({
       status: 500,
-      message: "An error occurred while searching bus details"
+      message: "An error occurred while searching bus details",
+      error: error,
     })
   }
 };
 
 export const getSeatLayoutController = async (req, res) => {
   try {
-    const response = await getSeatLayout(req.body);
+    const response = await getSeatLayout(req.params.id);
     res.status(200).send(response);
   } catch (error) {
     console.log(error);
     return res.status(500).send({
       status: 500,
-      message: "An error occurred while getting seat layout"
+      message: "An error occurred while getting seat layout",
+      error: error,
+    })
+  }
+};
+
+
+export const getBpDpDetailsController = async (req, res) => {
+  try {
+    const response = await getBpDpDetails(req.params.id);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "An error occurred while getting bpdp details",
+      error: error,
+    })
+  }
+};
+
+export const getSeatLayoutV2Controller = async (req, res) => {
+  try {
+    const response = await getSeatLayoutV2(req.body);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "An error occurred while getting seat layout v2",
+      error: error,
     })
   }
 };
@@ -76,20 +120,50 @@ export const blockSeatController = async (req, res) => {
     console.log(error);
     return res.status(500).send({
       status: 500,
-      message: "An error occurred while blocking seat"
+      message: "An error occurred while blocking seat",
+      error: error,
+    })
+  }
+};
+
+export const getRTCFareBreakupController = async (req, res) => {
+  try {
+    const response = await getRTCFareBreakup(req.params.blockKey);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "An error occurred while getting rtcfarebreakup details",
+      error: error,
     })
   }
 };
 
 export const bookSeatController = async (req, res) => {
   try {
-    const response = await bookSeat(req.params.ticketKey);
+    const response = await bookSeat(req.params.blockKey);
     res.status(200).send(response);
   } catch (error) {
     console.log(error);
     return res.status(500).send({
       status: 500,
-      message: "An error occurred while booking seat"
+      message: "An error occurred while booking seat",
+      error: error,
+    })
+  }
+};
+
+export const cancelTicketDataController = async (req, res) => {
+  try {
+    const response = await cancelTicketData(req.params.tin);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "An error occurred while getting cancel ticket data",
+      error: error,
     })
   }
 };
@@ -102,10 +176,55 @@ export const cancelTicketController = async (req, res) => {
     console.log(error);
     return res.status(500).send({
       status: 500,
-      message: "An error occurred while cancelling ticket"
+      message: "An error occurred while cancelling ticket",
+      error: error,
     })
   }
 };
+
+
+export const getTicketController = async (req, res) => {
+  try {
+    const response = await getTicket(req.params.tin);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "An error occurred while getting ticket data",
+      error: error,
+    })
+  }
+};
+
+export const checkBookedTicketController = async (req, res) => {
+  try {
+    const response = await checkBookedTicket(req.params.blockKey);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "An error occurred while checking booked ticket",
+      error: error,
+    })
+  }
+};
+
+export const busCancellationInfoController = async (req, res) => {
+  try {
+    const response = await busCancellationInfo(req.params.from, req.params.to);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "An error occurred while getting bus cancellation info",
+      error: error,
+    })
+  }
+};
+
 
 export const getBusFiltersController = async (req, res) => {
   try {
@@ -136,6 +255,9 @@ export const getBusDetailsController = async (req, res) => {
     }
     if (req.body.busPartners !== null && req.body.busPartners?.length > 0) {
       filters.busPartners = req.body.busPartners;
+    }
+    if (req.body.busTypes !== null && req.body.busTypes?.length > 0) {
+      filters.busTypes = req.body.busTypes;
     }
     if (req.body.minPrice !== null && req.body.minPrice !== undefined) {
       filters.minPrice = req.body.minPrice;
@@ -333,3 +455,62 @@ export const sendCancelTicketEmail = async (req, res) => {
     });
   }
 }
+
+
+//vrl travels buses
+export const sendVrlRequestController = async (req, res) => {
+  try {
+    const url = req.params.url;
+    const response = await sendVrlRequest(url, req.body);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "Internal Server Error",
+      error: error,
+    })
+  }
+};
+
+
+//vrl filters
+export const getVrlFiltersController = async (req, res) => {
+  try {
+    const response = await getVrlFilters(req.body);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "An error occurred while getting filters",
+      error: error,
+    })
+  }
+};
+
+
+export const getVrlBusDetailsController = async (req, res) => {
+  try {
+    const searchArgs = {
+      sourceCity: req.body.sourceCity,
+      destinationCity: req.body.destinationCity,
+      doj: req.body.doj
+    };
+    let filters = {};
+    if (req.body.boardingPoints !== null && req.body.boardingPoints?.length > 0) {
+      filters.boardingPoints = req.body.boardingPoints;
+    }
+    if (req.body.droppingPoints !== null && req.body.droppingPoints?.length > 0) {
+      filters.droppingPoints = req.body.droppingPoints;
+    }
+    const response = await getVrlBusDetails(searchArgs, filters);
+    res.status(response.status).send(response);
+  } catch (error) {
+    // console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "An error occurred while getting bus details with filters",
+    });
+  }
+};

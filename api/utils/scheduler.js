@@ -66,11 +66,11 @@ const checkPaymentAndRefund = async () => {
 }
 
 const sendReminderJob = schedule.scheduleJob('*/10 * * * *', function () {
-  sendReminderMessages();
+  // sendReminderMessages();
 });
 
 const checkPaymentJob = schedule.scheduleJob('0 * * * *', function () {
-  checkPaymentAndRefund();
+  // checkPaymentAndRefund();
 });
 
 export { sendReminderJob, checkPaymentJob };

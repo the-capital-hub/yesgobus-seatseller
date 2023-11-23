@@ -2,17 +2,17 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
-const boardingPointSchema = new Schema({
-  id: String,
-  location: String,
-  time: String,
-});
+// const boardingPointSchema = new Schema({
+//   id: String,
+//   location: String,
+//   time: String,
+// });
 
-const droppingPointSchema = new Schema({
-  id: String,
-  location: String,
-  time: String,
-});
+// const droppingPointSchema = new Schema({
+//   id: String,
+//   location: String,
+//   time: String,
+// });
 
 const seatDetailsSchema = new Schema({
   age: String,
@@ -39,9 +39,9 @@ const busBookingSchema = new Schema({
   sourceCity: String,
   destinationCity: String,
   doj: Date,
-  routeScheduleId: String,
-  boardingPoint: boardingPointSchema,
-  droppingPoint: droppingPointSchema,
+  tripId: String,
+  // boardingPoint: boardingPointSchema,
+  // droppingPoint: droppingPointSchema,
   busOperator: String,
   busType: String,
   selectedSeats: String,
@@ -58,7 +58,7 @@ const busBookingSchema = new Schema({
     type: String,
     default: "pending"
   },
-  tid: String,
+  tin: String,
   buspnr: String,
   opPNR: String,
   totalRefundAmount: String,
@@ -66,11 +66,16 @@ const busBookingSchema = new Schema({
   cancellationCharges: String,
   pickUpTime: String,
   reachTime: String,
-  cancellationPolicy:String,
+  cancellationPolicy: String,
   sentBookingRemainer: {
     type: String,
     default: false,
   },
+  blockKey: String,
+  isVrl: {
+    type: String,
+    default: false
+  }
 },
   {
     timestamps: true,

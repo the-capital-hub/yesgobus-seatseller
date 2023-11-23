@@ -21,6 +21,7 @@ import { Spin } from "antd";
 import { useLocation, Navigate } from "react-router-dom";
 import { cityMapping } from "../../utils/cityMapping";
 import { filterIcon } from "../../assets/busbooking";
+import { getVrlBuses } from "../../api/vrlBusesApis";
 
 const BusBooking = () => {
   const loggedInUser = localStorage.getItem("loggedInUser");
@@ -30,8 +31,13 @@ const BusBooking = () => {
 
   const location = useLocation();
   const [noOfBuses, setNoOfBuses] = useState(0);
+  const [noOfVrlBuses, setNoVrlOfBuses] = useState(0);
   const [busDetails, setBusDetails] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const [vrlBuses, setVrlBuses] = useState([]);
+  const [vrlSourceCityId, setVrlSourceCityId] = useState("");
+  const [vrlDestinationCityId, setVrlDestinationCityId] = useState("");
 
   //dates
   const date = new Date();
@@ -65,6 +71,9 @@ const BusBooking = () => {
   const [fromLocation, setFromLocation] = useState(sourceCity);
   const [toLocation, setToLocation] = useState(destinationCity);
   const [selectedDate, setSelectedDate] = useState(currentDate);
+
+  const [sourceCityId, setSourceCityId] = useState("");
+  const [destinationCityId, setDestinationCityId] = useState("");
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -105,7 +114,6 @@ const BusBooking = () => {
     setFromLocation(sourceCity);
     setToLocation(destinationCity);
     setSelectedDate(doj);
-    setLoading(true);
     setNoOfBuses(0);
 
     let boardingPoints = [];
@@ -120,20 +128,49 @@ const BusBooking = () => {
       destinationCity = mapping.sourceCity;
       droppingPoints = mapping.boardingPoints;
     }
+
     try {
+      setLoading(true);
+      const requestBody = {
+        sourceCity: sourceCity.trim(),
+        destinationCity: destinationCity.trim(),
+        doj: doj,
+      };
+      const vrlResponse = await getVrlBuses(requestBody);
+      setVrlBuses(vrlResponse.data);
+      setNoOfBuses(vrlResponse.data.length);
+      setVrlDestinationCityId(vrlResponse.destinationCity);
+      setVrlSourceCityId(vrlResponse.sourceCity);
+    } catch (error) {
+      setVrlBuses([]);
+      setNoVrlOfBuses(0);
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+
+    try {
+      setLoading(true);
       const response = await axiosInstance.post(
         `${import.meta.env.VITE_BASE_URL}/api/busBooking/getBusDetails`,
         {
           sourceCity: sourceCity.trim(),
           destinationCity: destinationCity.trim(),
           doj: doj,
-          boardingPoints,
-          droppingPoints,
+          // boardingPoints,
+          // droppingPoints,
           ...filters,
         }
       );
-      setBusDetails(response.data.data);
-      setNoOfBuses(response.data.data.length);
+      if (response.data.data[0] !== null) {
+        setBusDetails(response.data.data);
+        setNoOfBuses(response.data.data.length);
+      } else {
+        setBusDetails([]);
+        setNoOfBuses(0);
+      }
+      setSourceCityId(response.data.sourceCity);
+      setDestinationCityId(response.data.destinationCity);
       setLoading(false);
     } catch (error) {
       setBusDetails([]);
@@ -171,7 +208,12 @@ const BusBooking = () => {
   };
 
   const priceToDisplay = (fare) => {
-    const prices = fare.split(",").map(parseFloat);
+    const fareArray = Array.isArray(fare) ? fare : [fare];
+
+    const prices = fareArray.map((price) => {
+      return parseInt(price, 10);
+    });
+
     if (prices.length === 1) {
       return prices[0].toFixed(2);
     } else {
@@ -181,13 +223,14 @@ const BusBooking = () => {
     }
   };
 
-  const formatTravelTime = (durationInMins) => {
-    const hours = Math.floor(durationInMins / 60);
-    const minutes = durationInMins % 60;
-    const formattedHours = hours > 0 ? `${hours}hr` : "";
-    const formattedMinutes = minutes > 0 ? ` ${minutes}min` : "";
-    return `${formattedHours}${formattedMinutes}`;
-  };
+
+  // const formatTravelTime = (durationInMins) => {
+  //   const hours = Math.floor(durationInMins / 60);
+  //   const minutes = durationInMins % 60;
+  //   const formattedHours = hours > 0 ? `${hours}hr` : "";
+  //   const formattedMinutes = minutes > 0 ? ` ${minutes}min` : "";
+  //   return `${formattedHours}${formattedMinutes}`;
+  // };
 
   const handleFilter = (filters) => {
     handleSearch(fromLocation, toLocation, selectedDate, filters);
@@ -198,6 +241,28 @@ const BusBooking = () => {
   };
 
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+
+  function convertMinutesToTime(minutes) {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    const journeyDay = Math.floor(hours / 24);
+    const hour = hours % 24;
+    const ampm = hour < 12 ? 'am' : 'pm';
+    const displayHour = hour > 12 ? hour - 12 : hour;
+    const formattedTime = `${displayHour.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')} ${ampm}`;
+    return formattedTime;
+  }
+
+  function calculateTravelTime(departureTime, arrivalTime) {
+    if (arrivalTime < departureTime) {
+      arrivalTime += 1440;
+    }
+    const travelTimeInMinutes = arrivalTime - departureTime;
+    const travelHours = Math.floor(travelTimeInMinutes / 60);
+    const travelMinutes = travelTimeInMinutes % 60;
+    const totalTimeTaken = travelHours + "hr " + travelMinutes + "min";
+    return totalTimeTaken;
+  }
 
   return (
     <div className="busBooking">
@@ -294,38 +359,85 @@ const BusBooking = () => {
                 date={selectedDate}
                 onDateChange={handleDate}
               />
-              <ColumnNames noOfBuses={noOfBuses} />
+              <ColumnNames noOfBuses={noOfBuses + noOfVrlBuses} />
 
-              {busDetails?.map((bus) => (
-                <div className="bus-card-container" key={bus.routeScheduleId}>
+
+              {vrlBuses?.map((bus) => (
+                <div className="bus-card-container" key={bus?.ReferenceNumber}>
                   <BusBookingCard
-                    key={bus.routeScheduleId}
-                    routeScheduleId={bus.routeScheduleId}
-                    inventoryType={bus.inventoryType}
+                    key={bus?.ReferenceNumber}
+                    ReferenceNumber={bus?.ReferenceNumber}
+                    // inventoryType={bus.inventoryType}
                     sourceCity={fromLocation}
+                    sourceCityId={bus.FromCityId}
                     destinationCity={toLocation}
+                    destinationCityId={bus.ToCityId}
                     doj={selectedDate}
-                    title={bus.operatorName}
-                    busName={bus.operatorName}
-                    busType={bus.busType}
+                    title={"VRL Travels"}
+                    busName={"VRL Travels"}
+                    busType={bus?.BusTypeName}
                     rating={(Math.random() * 1 + 4).toFixed(1)}
                     noOfReviews={Math.floor(Math.random() * 101) + 37}
-                    pickUpLocation={fromLocation}
-                    pickUpTime={bus.departureTime}
-                    reachLocation={toLocation}
-                    reachTime={bus.arrivalTime}
-                    travelTime={formatTravelTime(bus.durationInMins)}
-                    seatsLeft={bus.availableSeats}
-                    price={priceToDisplay(bus.fare)}
+                    pickUpLocation={bus?.FromCityName}
+                    pickUpTime={bus?.CityTime}
+                    reachLocation={bus?.ToCityName}
+                    reachTime={bus.ArrivalTime}
+
+                    // calucalte total time
+                    travelTime={"0min"}
+                    seatsLeft={bus?.EmptySeats}
+                    // avlWindowSeats={bus?.avlWindowSeats}
+                    price={"0"}
                     // pickUpTimes={pickUpTimes}
-                    pickUpLocationOne={bus.boardingPoints}
+                    pickUpLocationOne={bus?.BoardingPoints}
                     // pickUpLocationTwo={pickUpLocationTwo}
                     // dropTimes={dropTimes}
-                    dropLocationOne={bus.droppingPoints}
+                    dropLocationOne={bus?.DroppingPoints}
                     // dropLocationTwo={dropLocationTwo}
                     backSeat={true}
-                    cancellationPolicy={bus.cancellationPolicy}
-                    fare={bus.fare}
+                    // cancellationPolicy={bus?.cancellationPolicy}
+                    fare={bus?.fares}
+                    isVrl={true}
+                  />
+                </div>
+              ))}
+
+
+
+              {/* seat seller buses */}
+              {busDetails?.map((bus) => (
+                <div className="bus-card-container" key={bus?.id}>
+                  <BusBookingCard
+                    key={bus?.id}
+                    tripId={bus?.id}
+                    // inventoryType={bus.inventoryType}
+                    sourceCity={fromLocation}
+                    sourceCityId={sourceCityId}
+                    destinationCity={toLocation}
+                    destinationCityId={destinationCityId}
+                    doj={selectedDate}
+                    title={bus?.travels}
+                    busName={bus?.travels}
+                    busType={bus?.busType}
+                    rating={(Math.random() * 1 + 4).toFixed(1)}
+                    noOfReviews={Math.floor(Math.random() * 101) + 37}
+                    pickUpLocation={bus?.boardingTimes[0]?.bpName || bus.boardingTimes?.bpName}
+                    pickUpTime={convertMinutesToTime(bus.departureTime)}
+                    reachLocation={bus?.droppingTimes[0]?.bpName}
+                    reachTime={convertMinutesToTime(bus?.arrivalTime)}
+                    travelTime={calculateTravelTime(bus?.departureTime, bus?.arrivalTime)}
+                    seatsLeft={bus?.availableSeats}
+                    avlWindowSeats={bus?.avlWindowSeats}
+                    price={priceToDisplay(bus?.fares)}
+                    // pickUpTimes={pickUpTimes}
+                    pickUpLocationOne={bus?.boardingTimes}
+                    // pickUpLocationTwo={pickUpLocationTwo}
+                    // dropTimes={dropTimes}
+                    dropLocationOne={bus?.droppingTimes}
+                    // dropLocationTwo={dropLocationTwo}
+                    backSeat={true}
+                    cancellationPolicy={bus?.cancellationPolicy}
+                    fare={bus?.fares}
                   />
                 </div>
               ))}

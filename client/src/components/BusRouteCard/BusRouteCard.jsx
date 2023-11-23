@@ -78,13 +78,13 @@ const BusRouteCard = ({ title, location, setLocation, date, suggestions, loading
             </li>
           ) : (
             suggestions
-              .filter(({ city_name }) => !/\d/.test(city_name) && !city_name.includes(" "))
+              // .filter(({ city_name }) => !/\d/.test(city_name) && !city_name.includes(" "))
               .map((suggestion) => (
                 <li
                   key={suggestion._id}
-                  onClick={() => handleSuggestionClick(suggestion.city_name)}
+                  onClick={() => handleSuggestionClick(suggestion.name)}
                 >
-                  {suggestion.city_name}
+                  {suggestion.name}
                 </li>
               ))
           )}
