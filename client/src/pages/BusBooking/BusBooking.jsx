@@ -115,6 +115,7 @@ const BusBooking = () => {
     setToLocation(destinationCity);
     setSelectedDate(doj);
     setNoOfBuses(0);
+    setNoVrlOfBuses(0);
 
     let boardingPoints = [];
     let droppingPoints = [];
@@ -138,7 +139,7 @@ const BusBooking = () => {
       };
       const vrlResponse = await getVrlBuses(requestBody);
       setVrlBuses(vrlResponse.data);
-      setNoOfBuses(vrlResponse.data.length);
+      setNoVrlOfBuses(vrlResponse.data.length);
       setVrlDestinationCityId(vrlResponse.destinationCity);
       setVrlSourceCityId(vrlResponse.sourceCity);
     } catch (error) {
