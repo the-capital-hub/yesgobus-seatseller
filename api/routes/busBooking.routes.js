@@ -69,7 +69,7 @@ router.get("/searchCity/:searchParam", searchCityController);
 
 
 
-router.use(authenticateUser);
+// router.use(authenticateUser);
 
 //seatseller apis 
 

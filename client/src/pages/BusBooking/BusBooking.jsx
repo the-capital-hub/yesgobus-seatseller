@@ -21,6 +21,7 @@ import { Spin } from "antd";
 import { useLocation, Navigate } from "react-router-dom";
 import { cityMapping } from "../../utils/cityMapping";
 import { filterIcon } from "../../assets/busbooking";
+import { getVrlBuses } from "../../api/vrlBusesApis";
 
 const BusBooking = () => {
   const loggedInUser = localStorage.getItem("loggedInUser");
@@ -30,8 +31,13 @@ const BusBooking = () => {
 
   const location = useLocation();
   const [noOfBuses, setNoOfBuses] = useState(0);
+  const [noOfVrlBuses, setNoVrlOfBuses] = useState(0);
   const [busDetails, setBusDetails] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const [vrlBuses, setVrlBuses] = useState([]);
+  const [vrlSourceCityId, setVrlSourceCityId] = useState("");
+  const [vrlDestinationCityId, setVrlDestinationCityId] = useState("");
 
   //dates
   const date = new Date();
@@ -108,22 +114,43 @@ const BusBooking = () => {
     setFromLocation(sourceCity);
     setToLocation(destinationCity);
     setSelectedDate(doj);
-    setLoading(true);
     setNoOfBuses(0);
 
-    // let boardingPoints = [];
-    // let droppingPoints = [];
-    // if (sourceCity.trim().toLowerCase() in cityMapping) {
-    //   const mapping = cityMapping[sourceCity.trim().toLowerCase()];
-    //   sourceCity = mapping.sourceCity;
-    //   boardingPoints = mapping.boardingPoints;
-    // }
-    // if (destinationCity.trim().toLowerCase() in cityMapping) {
-    //   const mapping = cityMapping[destinationCity.trim().toLowerCase()];
-    //   destinationCity = mapping.sourceCity;
-    //   droppingPoints = mapping.boardingPoints;
-    // }
+    let boardingPoints = [];
+    let droppingPoints = [];
+    if (sourceCity.trim().toLowerCase() in cityMapping) {
+      const mapping = cityMapping[sourceCity.trim().toLowerCase()];
+      sourceCity = mapping.sourceCity;
+      boardingPoints = mapping.boardingPoints;
+    }
+    if (destinationCity.trim().toLowerCase() in cityMapping) {
+      const mapping = cityMapping[destinationCity.trim().toLowerCase()];
+      destinationCity = mapping.sourceCity;
+      droppingPoints = mapping.boardingPoints;
+    }
+
     try {
+      setLoading(true);
+      const requestBody = {
+        sourceCity: sourceCity.trim(),
+        destinationCity: destinationCity.trim(),
+        doj: doj,
+      };
+      const vrlResponse = await getVrlBuses(requestBody);
+      setVrlBuses(vrlResponse.data);
+      setNoOfBuses(vrlResponse.data.length);
+      setVrlDestinationCityId(vrlResponse.destinationCity);
+      setVrlSourceCityId(vrlResponse.sourceCity);
+    } catch (error) {
+      setVrlBuses([]);
+      setNoVrlOfBuses(0);
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+
+    try {
+      setLoading(true);
       const response = await axiosInstance.post(
         `${import.meta.env.VITE_BASE_URL}/api/busBooking/getBusDetails`,
         {
@@ -332,8 +359,52 @@ const BusBooking = () => {
                 date={selectedDate}
                 onDateChange={handleDate}
               />
-              <ColumnNames noOfBuses={noOfBuses} />
+              <ColumnNames noOfBuses={noOfBuses + noOfVrlBuses} />
 
+
+              {vrlBuses?.map((bus) => (
+                <div className="bus-card-container" key={bus?.ReferenceNumber}>
+                  <BusBookingCard
+                    key={bus?.ReferenceNumber}
+                    ReferenceNumber={bus?.ReferenceNumber}
+                    // inventoryType={bus.inventoryType}
+                    sourceCity={fromLocation}
+                    sourceCityId={bus.FromCityId}
+                    destinationCity={toLocation}
+                    destinationCityId={bus.ToCityId}
+                    doj={selectedDate}
+                    title={"VRL Travels"}
+                    busName={"VRL Travels"}
+                    busType={bus?.BusTypeName}
+                    rating={(Math.random() * 1 + 4).toFixed(1)}
+                    noOfReviews={Math.floor(Math.random() * 101) + 37}
+                    pickUpLocation={bus?.FromCityName}
+                    pickUpTime={bus?.CityTime}
+                    reachLocation={bus?.ToCityName}
+                    reachTime={bus.ArrivalTime}
+
+                    // calucalte total time
+                    travelTime={"0min"}
+                    seatsLeft={bus?.EmptySeats}
+                    // avlWindowSeats={bus?.avlWindowSeats}
+                    price={"0"}
+                    // pickUpTimes={pickUpTimes}
+                    pickUpLocationOne={bus?.BoardingPoints}
+                    // pickUpLocationTwo={pickUpLocationTwo}
+                    // dropTimes={dropTimes}
+                    dropLocationOne={bus?.DroppingPoints}
+                    // dropLocationTwo={dropLocationTwo}
+                    backSeat={true}
+                    // cancellationPolicy={bus?.cancellationPolicy}
+                    fare={bus?.fares}
+                    isVrl={true}
+                  />
+                </div>
+              ))}
+
+
+
+              {/* seat seller buses */}
               {busDetails?.map((bus) => (
                 <div className="bus-card-container" key={bus?.id}>
                   <BusBookingCard

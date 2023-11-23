@@ -402,12 +402,15 @@ export const getVrlFilters = async (args) => {
       VrlCity.findOne({ CityName: args.sourceCity }),
       VrlCity.findOne({ CityName: args.destinationCity }),
     ]);
+
+    const dateParts = args.doj.split('-');
+    const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+
     const requestBody = {
       fromID: parseInt(vrlSourceCity.CityID),
       toID: parseInt(vrlDesctinationCity.CityID),
-      journeyDate: args.doj,
+      journeyDate: formattedDate,
     }
-
     let searchResponse = await sendVrlRequest("GetAvailableRoutes", requestBody);
     const filters = {
       boardingPoints: [],
@@ -461,12 +464,16 @@ export const getVrlBusDetails = async (searchArgs, filters) => {
       VrlCity.findOne({ CityName: searchArgs.sourceCity }),
       VrlCity.findOne({ CityName: searchArgs.destinationCity }),
     ]);
+
+    const dateParts = searchArgs.doj.split('-');
+    const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+
     const requestBody = {
       fromID: parseInt(vrlSourceCity.CityID),
       toID: parseInt(vrlDesctinationCity.CityID),
-      journeyDate: searchArgs.doj,
+      journeyDate: formattedDate.toString(),
     }
-
+    
     let searchResponse = await sendVrlRequest("GetAvailableRoutes", requestBody);
     searchResponse = searchResponse.data.AllRouteBusLists;
 
@@ -496,6 +503,8 @@ export const getVrlBusDetails = async (searchArgs, filters) => {
     return {
       status: 200,
       data: filteredBuses,
+      sourceCity: vrlSourceCity.CityID,
+      destinationCity: vrlDesctinationCity.CityID,
     };
   } catch (error) {
     throw error.message;

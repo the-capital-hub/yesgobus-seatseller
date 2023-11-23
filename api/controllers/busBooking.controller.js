@@ -507,7 +507,7 @@ export const getVrlBusDetailsController = async (req, res) => {
     const response = await getVrlBusDetails(searchArgs, filters);
     res.status(response.status).send(response);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return res.status(500).send({
       status: 500,
       message: "An error occurred while getting bus details with filters",
