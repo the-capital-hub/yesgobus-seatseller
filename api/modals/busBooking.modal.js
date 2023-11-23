@@ -72,6 +72,10 @@ const busBookingSchema = new Schema({
     default: false,
   },
   blockKey: String,
+  isVrl: {
+    type: String,
+    default: false
+  }
 },
   {
     timestamps: true,

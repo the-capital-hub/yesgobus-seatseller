@@ -18,8 +18,6 @@ import {
     updateBookingsController,
     getBookingByIdController,
     getAllBookingsController,
-
-
     getBusFiltersController,
     getBusDetailsController,
     searchCityController,
@@ -27,6 +25,10 @@ import {
     sendBookingConfirmationEmail,
     sendCancelTicketMessage,
     sendCancelTicketEmail,
+    //vrl buses
+    sendVrlRequestController,
+    getVrlFiltersController,
+    getVrlBusDetailsController,
 } from "../controllers/busBooking.controller.js";
 import { authenticateUser } from "../middleware/authenticateUser.js";
 
@@ -67,7 +69,7 @@ router.get("/searchCity/:searchParam", searchCityController);
 
 
 
-router.use(authenticateUser);
+// router.use(authenticateUser);
 
 //seatseller apis 
 
@@ -122,5 +124,14 @@ router.post("/sendBookingConfirmationMessage", sendBookingConfirmationMessage);
 router.post("/sendCancelTicketMessage", sendCancelTicketMessage);
 router.post("/sendBookingConfirmationEmail", sendBookingConfirmationEmail);
 router.post("/sendCancelTicketEmail", sendCancelTicketEmail);
+
+
+// VRL travels buses
+// https://itsplatform.itspl.net/swagger/index.html - documentation
+router.post("/sendVrlRequest/:url", sendVrlRequestController);
+
+router.post("/getVrlFilters", getVrlFiltersController);
+
+router.post("/getVrlBusDetails", getVrlBusDetailsController);
 
 export default router;
