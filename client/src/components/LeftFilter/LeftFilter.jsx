@@ -113,13 +113,13 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange }) => {
           name={"busPartners"}
           onFilterChange={handleFilterChange}
         />
-        <LeftFilterBox
+        {/* <LeftFilterBox
           title={"Bus Type"}
           points={filters.busType}
           count={[12, 16, 78]}
           name={"busTypes"}
           onFilterChange={handleFilterChange}
-        />
+        /> */}
         <div className="priceRange">
           <Typography gutterBottom>Price Range</Typography>
           <Slider

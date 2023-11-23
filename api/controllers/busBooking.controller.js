@@ -13,8 +13,6 @@ import {
   getTicket,
   checkBookedTicket,
   busCancellationInfo,
-
-
   getBusFilters,
   getBusDetails,
   bookBus,
@@ -22,6 +20,10 @@ import {
   updateBookings,
   getBookingById,
   getAllBookings,
+  //vrl buses
+  sendVrlRequest,
+  getVrlFilters,
+  getVrlBusDetails
 } from "../service/buBooking.service.js";
 import { sendMessage, sendMail } from "../utils/helper.js";
 
@@ -453,3 +455,62 @@ export const sendCancelTicketEmail = async (req, res) => {
     });
   }
 }
+
+
+//vrl travels buses
+export const sendVrlRequestController = async (req, res) => {
+  try {
+    const url = req.params.url;
+    const response = await sendVrlRequest(url, req.body);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "Internal Server Error",
+      error: error,
+    })
+  }
+};
+
+
+//vrl filters
+export const getVrlFiltersController = async (req, res) => {
+  try {
+    const response = await getVrlFilters(req.body);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "An error occurred while getting filters",
+      error: error,
+    })
+  }
+};
+
+
+export const getVrlBusDetailsController = async (req, res) => {
+  try {
+    const searchArgs = {
+      sourceCity: req.body.sourceCity,
+      destinationCity: req.body.destinationCity,
+      doj: req.body.doj
+    };
+    let filters = {};
+    if (req.body.boardingPoints !== null && req.body.boardingPoints?.length > 0) {
+      filters.boardingPoints = req.body.boardingPoints;
+    }
+    if (req.body.droppingPoints !== null && req.body.droppingPoints?.length > 0) {
+      filters.droppingPoints = req.body.droppingPoints;
+    }
+    const response = await getVrlBusDetails(searchArgs, filters);
+    res.status(response.status).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "An error occurred while getting bus details with filters",
+    });
+  }
+};

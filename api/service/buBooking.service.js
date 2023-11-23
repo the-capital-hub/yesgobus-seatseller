@@ -3,6 +3,7 @@ import OAuth from "oauth-1.0a";
 import crypto from 'crypto';
 import BusBooking from "../modals/busBooking.modal.js";
 import City from "../modals/cities.modal.js";
+import VrlCity from "../modals/vrlcities.modal.js";
 import Tickets from "../modals/ticket.modal.js";
 
 const sendRequest = async (url, method, data) => {
@@ -346,7 +347,7 @@ export const getBookingById = async (bookingId) => {
         status: 200,
         message: "Booking retrieved",
         data: ticket,
-        booking : booking,
+        booking: booking,
       };
     }
   } catch (error) {
@@ -369,6 +370,132 @@ export const getAllBookings = async (userId) => {
       status: 200,
       message: "Booking retrieved",
       data: booking,
+    };
+  } catch (error) {
+    throw error.message;
+  }
+};
+
+
+// vrl travels buses
+export const sendVrlRequest = async (url, data) => {
+  try {
+    data.verifyCall = process.env.VERIFY_CALL;
+    const response = await axios({
+      method: "POST",
+      url: `https://itsplatform.itspl.net/api/${url}`,
+      data: data,
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error.message;
+  }
+};
+
+
+
+// get vrl bus filters
+export const getVrlFilters = async (args) => {
+  try {
+    const [vrlSourceCity, vrlDesctinationCity] = await Promise.all([
+      VrlCity.findOne({ CityName: args.sourceCity }),
+      VrlCity.findOne({ CityName: args.destinationCity }),
+    ]);
+    const requestBody = {
+      fromID: parseInt(vrlSourceCity.CityID),
+      toID: parseInt(vrlDesctinationCity.CityID),
+      journeyDate: args.doj,
+    }
+
+    let searchResponse = await sendVrlRequest("GetAvailableRoutes", requestBody);
+    const filters = {
+      boardingPoints: [],
+      droppingPoints: [],
+    };
+
+    if (searchResponse && searchResponse.data && searchResponse.data.AllRouteBusLists) {
+      searchResponse.data.AllRouteBusLists.forEach(route => {
+        // Extract Boarding Points
+        if (route.BoardingPoints) {
+          const boardingPointsArray = route.BoardingPoints.split('|');
+          for (let i = 0; i < boardingPointsArray.length; i += 3) {
+            const boardingPoint = {
+              id: boardingPointsArray[i],
+              name: boardingPointsArray[i + 1],
+              time: boardingPointsArray[i + 2],
+            };
+            filters.boardingPoints.push(boardingPoint);
+          }
+        }
+
+        // Extract Dropping Points
+        if (route.DroppingPoints) {
+          const droppingPointsArray = route.DroppingPoints.split('|');
+          for (let i = 0; i < droppingPointsArray.length; i += 3) {
+            const droppingPoint = {
+              id: droppingPointsArray[i],
+              name: droppingPointsArray[i + 1],
+              time: droppingPointsArray[i + 2],
+            };
+            filters.droppingPoints.push(droppingPoint);
+          }
+        }
+      });
+    }
+    return {
+      status: 200,
+      data: filters,
+      sourceCity: vrlSourceCity.CityID,
+      destinationCity: vrlDesctinationCity.CityID,
+    };
+  } catch (error) {
+    throw error.message;
+  }
+};
+
+
+export const getVrlBusDetails = async (searchArgs, filters) => {
+  try {
+    const [vrlSourceCity, vrlDesctinationCity] = await Promise.all([
+      VrlCity.findOne({ CityName: searchArgs.sourceCity }),
+      VrlCity.findOne({ CityName: searchArgs.destinationCity }),
+    ]);
+    const requestBody = {
+      fromID: parseInt(vrlSourceCity.CityID),
+      toID: parseInt(vrlDesctinationCity.CityID),
+      journeyDate: searchArgs.doj,
+    }
+
+    let searchResponse = await sendVrlRequest("GetAvailableRoutes", requestBody);
+    searchResponse = searchResponse.data.AllRouteBusLists;
+
+    if (!hasFilters(filters)) {
+      return {
+        status: 200,
+        data: searchResponse,
+      };
+    }
+
+    const filteredBuses = searchResponse.filter(route => {
+      const hasMatchingBoardingPoint = filters.boardingPoint ? route.BoardingPoints?.split(',').some(point => {
+        const location = point.split('|')[1];
+        return filters.boardingPoints?.some(filterPoint => { filterPoint === location });
+      })
+        : true;
+
+      const hasMatchingDroppingPoint = filters.droppingPoints ? route.DroppingPoints?.split('|').some(point => {
+        const pointId = point.split(',')[0];
+        return filters.droppingPoints?.some(filterPoint => filterPoint.id === pointId);
+      })
+        : true;
+
+      return hasMatchingBoardingPoint && hasMatchingDroppingPoint;
+    });
+
+    return {
+      status: 200,
+      data: filteredBuses,
     };
   } catch (error) {
     throw error.message;
