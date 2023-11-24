@@ -65,28 +65,30 @@ const BusBookingCard = ({
     }
     setSeatLoading(true);
     let seatData = [];
-    // const requestBody = {
-    //   sourceCity: sourceCity,
-    //   destinationCity: destinationCity,
-    //   doj: doj,
-    //   inventoryType: inventoryType,
-    //   routeScheduleId: routeScheduleId,
-    // }
     try {
+      if (isVrl) {
+        const seatsResponse = await getVrlSeatLayout({
+          referenceNumber: ReferenceNumber,
+        });
+        let seatData = seatsResponse.data?.ITSSeatDetails;
+        seatData = seatData?.filter(seat => !seat.SeatNo.startsWith('T'));
+        const availableSeats = seatData?.filter(seat => seat.Available === "Y");
+        setSeatDetails(seatData);
+        setAvailableSeats(availableSeats.length);
+        setSeatLoading(false);
+        setShowSeats(!showSeats);
+      } else {
+        const response = await axiosInstance.get(
+          `${import.meta.env.VITE_BASE_URL}/api/busBooking/getSeatLayout/${tripId}`,
+        );
+        seatData = response.data?.seats;
+        const availableSeats = seatData?.filter(seat => seat.available === "true");
+        setAvailableSeats(availableSeats?.length);
+        setSeatDetails(seatData);
+        setSeatLoading(false);
+        setShowSeats(!showSeats);
+      }
 
-      const response = await axiosInstance.get(
-        `${import.meta.env.VITE_BASE_URL}/api/busBooking/getSeatLayout/${tripId}`,
-      );
-
-      // check if tripdetails is array?
-      seatData = response.data?.seats;
-      // check if seat.available is boolean or string
-      const availableSeats = seatData?.filter(seat => seat.available === "true");
-
-      setAvailableSeats(availableSeats?.length);
-      setSeatDetails(seatData);
-      setSeatLoading(false);
-      setShowSeats(!showSeats);
     } catch (error) {
       if (error.response) {
         toast.error(`Server Error: ${error.response.status}`, {
@@ -127,24 +129,41 @@ const BusBookingCard = ({
 
   const [vrlSeatLayout, setVrlSeatLayout] = useState([]);
   const [vrlPrices, setVrlPrices] = useState([0]);
+  const [fetchVrlSeat, setFetchVrlSeat] = useState(false);
+  const [vrlPickupLocations, setVrlPickupLocations] = useState(false);
+  const [vrlDropLocations, setVrlDropLocations] = useState(false);
 
-  const getVrlSeats = async () => {
+  useEffect(() => {
+    if (isVrl) {
+      getVrlSeatsPrices();
+      const boardingPointlocationsAndTimes = pickUpLocationOne.split("#").map(entry => {
+        const [bpId, bpName, time] = entry.split("|");
+        return { bpId, bpName, time };
+      });
+      const droppingPointlocationsAndTimes = dropLocationOne.split("#").map(entry => {
+        const [bpId, bpName, time] = entry.split("|");
+        return { bpId, bpName, time };
+      });
+      setVrlPickupLocations(boardingPointlocationsAndTimes);
+      setVrlDropLocations(droppingPointlocationsAndTimes);
+    }
+  }, [])
+
+  const getVrlSeatsPrices = async () => {
     const seatsResponse = await getVrlSeatLayout({
       referenceNumber: ReferenceNumber,
     });
-    setVrlSeatLayout(seatsResponse.data.ITSSeatDetails);
+    let seatData = seatsResponse.data?.ITSSeatDetails;
+    seatData = seatData?.filter(seat => !seat.SeatNo.startsWith('T'));
+    const availableSeats = seatData?.filter(seat => seat.Available === "Y");
+    // setAvailableSeats(availableSeats.length);
     const uniqueBaseFaresSet = new Set();
-    seatsResponse.data.ITSSeatDetails.forEach(seatDetail => {
+    seatData.forEach(seatDetail => {
       uniqueBaseFaresSet.add(seatDetail.BaseFare);
     });
     const uniqueBaseFares = Array.from(uniqueBaseFaresSet);
     setVrlPrices(uniqueBaseFares);
   }
-  useEffect(() => {
-    if (isVrl) {
-      getVrlSeats();
-    }
-  }, [])
 
   return (
     <div className={`BusBookingCard ${showSeats && "bg-lightgrey"}`}>
@@ -239,10 +258,10 @@ const BusBookingCard = ({
           destinationCityId={destinationCityId}
           doj={doj}
           // pickUpTimes={pickUpTimes}
-          pickUpLocationOne={Array.isArray(pickUpLocationOne) ? pickUpLocationOne : [pickUpLocationOne]}
+          pickUpLocationOne={isVrl ? vrlPickupLocations : Array.isArray(pickUpLocationOne) ? pickUpLocationOne : [pickUpLocationOne]}
           // pickUpLocationTwo={pickUpLocationTwo}
           // dropTimes={dropTimes}
-          dropLocationOne={Array.isArray(dropLocationOne) ? dropLocationOne : [dropLocationOne]}
+          dropLocationOne={isVrl ? vrlDropLocations : Array.isArray(dropLocationOne) ? dropLocationOne : [dropLocationOne]}
           // dropLocationTwo={dropLocationTwo}
           backSeat={backSeat}
           busName={busName}
@@ -250,7 +269,8 @@ const BusBookingCard = ({
           price={price}
           seatDetails={seatDetails}
           cancellationPolicy={cancellationPolicy}
-          fare={fare}
+          fare={isVrl ? vrlPrices : fare}
+          isVrl={isVrl}
         />
       )}
       <Toaster />

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import axiosInstance from "../../utils/service";
 import { cityMapping } from "../../utils/cityMapping";
 import { map } from "../../assets/homepage";
+import { getVrlBusFilters } from "../../api/vrlBusesApis";
 
 const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange }) => {
   const [range, setRange] = useState([100, 3000]);
@@ -29,20 +30,11 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange }) => {
 
   useEffect(() => {
     const getFilters = async () => {
-
-      // if (sourceCity.trim().toLowerCase() in cityMapping) {
-      //   const mapping = cityMapping[sourceCity.trim().toLowerCase()];
-      //   sourceCity = mapping.sourceCity;
-      //   setSelectedBoardingPoints(mapping.boardingPoints);
-      // }
-      // if (destinationCity.trim().toLowerCase() in cityMapping) {
-      //   const mapping = cityMapping[destinationCity.trim().toLowerCase()];
-      //   destinationCity = mapping.sourceCity;
-      //   setSelectedDroppingPoints(mapping.boardingPoints);
-      // }
+      let response = {};
+      let vrlResponse = {};
 
       try {
-        const response = await axiosInstance.get(
+        response = await axiosInstance.get(
           `${import.meta.env.VITE_BASE_URL}/api/busBooking/getFilters`,
           {
             params: {
@@ -52,11 +44,54 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange }) => {
             },
           }
         );
-        setFilters(response?.data?.data);
       } catch (error) {
         console.error("Error fetching filters:", error);
       }
+
+      try {
+        vrlResponse = await getVrlBusFilters({
+          sourceCity: sourceCity,
+          destinationCity: destinationCity,
+          doj: doj,
+        });
+      } catch (error) {
+        console.error("Error fetching filters:", error);
+      }
+
+      // Ensure that the values are arrays before spreading
+      const combinedBoardingPoints = [
+        ...(vrlResponse?.data?.boardingPoints || []),
+        ...(response?.data?.data?.boardingPoints || []),
+      ].filter(point => point !== null);
+
+      const combinedDroppingPoints = [
+        ...(vrlResponse?.data?.droppingPoints || []),
+        ...(response?.data?.data?.droppingPoints || []),
+      ].filter(point => point !== null);
+
+      const combiledBusPartners = [
+        ...(response?.data?.data?.busPartners || []),
+      ].filter(point => point !== null);
+
+      if(vrlResponse?.data) {
+        combiledBusPartners.push("VRL Travels")
+      }
+
+      // Create Set objects to remove duplicates
+      const uniqueBoardingPointsSet = new Set(combinedBoardingPoints);
+      const uniqueDroppingPointsSet = new Set(combinedDroppingPoints);
+
+      // Convert Set objects to arrays
+      const uniqueBoardingPoints = [...uniqueBoardingPointsSet];
+      const uniqueDroppingPoints = [...uniqueDroppingPointsSet];
+      setFilters({
+        ...response?.data?.data || [],
+        boardingPoints: uniqueBoardingPoints,
+        droppingPoints: uniqueDroppingPoints,
+        busPartners: combiledBusPartners,
+      });
     };
+
     getFilters();
   }, [sourceCity, destinationCity, doj]);
 

@@ -45,6 +45,7 @@ const Seats = ({
   seatDetails,
   cancellationPolicy,
   fare,
+  isVrl
 }) => {
   //* states
   const navigate = useNavigate();
@@ -106,7 +107,6 @@ const Seats = ({
     // isSleeper
   ) => {
 
-    console.log(serviceTax);
 
     return setBookingDetails((prev) => {
       let newSelected = [...prev.selectedSeats];
@@ -153,7 +153,7 @@ const Seats = ({
       return {
         ...prev,
         selectedSeats: newSelected,
-        fare: newFare, 
+        fare: newFare,
         serviceTax: newTax,
         operatorTax: newOperatorTax,
         totalFare: newTotalFare,
@@ -167,137 +167,303 @@ const Seats = ({
   };
 
 
-  const lowerTierSeats = seatDetails.filter((seat) => seat.zIndex === "0");
-  const upperTierSeats = seatDetails.filter((seat) => seat.zIndex === "1");
+  const lowerTierSeats = isVrl ?
+    seatDetails.filter((seat) => seat.UpLowBerth === "LB") :
+    seatDetails.filter((seat) => seat.zIndex === "0");
+  const upperTierSeats = isVrl ?
+    seatDetails.filter((seat) => seat.UpLowBerth === "UB") :
+    seatDetails.filter((seat) => seat.zIndex === "1");
 
   const renderSeatTable = (seats, selectedSeats) => {
-    const filteredSeats = selectedPriceFilter
-      ? seats.filter(seat => seat.baseFare === selectedPriceFilter)
-      : seats;
+    if (isVrl) {
+      const filteredSeats = seats;
+      const highlightedPrice = selectedPriceFilter;
 
-    const numRows = Math.max(...filteredSeats?.map((seat) => parseInt(seat.row, 10))) + 1;
-    const numCols = Math.max(...filteredSeats?.map((seat) => parseInt(seat.column, 10))) + 1;
+      const numRows = Math.max(...filteredSeats?.map((seat) => parseInt(seat.Column, 10))) + 1;
+      const numCols = Math.max(...filteredSeats?.map((seat) => parseInt(seat.Row, 10))) + 1;
+      const minRow = Math.min(...filteredSeats?.map((seat) => parseInt(seat.Column, 10)));
 
-    const seatTable = [];
+      const seatTable = [];
 
-    for (let row = 0; row < numRows; row++) {
-      const seatRow = [];
+      for (let row = minRow; row < numRows; row++) {
+        const seatRow = [];
 
-      for (let col = 0; col < numCols; col++) {
-        const seat = filteredSeats.find((s) => parseInt(s.row, 10) === row && parseInt(s.column, 10) === col);
+        for (let col = 0; col < numCols; col++) {
+          const seat = filteredSeats.find((s) => parseInt(s.Column, 10) === row && parseInt(s.Row, 10) === col);
 
-        if (seat) {
-          if (seat.available === "true") {
-            if (selectedSeats.includes(seat.name)) {
-              seatRow.push(
-                <td key={seat.name}>
-                  <img
-                    onClick={() =>
-                      seatSelectionHandler(
-                        seat.name,
-                        seat.baseFare,
-                        seat.serviceTaxAbsolute,
-                        seat.operatorServiceChargeAbsolute,
-                        seat.fare,
-                        seat.ladiesSeat,
-                        // seat.ac,
-                        // seat.sleeper
-                      )
-                    }
-                    title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
-                    src={(seat.width !== "2" && seat.length !== "2") ? singleselected : selectedFill}
-                    alt="selected seat"
-                    className={(seat.width == "2") ? "vertical" : ""}
-                  />
-                </td>
-              );
-            } else {
-              if (seat.ladiesSeat === "true") {
+          if (seat) {
+            const isHighlighted = seat.BaseFare === highlightedPrice;
+            if (seat.Available === "Y") {
+              if (selectedSeats.includes(seat.SeatNo)) {
                 seatRow.push(
-                  <td key={seat.name}>
-                    <img
-                      onClick={() =>
-                        seatSelectionHandler(
-                          seat.name,
-                          seat.baseFare,
-                          seat.serviceTaxAbsolute,
-                          seat.operatorServiceChargeAbsolute,
-                          seat.fare,
-                          seat.ladiesSeat,
-                          // seat.ac,
-                          // seat.sleeper
-                        )
-                      }
-                      title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
-                      src={(seat.width !== "2" && seat.length !== "2") ? singleladiesavailable : ladiesavailable}
-                      alt="available ladies"
-                      className={(seat.width == "2") ? "vertical" : ""}
-                    />
+                  <td key={seat.SeatNo}>
+                    <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
+                      <img
+                        onClick={() =>
+                          seatSelectionHandler(
+                            seat.SeatNo,
+                            seat.BaseFare,
+                            seat.ServiceTax,
+                            0,
+                            seat.SeatRate,
+                            seat.IsLadiesSeat,
+                            // seat.ac,
+                            // seat.sleeper
+                          )
+                        }
+                        title={`ID: ${seat.SeatNo}\nFare: ₹${seat.BaseFare}`}
+                        src={seat.SeatType === 0 || seat.SeatType == 2 ? singleselected : selectedFill}
+                        alt="selected seat"
+                        className={(seat.ColumnSpan == "2") ? "vertical" : ""}
+                      />
+                    </div>
+                  </td>
+                );
+              } else {
+                if (seat.IsLadiesSeat === "Y") {
+                  seatRow.push(
+                    <td key={seat.SeatNo}>
+                      <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
+                        <img
+                          onClick={() =>
+                            seatSelectionHandler(
+                              seat.SeatNo,
+                              seat.BaseFare,
+                              seat.ServiceTax,
+                              0,
+                              seat.SeatRate,
+                              seat.IsLadiesSeat,
+                              // seat.ac,
+                              // seat.sleeper
+                            )
+                          }
+                          title={`ID: ${seat.SeatNo}\nFare: ₹${seat.BaseFare}`}
+                          src={seat.SeatType === 0 || seat.SeatType == 2 ? singleladiesavailable : ladiesavailable}
+                          alt="available ladies"
+                          className={(seat.ColumnSpan == "2") ? "vertical" : ""}
+                        />
+                      </div>
+                    </td>
+                  );
+                } else {
+                  seatRow.push(
+                    <td key={seat.SeatNo}>
+                      <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
+                        <img
+                          onClick={() =>
+                            seatSelectionHandler(
+                              seat.SeatNo,
+                              seat.BaseFare,
+                              seat.ServiceTax,
+                              0,
+                              seat.SeatRate,
+                              seat.IsLadiesSeat,
+                              // seat.ac,
+                              // seat.sleeper
+                            )
+                          }
+                          title={`ID: ${seat.SeatNo}\nFare: ₹${seat.BaseFare}`}
+                          src={seat.SeatType === 0 || seat.SeatType == 2 ? singleavailable : available}
+                          alt="available"
+                          className={(seat.ColumnSpan == "2") ? "vertical" : ""}
+                        />
+                      </div>
+                    </td>
+                  );
+                }
+              }
+            } else {
+              if (seat.ladiesSeat === "N") {
+                seatRow.push(
+                  <td key={seat.SeatNo}>
+                    <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
+
+                      <img
+                        title={`ID: ${seat.SeatNo}\nFare: ₹${seat.BaseFare}`}
+                        src={seat.SeatType === 0 || seat.SeatType == 2 ? singleladiesbooked : ladiesbooked}
+                        alt="ladiesbooked"
+                        className={(seat.ColumnSpan == "2") ? "vertical" : ""}
+                      />
+                    </div>
                   </td>
                 );
               } else {
                 seatRow.push(
-                  <td key={seat.name}>
-                    <img
-                      onClick={() =>
-                        seatSelectionHandler(
-                          seat.name,
-                          seat.baseFare,
-                          seat.serviceTaxAbsolute,
-                          seat.operatorServiceChargeAbsolute,
-                          seat.fare,
-                          seat.ladiesSeat,
-                          // seat.ac,
-                          // seat.sleeper
-                        )
-                      }
-                      title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
-                      src={(seat.width !== "2" && seat.length !== "2") ? singleavailable : available}
-                      alt="available"
-                      className={(seat.width == "2") ? "vertical" : ""}
-                    />
+                  <td key={seat.SeatNo}>
+                    <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
+
+
+                      <img
+                        title={`ID: ${seat.SeatNo}\nFare: ₹${seat.BaseFare}`}
+                        src={seat.SeatType === 0 || seat.SeatType == 2 ? singlebooked : booked}
+                        alt="booked"
+                        className={(seat.ColumnSpan == "2") ? "vertical" : ""}
+                      />
+                    </div>
                   </td>
                 );
               }
             }
           } else {
-            if (seat.ladiesSeat === "true") {
-              seatRow.push(
-                <td key={seat.name}>
-                  <img
-                    title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
-                    src={(seat.width !== "2" && seat.length !== "2") ? singleladiesbooked : ladiesbooked}
-                    alt="ladiesbooked"
-                    className={(seat.width == "2") ? "vertical" : ""}
-                  />
-                </td>
-              );
-            } else {
-              seatRow.push(
-                <td key={seat.name}>
-                  <img
-                    title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
-                    src={(seat.width !== "2" && seat.length !== "2") ? singlebooked : booked}
-                    alt="booked"
-                    className={(seat.width == "2") ? "vertical" : ""}
-                  />
-                </td>
-              );
-            }
+            seatRow.push(<td key={`empty-${row}-${col}`}></td>);
           }
-        } else {
-          seatRow.push(<td key={`empty-${row}-${col}`}></td>);
         }
+
+        seatTable.push(<tr key={`row-${row}`}>{seatRow}</tr>);
+        // seatTable.push()
       }
 
-      seatTable.push(<tr key={`row-${row}`}>{seatRow}</tr>);
+      return (
+        <table>
+          <tbody>{seatTable}</tbody>
+        </table>
+      );
+    } else {
+      const filteredSeats = seats;
+      const highlightedPrice = selectedPriceFilter;
+
+      const numRows = Math.max(...filteredSeats?.map((seat) => parseInt(seat.row, 10))) + 1;
+      const numCols = Math.max(...filteredSeats?.map((seat) => parseInt(seat.column, 10))) + 1;
+
+      const seatTable = [];
+
+      for (let row = 0; row < numRows; row++) {
+        const seatRow = [];
+
+        for (let col = 0; col < numCols; col++) {
+          const seat = filteredSeats.find((s) => parseInt(s.row, 10) === row && parseInt(s.column, 10) === col);
+
+          if (seat) {
+            const isHighlighted = seat.BaseFare === highlightedPrice;
+            if (seat.available === "true") {
+              if (selectedSeats.includes(seat.name)) {
+                seatRow.push(
+                  <td key={seat.name}>
+                    <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
+
+                      <img
+                        onClick={() =>
+                          seatSelectionHandler(
+                            seat.name,
+                            seat.baseFare,
+                            seat.serviceTaxAbsolute,
+                            seat.operatorServiceChargeAbsolute,
+                            seat.fare,
+                            seat.ladiesSeat,
+                            // seat.ac,
+                            // seat.sleeper
+                          )
+                        }
+                        title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
+                        src={(seat.width !== "2" && seat.length !== "2") ? singleselected : selectedFill}
+                        alt="selected seat"
+                        className={(seat.width == "2") ? "vertical" : ""}
+                      />
+                    </div>
+                  </td>
+                );
+              } else {
+                if (seat.ladiesSeat === "true") {
+                  seatRow.push(
+                    <td key={seat.name}>
+                      <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
+
+                        <img
+                          onClick={() =>
+                            seatSelectionHandler(
+                              seat.name,
+                              seat.baseFare,
+                              seat.serviceTaxAbsolute,
+                              seat.operatorServiceChargeAbsolute,
+                              seat.fare,
+                              seat.ladiesSeat,
+                              // seat.ac,
+                              // seat.sleeper
+                            )
+                          }
+                          title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
+                          src={(seat.width !== "2" && seat.length !== "2") ? singleladiesavailable : ladiesavailable}
+                          alt="available ladies"
+                          className={(seat.width == "2") ? "vertical" : ""}
+                        />
+                      </div>
+                    </td>
+                  );
+                } else {
+                  seatRow.push(
+                    <td key={seat.name}>
+                      <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
+
+                        <img
+                          onClick={() =>
+                            seatSelectionHandler(
+                              seat.name,
+                              seat.baseFare,
+                              seat.serviceTaxAbsolute,
+                              seat.operatorServiceChargeAbsolute,
+                              seat.fare,
+                              seat.ladiesSeat,
+                              // seat.ac,
+                              // seat.sleeper
+                            )
+                          }
+                          title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
+                          src={(seat.width !== "2" && seat.length !== "2") ? singleavailable : available}
+                          alt="available"
+                          className={(seat.width == "2") ? "vertical" : ""}
+                        />
+                      </div>
+                    </td>
+                  );
+                }
+              }
+            } else {
+              if (seat.ladiesSeat === "true") {
+                seatRow.push(
+                  <td key={seat.name}>
+                    <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
+
+                      <img
+                        title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
+                        src={(seat.width !== "2" && seat.length !== "2") ? singleladiesbooked : ladiesbooked}
+                        alt="ladiesbooked"
+                        className={(seat.width == "2") ? "vertical" : ""}
+                      />
+                    </div>
+                  </td>
+
+                );
+              } else {
+                seatRow.push(
+                  <td key={seat.name}>
+                    <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
+
+                      <img
+                        title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
+                        src={(seat.width !== "2" && seat.length !== "2") ? singlebooked : booked}
+                        alt="booked"
+                        className={(seat.width == "2") ? "vertical" : ""}
+                      />
+                    </div>
+                  </td>
+                );
+              }
+            }
+          } else {
+            seatRow.push(<td key={`empty-${row}-${col}`}></td>);
+          }
+        }
+
+        seatTable.push(<tr key={`row-${row}`}>{seatRow}</tr>);
+      }
+
+      return (
+        <table>
+          <tbody>{seatTable}</tbody>
+        </table>
+      );
     }
 
-    return (
-      <table>
-        <tbody>{seatTable}</tbody>
-      </table>
-    );
   };
 
   // useEffect(() => {
@@ -346,6 +512,7 @@ const Seats = ({
           busName,
           bookingDetails,
           cancellationPolicy,
+          isVrl
         },
       });
     } else {
@@ -363,7 +530,7 @@ const Seats = ({
             {pickUpLocationOne?.map((boardingPoint, index) => (
               <PickUpAndDropPoints
                 key={boardingPoint.bpId}
-                time={convertMinutesToTime(boardingPoint.time)}
+                time={isVrl ? boardingPoint.time : convertMinutesToTime(boardingPoint.time)}
                 locationOne={boardingPoint.bpName}
                 locationTwo={boardingPoint.address}
                 highlight={bookingDetails.boardingPoint.bpId === boardingPoint.bpId}
@@ -384,7 +551,7 @@ const Seats = ({
               <PickUpAndDropPoints
                 highlight={bookingDetails.droppingPoint.bpId === droppingPoint.bpId}
                 key={droppingPoint.bpId}
-                time={convertMinutesToTime(droppingPoint.time)}
+                time={isVrl ? droppingPoint.time : convertMinutesToTime(droppingPoint.time)}
                 locationOne={droppingPoint.bpName}
                 locationTwo={droppingPoint.address}
                 onClick={() =>
