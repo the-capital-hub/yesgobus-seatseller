@@ -77,6 +77,7 @@ const Payment = () => {
     busName,
     bookingDetails,
     cancellationPolicy,
+    isVrl
   } = location.state || {};
   const [executed, setExecuted] = useState(false);
   const urlSearchParams = new URLSearchParams(window.location.search);
@@ -477,13 +478,13 @@ const Payment = () => {
           <div className="destinations">
             <SimpleCard
               text={"Boarding Pass Details"}
-              date={convertMinutesToTime(bookingDetails?.boardingPoint?.time)}
+              date={isVrl ? bookingDetails?.boardingPoint?.time : convertMinutesToTime(bookingDetails?.boardingPoint?.time)}
               // locationOne={bookingDetails.boardingPoint.location}
               locationTwo={bookingDetails?.boardingPoint?.bpName}
             />
             <SimpleCard
               text={"Drop Point Details"}
-              date={convertMinutesToTime(bookingDetails?.droppingPoint?.time)}
+              date={isVrl ? bookingDetails?.droppingPoint?.time : convertMinutesToTime(bookingDetails?.droppingPoint?.time)}
               // locationOne={bookingDetails.droppingPoint.location}
               locationTwo={bookingDetails?.droppingPoint?.bpName}
             />

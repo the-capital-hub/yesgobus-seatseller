@@ -76,6 +76,9 @@
         color: white;
         background: rgba(253, 89, 1, 0.59);
       }
+
+
+
     }
 
     .birthSelector {
@@ -310,4 +313,13 @@
       }
     }
   }
+}
+
+.seat_____container {
+  position: relative;
+  display: inline-block;
+}
+
+.highlighted_____seat {
+  box-shadow: 0 0 10px orange;
 }

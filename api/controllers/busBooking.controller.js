@@ -504,6 +504,9 @@ export const getVrlBusDetailsController = async (req, res) => {
     if (req.body.droppingPoints !== null && req.body.droppingPoints?.length > 0) {
       filters.droppingPoints = req.body.droppingPoints;
     }
+    if (req.body.busPartners !== null && req.body.busPartners?.length > 0) {
+      filters.busPartners = req.body.busPartners;
+    }
     const response = await getVrlBusDetails(searchArgs, filters);
     res.status(response.status).send(response);
   } catch (error) {
