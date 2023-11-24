@@ -156,7 +156,7 @@ const BusBookingCard = ({
     let seatData = seatsResponse.data?.ITSSeatDetails;
     seatData = seatData?.filter(seat => !seat.SeatNo.startsWith('T'));
     const availableSeats = seatData?.filter(seat => seat.Available === "Y");
-    // setAvailableSeats(availableSeats.length);
+    setAvailableSeats(availableSeats.length);
     const uniqueBaseFaresSet = new Set();
     seatData.forEach(seatDetail => {
       uniqueBaseFaresSet.add(seatDetail.BaseFare);
