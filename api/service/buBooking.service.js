@@ -144,14 +144,14 @@ export const getBusFilters = async (args) => {
           ? bus.droppingTimes
           : [bus.droppingTimes]
 
-        if (bus.boardingTimes && bus.boardingTimes.length > 0) {
+        if (bus.boardingTimes && bus.boardingTimes?.length > 0) {
 
-          bus.boardingTimes.forEach((point) => {
+          bus.boardingTimes?.forEach((point) => {
             filters.boardingPoints.push(point.bpName);
           });
         }
-        if (bus.droppingTimes && bus.droppingTimes.length > 0) {
-          bus.droppingTimes.forEach((point) => {
+        if (bus.droppingTimes && bus.droppingTimes?.length > 0) {
+          bus.droppingTimes?.forEach((point) => {
             filters.droppingPoints.push(point.bpName);
           });
         }
@@ -187,6 +187,7 @@ function hasFilters(filters) {
 
 export const getBusDetails = async (searchArgs, filters) => {
   try {
+    // if(filters.busPartners )
     const [sourceCity, destinationCity] = await Promise.all([
       City.findOne({ name: searchArgs.sourceCity }),
       City.findOne({ name: searchArgs.destinationCity }),
@@ -416,32 +417,23 @@ export const getVrlFilters = async (args) => {
       boardingPoints: [],
       droppingPoints: [],
     };
-
     if (searchResponse && searchResponse.data && searchResponse.data.AllRouteBusLists) {
       searchResponse.data.AllRouteBusLists.forEach(route => {
         // Extract Boarding Points
         if (route.BoardingPoints) {
-          const boardingPointsArray = route.BoardingPoints.split('|');
-          for (let i = 0; i < boardingPointsArray.length; i += 3) {
-            const boardingPoint = {
-              id: boardingPointsArray[i],
-              name: boardingPointsArray[i + 1],
-              time: boardingPointsArray[i + 2],
-            };
-            filters.boardingPoints.push(boardingPoint);
+          const boardingPointsArray = route.BoardingPoints.split('#');
+          for (let i = 0; i < boardingPointsArray.length; i++) {
+            const bdPoints = boardingPointsArray[i].split('|')[1];
+            filters.boardingPoints.push(bdPoints);
           }
         }
 
         // Extract Dropping Points
         if (route.DroppingPoints) {
-          const droppingPointsArray = route.DroppingPoints.split('|');
-          for (let i = 0; i < droppingPointsArray.length; i += 3) {
-            const droppingPoint = {
-              id: droppingPointsArray[i],
-              name: droppingPointsArray[i + 1],
-              time: droppingPointsArray[i + 2],
-            };
-            filters.droppingPoints.push(droppingPoint);
+          const droppingPointsArray = route.DroppingPoints.split('#');
+          for (let i = 0; i < droppingPointsArray.length; i++) {
+            const bdPoints = droppingPointsArray[i].split('|')[1];
+            filters.droppingPoints.push(bdPoints);
           }
         }
       });
@@ -460,6 +452,13 @@ export const getVrlFilters = async (args) => {
 
 export const getVrlBusDetails = async (searchArgs, filters) => {
   try {
+    if (filters.busPartners && filters.busPartners.every(partner => partner.trim() !== "VRL Travels")) {
+      return {
+        status: 200,
+        data: [],
+      };
+    }
+
     const [vrlSourceCity, vrlDesctinationCity] = await Promise.all([
       VrlCity.findOne({ CityName: searchArgs.sourceCity }),
       VrlCity.findOne({ CityName: searchArgs.destinationCity }),
@@ -473,7 +472,7 @@ export const getVrlBusDetails = async (searchArgs, filters) => {
       toID: parseInt(vrlDesctinationCity.CityID),
       journeyDate: formattedDate.toString(),
     }
-    
+
     let searchResponse = await sendVrlRequest("GetAvailableRoutes", requestBody);
     searchResponse = searchResponse.data.AllRouteBusLists;
 
@@ -485,18 +484,18 @@ export const getVrlBusDetails = async (searchArgs, filters) => {
     }
 
     const filteredBuses = searchResponse.filter(route => {
-      const hasMatchingBoardingPoint = filters.boardingPoint ? route.BoardingPoints?.split(',').some(point => {
+      
+      const hasMatchingBoardingPoint = filters.boardingPoints ? route.BoardingPoints?.split('#').some(point => {
         const location = point.split('|')[1];
-        return filters.boardingPoints?.some(filterPoint => { filterPoint === location });
+        return filters.boardingPoints?.some(filterPoint => filterPoint.trim() === location.trim());
       })
         : true;
 
-      const hasMatchingDroppingPoint = filters.droppingPoints ? route.DroppingPoints?.split('|').some(point => {
-        const pointId = point.split(',')[0];
-        return filters.droppingPoints?.some(filterPoint => filterPoint.id === pointId);
+      const hasMatchingDroppingPoint = filters.droppingPoints ? route.DroppingPoints?.split('#').some(point => {
+        const location = point.split('|')[1];
+        return filters.droppingPoints?.some(filterPoint => filterPoint === location);
       })
         : true;
-
       return hasMatchingBoardingPoint && hasMatchingDroppingPoint;
     });
 

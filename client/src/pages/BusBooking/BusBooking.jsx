@@ -136,6 +136,7 @@ const BusBooking = () => {
         sourceCity: sourceCity.trim(),
         destinationCity: destinationCity.trim(),
         doj: doj,
+        ...filters,
       };
       const vrlResponse = await getVrlBuses(requestBody);
       setVrlBuses(vrlResponse.data);
@@ -225,13 +226,13 @@ const BusBooking = () => {
   };
 
 
-  // const formatTravelTime = (durationInMins) => {
-  //   const hours = Math.floor(durationInMins / 60);
-  //   const minutes = durationInMins % 60;
-  //   const formattedHours = hours > 0 ? `${hours}hr` : "";
-  //   const formattedMinutes = minutes > 0 ? ` ${minutes}min` : "";
-  //   return `${formattedHours}${formattedMinutes}`;
-  // };
+  const formatTravelTime = (durationInMins) => {
+    const hours = Math.floor(durationInMins / 60);
+    const minutes = durationInMins % 60;
+    const formattedHours = hours > 0 ? `${hours}hr` : "";
+    const formattedMinutes = minutes > 0 ? ` ${minutes}min` : "";
+    return `${formattedHours}${formattedMinutes}`;
+  };
 
   const handleFilter = (filters) => {
     handleSearch(fromLocation, toLocation, selectedDate, filters);
@@ -264,6 +265,23 @@ const BusBooking = () => {
     const totalTimeTaken = travelHours + "hr " + travelMinutes + "min";
     return totalTimeTaken;
   }
+
+  function calculateVrlTravelTime(pickupTime, arrivalTime) {
+    const currentDate = new Date();
+
+    const [hours, minutes, seconds] = pickupTime.split(':');
+    currentDate.setHours(hours);
+    currentDate.setMinutes(minutes);
+    currentDate.setSeconds(seconds || 0);
+
+    const arrivalDateTime = new Date(arrivalTime.replace(/(\d+)-(\d+)-(\d+) (\d+):(\d+) ([APMapm]{2})/, '$2/$1/$3 $4:$5 $6'));
+    console.log(arrivalDateTime);
+    const timeDifference = arrivalDateTime - currentDate;
+
+    const travelTimeInMinutes = timeDifference / (1000 * 60);
+    return formatTravelTime(parseInt(travelTimeInMinutes));
+  }
+
 
   return (
     <div className="busBooking">
@@ -382,10 +400,10 @@ const BusBooking = () => {
                     pickUpLocation={bus?.FromCityName}
                     pickUpTime={bus?.CityTime}
                     reachLocation={bus?.ToCityName}
-                    reachTime={bus.ArrivalTime}
+                    reachTime={bus?.ArrivalTime}
 
                     // calucalte total time
-                    travelTime={"0min"}
+                    travelTime={calculateVrlTravelTime(bus?.CityTime24, bus?.ApproxArrival)}
                     seatsLeft={bus?.EmptySeats}
                     // avlWindowSeats={bus?.avlWindowSeats}
                     price={"0"}
