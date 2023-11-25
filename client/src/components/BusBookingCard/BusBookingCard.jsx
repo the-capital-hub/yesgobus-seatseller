@@ -271,6 +271,7 @@ const BusBookingCard = ({
           cancellationPolicy={cancellationPolicy}
           fare={isVrl ? vrlPrices : fare}
           isVrl={isVrl}
+          ReferenceNumber={ReferenceNumber}
         />
       )}
       <Toaster />
