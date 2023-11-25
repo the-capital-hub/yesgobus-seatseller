@@ -1,7 +1,7 @@
 import "./Terms.scss";
 import { useState, useEffect } from "react";
 
-export default function Terms({ cancellationPolicy }) {
+export default function Terms({ cancellationPolicy, isVrl }) {
 
   const decodeCancellationPolicy = () => {
     const policyParts = cancellationPolicy.split(';');
@@ -50,9 +50,9 @@ export default function Terms({ cancellationPolicy }) {
           </p>
         </li>
         <li>
-          <h3>Cancellation Policy:</h3>
+          <h3>{isVrl ? "" : "Cancellation Policy:"}</h3>
           <ul>
-            {decodeCancellationPolicy()}
+            {isVrl ? "" : decodeCancellationPolicy()}
           </ul>
         </li>
       </ul>

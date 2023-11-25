@@ -71,10 +71,15 @@ export default function TicketView() {
           `${import.meta.env.VITE_BASE_URL
           }/api/busBooking/getBookingById/${bookingId}`
         );
-        setTicketDetails(getBookingDetails.data)
-        setBookingDetails(getBookingDetails.booking);
-        const joinedNames = getBookingDetails.data.inventoryItems?.map(seat => seat.passengers.name).join(", ");
-        const joinedAges = getBookingDetails.data.inventoryItems?.map(seat => seat.passengers.age).join(", ");
+        // setTicketDetails(getBookingDetails.data)
+        setBookingDetails(getBookingDetails.data);
+
+        // const joinedNames = getBookingDetails.data.inventoryItems?.map(seat => seat.passengers.name).join(", ");
+        // const joinedAges = getBookingDetails.data.inventoryItems?.map(seat => seat.passengers.age).join(", ");
+
+        const joinedNames = getBookingDetails.data.reservationSchema?.map(seat => seat.passengerName).join(", ");
+        const joinedAges = getBookingDetails.data.reservationSchema?.map(seat => seat.passengerName).join(", ");
+
         setTravellers(joinedNames);
         setTravellersAge(joinedAges);
         if (downloadParam === "1" && downloaded === false) {
@@ -123,8 +128,8 @@ export default function TicketView() {
               {bookingDetails?.pickUpTime}
             </p>
             <div>
-              <p className="location">{ticketDetails?.pickUpLocation}</p>
-              <p className="sub-location">{ticketDetails?.pickUpLocationAddress}</p>
+              {/* <p className="location">{isVrl ? bookingDetails?.bboardingPoint : ticketDetails?.pickUpLocation}</p> */}
+              <p className="sub-location">{bookingDetails?.isVrl ? bookingDetails?.boardingPoint : ticketDetails?.pickUpLocationAddress}</p>
             </div>
           </div>
 
@@ -134,8 +139,8 @@ export default function TicketView() {
               {bookingDetails?.reachTime}
             </p>
             <div>
-              <p className="location">{ticketDetails?.dropLocation}</p>
-              <p className="sub-location">{ticketDetails?.dropLocationAddress}</p>
+              {/* <p className="location">{ticketDetails?.dropLocation}</p> */}
+              <p className="sub-location">{bookingDetails?.isVrl ? bookingDetails?.droppingPoint : ticketDetails?.dropLocationAddress}</p>
             </div>
           </div>
         </div>
@@ -199,8 +204,8 @@ export default function TicketView() {
                   className="font-24"
                   style={{ width: "50%", minWidth: "40ch" }}
                 >
-                  <p>Yesgobus Booking ID {bookingDetails?.tin}</p>
-                  <p>Operator PNR :{ticketDetails?.pnr}</p>
+                  <p>Yesgobus Booking ID {bookingDetails?.isVrl ? bookingDetails._id : bookingDetails?.tin}</p>
+                  <p>Operator PNR :{bookingDetails?.isVrl ? bookingDetails.opPNR : ticketDetails?.pnr}</p>
                   <div className="price">
                     <p>₹ {bookingDetails?.totalAmount}</p>
                   </div>
@@ -219,7 +224,7 @@ export default function TicketView() {
 
         <CustomerSupport contactNumber={contactNumber} />
 
-        <Terms cancellationPolicy={ticketDetails?.cancellationPolicy || " 8:24:50:0;24:48:25:0;48:-1:10:0"} />
+        <Terms cancellationPolicy={ticketDetails?.cancellationPolicy || ""} isVrl={bookingDetails?.isVrl} />
       </section>
 
       <div className="action__buttons">

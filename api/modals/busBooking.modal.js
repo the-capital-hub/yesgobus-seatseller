@@ -14,6 +14,37 @@ const { Schema } = mongoose;
 //   time: String,
 // });
 
+const paxDetailsSchema = new mongoose.Schema({
+  seatName: String,
+  paxName: String,
+  mobileNo: String,
+  paxAge: Number,
+  baseFare: Number,
+  gstFare: Number,
+  totalFare: Number,
+  idProofId: String,
+  idProofDetails: String,
+});
+
+const reservationSchema = new mongoose.Schema({
+  referenceNumber: String,
+  passengerName: String,
+  email: String,
+  phone: String,
+  pickUpID: Number,
+  dropID: Number,
+  payableAmount: Number,
+  totalPassengers: Number,
+  verifyCall: String,
+  discount: Number,
+  paxDetails: [paxDetailsSchema],
+  gstState: Number,
+  gstCompanyName: String,
+  gstRegNo: String,
+  apipnrNo: String,
+});
+
+
 const seatDetailsSchema = new Schema({
   age: String,
   name: String,
@@ -42,6 +73,8 @@ const busBookingSchema = new Schema({
   tripId: String,
   // boardingPoint: boardingPointSchema,
   // droppingPoint: droppingPointSchema,
+  boardingPoint: String,
+  droppingPoint: String,
   busOperator: String,
   busType: String,
   selectedSeats: String,
@@ -51,6 +84,7 @@ const busBookingSchema = new Schema({
   customerPhone: String,
   emergencyPhNumber: String,
   blockSeatPaxDetails: [seatDetailsSchema],
+  reservationSchema: [reservationSchema],
   inventoryType: Number,
   totalAmount: Number,
   merchantTransactionId: String,
