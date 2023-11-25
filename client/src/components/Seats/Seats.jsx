@@ -45,7 +45,8 @@ const Seats = ({
   seatDetails,
   cancellationPolicy,
   fare,
-  isVrl
+  isVrl,
+  ReferenceNumber,
 }) => {
   //* states
   const navigate = useNavigate();
@@ -85,6 +86,7 @@ const Seats = ({
     },
     selectedSeats: [],
     seatFares: [],
+    seatTaxes: [],
     seatTotalFares: [],
     ladiesSeat: [],
     // ac: [],
@@ -115,6 +117,7 @@ const Seats = ({
       let newOperatorTax = parseFloat(prev.operatorTax);
       let newTotalFare = parseFloat(prev.totalFare);
       let newSeatFares = [...prev.seatFares];
+      let newSeatTaxes = [...prev.seatTaxes];
       let newSeatTotalFares = [...prev.seatTotalFares];
       let newLadiesSeat = [...prev.ladiesSeat];
       // let newAC = [...prev.ac];
@@ -130,6 +133,7 @@ const Seats = ({
           newOperatorTax += parseFloat(operatorTax);
           newTotalFare += parseFloat(totalFare);
           newSeatFares.push(parseFloat(fare));
+          newSeatTaxes.push(parseFloat(serviceTax));
           newSeatTotalFares.push(parseFloat(totalFare));
           // newAC.push(isAC);
           // newSleeper.push(isSleeper);
@@ -144,6 +148,7 @@ const Seats = ({
         newOperatorTax -= parseFloat(operatorTax);
         newTotalFare -= parseFloat(totalFare);
         newSeatFares.splice(seatIndex, 1);
+        newSeatTaxes.splice(seatIndex, 1);
         newSeatTotalFares.splice(seatIndex, 1);
         // newAC.splice(seatIndex, 1);
         // newSleeper.splice(seatIndex, 1);
@@ -158,6 +163,7 @@ const Seats = ({
         operatorTax: newOperatorTax,
         totalFare: newTotalFare,
         seatFares: newSeatFares,
+        seatTaxes: newSeatTaxes,
         seatTotalFares: newSeatTotalFares,
         // ac: newAC,
         // sleeper: newSleeper,
@@ -512,7 +518,8 @@ const Seats = ({
           busName,
           bookingDetails,
           cancellationPolicy,
-          isVrl
+          isVrl,
+          ReferenceNumber,
         },
       });
     } else {

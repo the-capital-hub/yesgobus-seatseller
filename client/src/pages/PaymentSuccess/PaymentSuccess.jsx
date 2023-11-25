@@ -43,7 +43,7 @@ const PaymentSuccess = () => {
       <div className="container">
         <img src={successful} alt="" />
         <h1>Payment Successful</h1>
-        <p>Ticket Number: {bookingDetails?.tid}</p>
+        {/* <p>YSB Ticket Number: {bookingDetails?._id}</p> */}
         <p>PNR No: {bookingDetails?.opPNR}</p>
         <hr />
 

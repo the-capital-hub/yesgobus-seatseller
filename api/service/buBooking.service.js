@@ -329,28 +329,28 @@ export const getBookingById = async (bookingId) => {
         data: null,
       };
     }
-    const ticket = await Tickets.findOne(booking.tin);
-    if (!ticket) {
-      const newTicketData = await getTicket(booking.tin);
-      if (!newTicketData) {
-        return {
-          status: 404,
-          message: "Booking not found",
-          data: null,
-        };
-      }
-      const newTicket = new Tickets({
-        ...newTicketData
-      });
-      await newTicket.save();
-    } else {
-      return {
-        status: 200,
-        message: "Booking retrieved",
-        data: ticket,
-        booking: booking,
-      };
-    }
+    // const ticket = await Tickets.findOne(booking.tin);
+    // if (!ticket) {
+    //   const newTicketData = await getTicket(booking.tin);
+    //   if (!newTicketData) {
+    //     return {
+    //       status: 404,
+    //       message: "Booking not found",
+    //       data: null,
+    //     };
+    //   }
+    //   const newTicket = new Tickets({
+    //     ...newTicketData
+    //   });
+    //   await newTicket.save();
+    // } else {
+    return {
+      status: 200,
+      message: "Booking retrieved",
+      data: booking,
+      // booking: ticket,
+    };
+    // }
   } catch (error) {
     throw error.message;
   }
@@ -382,6 +382,7 @@ export const getAllBookings = async (userId) => {
 export const sendVrlRequest = async (url, data) => {
   try {
     data.verifyCall = process.env.VERIFY_CALL;
+    console.log(data);
     const response = await axios({
       method: "POST",
       url: `https://itsplatform.itspl.net/api/${url}`,
@@ -389,7 +390,7 @@ export const sendVrlRequest = async (url, data) => {
     });
     return response.data;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     throw error.message;
   }
 };
@@ -484,7 +485,7 @@ export const getVrlBusDetails = async (searchArgs, filters) => {
     }
 
     const filteredBuses = searchResponse.filter(route => {
-      
+
       const hasMatchingBoardingPoint = filters.boardingPoints ? route.BoardingPoints?.split('#').some(point => {
         const location = point.split('|')[1];
         return filters.boardingPoints?.some(filterPoint => filterPoint.trim() === location.trim());
