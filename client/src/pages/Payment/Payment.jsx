@@ -128,6 +128,7 @@ const Payment = () => {
 
             if (getBookingDetails?.data?.data.isVrl) {
               let { data: vrlBookSeatResponse } = await vrlBookSeat(getBookingDetails?.data?.data.reservationSchema);
+              localStorage.setItem("bookedData", vrlBookSeatResponse);
               vrlBookSeatResponse = vrlBookSeatResponse[0]
               if (vrlBookSeatResponse.Status === 1) {
                 const { data: updatePaymentDetails } = await axiosInstance.patch(
@@ -340,12 +341,12 @@ const Payment = () => {
           discount: 0,
           paxDetails: seatObjects,
           gstState: 0,
-          gstCompanyName: "Yesgobus",
+          gstCompanyName: "",
           gstRegNo: 0,
           apipnrNo: vrlBlockSeatResponse.BlockID,
         }
 
-        if (vrlBlockSeatResponse.BlockID) {
+        if (vrlBlockSeatResponse.Status === 1) {
           const { data: bookResponse } = await axiosInstance.post(
             `${import.meta.env.VITE_BASE_URL}/api/busBooking/bookBus`,
             {
@@ -410,7 +411,7 @@ const Payment = () => {
           setLoadingModalVisible(false);
           setStartCountdown(false);
           setCountdown(10);
-          setErrorMessage("Seat is already blocked or There is an issue with the operator, Please try with other seat or bus.");
+          setErrorMessage(vrlBlockSeatResponse.Message);
         }
       } catch (error) {
         setLoadingModalVisible(false);
