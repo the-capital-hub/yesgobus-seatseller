@@ -23,6 +23,32 @@ export default function TicketView() {
   const [travellers, setTravellers] = useState("");
   const [travellersAge, setTravellersAge] = useState("");
 
+  const vrlCancellationPolicy = [
+    {
+      "CompanyID": 1265,
+      "CompanyName": "VIJAYANAND TRAVELS PRIVATE LIMITED",
+      "NoCancelWithinMinutes": 240,
+      "FromMinutes": "240",
+      "ToMinutes": 1440,
+      "DeductPercent": 50,
+      "RefundPercent": "50",
+      "CreatedDate": "02-11-2022 10:38 AM",
+      "ModifyDate": "18-11-2022 04:44 PM",
+      "Remarks": ""
+    },
+    {
+      "CompanyID": 1265,
+      "CompanyName": "VIJAYANAND TRAVELS PRIVATE LIMITED",
+      "NoCancelWithinMinutes": 240,
+      "FromMinutes": "1440",
+      "ToMinutes": 0,
+      "DeductPercent": 25,
+      "RefundPercent": "75",
+      "CreatedDate": "02-11-2022 10:38 AM",
+      "ModifyDate": "18-11-2022 04:44 PM",
+      "Remarks": "Policy Is Apply For  1440 Minutes And Above "
+    }
+  ];
   const handleDownloadPDF = () => {
     if (bookingDetails) {
       const element = document.querySelector(".ticket");
@@ -73,7 +99,6 @@ export default function TicketView() {
         );
         // setTicketDetails(getBookingDetails.data)
         setBookingDetails(getBookingDetails.data);
-
         // const joinedNames = getBookingDetails.data.inventoryItems?.map(seat => seat.passengers.name).join(", ");
         // const joinedAges = getBookingDetails.data.inventoryItems?.map(seat => seat.passengers.age).join(", ");
 
@@ -224,7 +249,7 @@ export default function TicketView() {
 
         <CustomerSupport contactNumber={contactNumber} />
 
-        <Terms cancellationPolicy={ticketDetails?.cancellationPolicy || ""} isVrl={bookingDetails?.isVrl} />
+        <Terms cancellationPolicy={bookingDetails?.isVrl ? vrlCancellationPolicy : ticketDetails?.cancellationPolicy} isVrl={bookingDetails?.isVrl} />
       </section>
 
       <div className="action__buttons">

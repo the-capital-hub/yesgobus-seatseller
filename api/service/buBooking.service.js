@@ -117,8 +117,8 @@ export const busCancellationInfo = async (from, to) => {
 export const getBusFilters = async (args) => {
   try {
     const [sourceCity, destinationCity] = await Promise.all([
-      City.findOne({ name: args.sourceCity }),
-      City.findOne({ name: args.destinationCity }),
+      City.findOne({ name: capitalizeFirstLetter(args.sourceCity) }),
+      City.findOne({ name: capitalizeFirstLetter(args.destinationCity) }),
     ]);
 
     const searchResponse = await searchBus(sourceCity.id, destinationCity.id, args.doj);
@@ -189,8 +189,8 @@ export const getBusDetails = async (searchArgs, filters) => {
   try {
     // if(filters.busPartners )
     const [sourceCity, destinationCity] = await Promise.all([
-      City.findOne({ name: searchArgs.sourceCity }),
-      City.findOne({ name: searchArgs.destinationCity }),
+      City.findOne({ name: capitalizeFirstLetter(searchArgs.sourceCity) }),
+      City.findOne({ name: capitalizeFirstLetter(searchArgs.destinationCity) }),
     ]);
 
     let searchResponse = await searchBus(sourceCity.id, destinationCity.id, searchArgs.doj);
@@ -382,7 +382,6 @@ export const getAllBookings = async (userId) => {
 export const sendVrlRequest = async (url, data) => {
   try {
     data.verifyCall = process.env.VERIFY_CALL;
-    console.log(data);
     const response = await axios({
       method: "POST",
       url: `https://itsplatform.itspl.net/api/${url}`,
@@ -390,19 +389,21 @@ export const sendVrlRequest = async (url, data) => {
     });
     return response.data;
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     throw error.message;
   }
 };
 
-
+const capitalizeFirstLetter = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};
 
 // get vrl bus filters
 export const getVrlFilters = async (args) => {
   try {
     const [vrlSourceCity, vrlDesctinationCity] = await Promise.all([
-      VrlCity.findOne({ CityName: args.sourceCity }),
-      VrlCity.findOne({ CityName: args.destinationCity }),
+      VrlCity.findOne({ CityName: capitalizeFirstLetter(args.sourceCity) }),
+      VrlCity.findOne({ CityName: capitalizeFirstLetter(args.destinationCity) }),
     ]);
 
     const dateParts = args.doj.split('-');
@@ -461,8 +462,8 @@ export const getVrlBusDetails = async (searchArgs, filters) => {
     }
 
     const [vrlSourceCity, vrlDesctinationCity] = await Promise.all([
-      VrlCity.findOne({ CityName: searchArgs.sourceCity }),
-      VrlCity.findOne({ CityName: searchArgs.destinationCity }),
+      VrlCity.findOne({ CityName: capitalizeFirstLetter(searchArgs.sourceCity) }),
+      VrlCity.findOne({ CityName: capitalizeFirstLetter(searchArgs.destinationCity) }),
     ]);
 
     const dateParts = searchArgs.doj.split('-');
