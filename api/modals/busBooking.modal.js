@@ -29,6 +29,7 @@ const paxDetailsSchema = new mongoose.Schema({
 const reservationSchema = new mongoose.Schema({
   referenceNumber: String,
   passengerName: String,
+  seatNames: String,
   email: String,
   phone: String,
   pickUpID: Number,
@@ -37,6 +38,7 @@ const reservationSchema = new mongoose.Schema({
   totalPassengers: Number,
   verifyCall: String,
   discount: Number,
+  seatDetails: String,
   paxDetails: [paxDetailsSchema],
   gstState: Number,
   gstCompanyName: String,
