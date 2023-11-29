@@ -127,7 +127,7 @@ const Payment = () => {
             // console.log(`Block Ticket ID: ${blockTicketId}`);
 
             if (getBookingDetails?.data?.data.isVrl) {
-              let { data: vrlBookSeatResponse } = await vrlBookSeat(getBookingDetails?.data?.data.reservationSchema);
+              let { data: vrlBookSeatResponse } = await vrlBookSeat(getBookingDetails?.data?.data.reservationSchema[0]);
               localStorage.setItem("bookedData", vrlBookSeatResponse);
               vrlBookSeatResponse = vrlBookSeatResponse[0]
               if (vrlBookSeatResponse.Status === 1) {
@@ -300,6 +300,8 @@ const Payment = () => {
 
         const seatAndGenderArray = bookingDetails?.selectedSeats?.map((seat, index) => `${seat},${userData[`gender_${index}`]}`);
         const resultSeatString = seatAndGenderArray.join("|");
+        const seatDetailsWithName = bookingDetails?.selectedSeats?.map((seat, index) => `${seat},${userData[`firstName_${index}`]},${userData.mobile},${userData[`age_${index}`]}`);
+        const resultseatDetailsWithNameString = seatDetailsWithName.join("|");
 
         const blockSeatRequestBody = {
           referenceNumber: ReferenceNumber,
@@ -321,28 +323,30 @@ const Payment = () => {
             seatName: seatId + "," + title,
             paxName: userData[`firstName_${index}`] + " " + userData[`lastName_${index}`],
             mobileNo: userData.mobile,
-            paxAge: 25,
+            paxAge: userData[`age_${index}`],
             baseFare: bookingDetails?.seatFares[index],
             gstFare: bookingDetails?.seatTaxes[index],
             totalFare: bookingDetails?.seatTotalFares[index],
-            idProofId: "Pan",
-            idProofDetails: "456543"
+            idProofId: 0,
+            idProofDetails: ""
           }
         });
         const bookingReservationDetails = {
           referenceNumber: ReferenceNumber,
           passengerName: userData[`firstName_0`],
+          seatNames: resultSeatString,
           email: userData.email,
           phone: userData.mobile,
           pickUpID: bookingDetails?.boardingPoint?.bpId,
           dropID: bookingDetails?.droppingPoint?.bpId,
           payableAmount: bookingDetails?.totalFare,
           totalPassengers: totalPassenger,
+          seatDetails: resultseatDetailsWithNameString,
           discount: 0,
           paxDetails: seatObjects,
           gstState: 0,
           gstCompanyName: "",
-          gstRegNo: 0,
+          gstRegNo: "",
           apipnrNo: vrlBlockSeatResponse.BlockID,
         }
 
