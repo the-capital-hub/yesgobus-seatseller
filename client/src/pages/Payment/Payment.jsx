@@ -127,7 +127,10 @@ const Payment = () => {
             // console.log(`Block Ticket ID: ${blockTicketId}`);
 
             if (getBookingDetails?.data?.data.isVrl) {
-              let { data: vrlBookSeatResponse } = await vrlBookSeat(getBookingDetails?.data?.data.reservationSchema[0]);
+              const requestbody = {
+                ...getBookingDetails?.data?.data.reservationSchema[0]
+              }
+              let { data: vrlBookSeatResponse } = await vrlBookSeat(requestbody);
               localStorage.setItem("bookedData", vrlBookSeatResponse);
               vrlBookSeatResponse = vrlBookSeatResponse[0]
               if (vrlBookSeatResponse.Status === 1) {
@@ -177,10 +180,10 @@ const Payment = () => {
                     messageBody,
                   );
                 }
-                setLoading(false);
+                // setLoading(false);
                 navigate(`/busbooking/payment/success?bookingId=${bookingId}`);
               } else {
-                setLoading(false);
+                // setLoading(false);
                 navigate("/busbooking/payment/failure");
               }
 
@@ -266,12 +269,8 @@ const Payment = () => {
       }
     } catch (error) {
       console.log(error);
-      setLoading(false);
       navigate("/busbooking/payment/failure");
-    } finally {
-      setLoading(false);
     }
-
   }, [paymentVerify]);
 
   const date = new Date();
