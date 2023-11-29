@@ -17,8 +17,9 @@ export default function BookingsList({ bookingData, selectedTab, setCancelled, c
   const handleCancelTicket = async (bookingData, tid, isVrl, pnr) => {
     if (isVrl) {
       let { data: vrlCancelDetailsResponse } = await vrlCancelDetails({
-        pnrNo: pnr
+        pnrNo: parseInt(pnr)
       });
+      console.log(vrlCancelDetailsResponse);
       vrlCancelDetailsResponse = vrlCancelDetailsResponse[0];
       if (vrlCancelDetailsResponse.Status === 2) {
         alert("Unable to Cancel Ticket Because Minimum Cancelation Minute is reached.");
@@ -41,12 +42,12 @@ export default function BookingsList({ bookingData, selectedTab, setCancelled, c
           merchantTransactionId: ticketToCancel.merchantTransactionId,
         };
         const cancelData = {
-          pnrNo: ticketToCancel.opPNR
+          pnrNo: parseInt(ticketToCancel.opPNR)
         };
-        let { data: vrlCancelDetailsResponse } = await vrlConfirmCancel(cancelData, refundData);
+        let { data: vrlCancelDetailsResponse } = await vrlConfirmCancel(cancelData, refundData, ticketToCancel._id);
         if (vrlCancelDetailsResponse.Status === 2) {
-          alert(vrlCancelDetailsResponse.Message);
-          return;
+          alert("Booking Cancelled. Refund will be processed soon");
+          setCancelled(!cancelled);
         }
       } else {
         const seatNbrsToCancel = ticketToCancel.selectedSeats.split(',').map(seat => seat.trim());
@@ -58,10 +59,10 @@ export default function BookingsList({ bookingData, selectedTab, setCancelled, c
           merchantTransactionId: ticketToCancel.merchantTransactionId,
         };
         const cancelTicketResponse = await cancelTicket(refundData, cancelTicketData, ticketToCancel._id);
-        if (cancelTicketResponse.status === 200) {
-          alert("Booking Cancelled. Refund will be processed soon");
-          setCancelled(!cancelled);
-        }
+        // if (cancelTicketResponse) {
+        alert("Booking Cancelled. Refund will be processed soon");
+        setCancelled(!cancelled);
+        // }
       }
     } catch (error) {
       alert("Oops, this ticket cannot be cancelled");
@@ -148,7 +149,7 @@ export default function BookingsList({ bookingData, selectedTab, setCancelled, c
       {/* Cancelation Confirmation Modal */}
       <Modal
         title="Confirm Ticket Cancellation"
-        visible={isCancelModalVisible}
+        open={isCancelModalVisible}
         onCancel={handleCancelModalClose}
         footer={[
           <Button key="cancel" onClick={handleCancelModalClose}>
