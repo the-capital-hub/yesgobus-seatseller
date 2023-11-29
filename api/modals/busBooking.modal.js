@@ -22,7 +22,7 @@ const paxDetailsSchema = new mongoose.Schema({
   baseFare: Number,
   gstFare: Number,
   totalFare: Number,
-  idProofId: String,
+  idProofId: Number,
   idProofDetails: String,
 });
 

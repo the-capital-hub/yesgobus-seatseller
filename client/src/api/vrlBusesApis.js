@@ -77,7 +77,7 @@ function formatDate(dateString) {
   return new Date(dateString).toLocaleDateString(undefined, options);
 }
 
-export const vrlConfirmCancel = async (cancelData, refundData) => {
+export const vrlConfirmCancel = async (cancelData, refundData, bookingId) => {
   try {
     let cancelTicketResponse = await axiosInstance.post(
       `${import.meta.env.VITE_BASE_URL}/api/busBooking/sendVrlRequest/ConfirmCancellation`,
