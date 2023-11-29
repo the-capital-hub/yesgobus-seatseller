@@ -180,6 +180,7 @@ const Payment = () => {
                 setLoading(false);
                 navigate(`/busbooking/payment/success?bookingId=${bookingId}`);
               } else {
+                setLoading(false);
                 navigate("/busbooking/payment/failure");
               }
 
@@ -265,7 +266,10 @@ const Payment = () => {
       }
     } catch (error) {
       console.log(error);
+      setLoading(false);
       navigate("/busbooking/payment/failure");
+    } finally {
+      setLoading(false);
     }
 
   }, [paymentVerify]);
