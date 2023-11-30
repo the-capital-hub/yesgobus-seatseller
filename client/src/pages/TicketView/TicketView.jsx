@@ -102,8 +102,8 @@ export default function TicketView() {
         // const joinedNames = getBookingDetails.data.inventoryItems?.map(seat => seat.passengers.name).join(", ");
         // const joinedAges = getBookingDetails.data.inventoryItems?.map(seat => seat.passengers.age).join(", ");
 
-        const joinedNames = getBookingDetails.data.reservationSchema?.map(seat => seat.passengerName).join(", ");
-        const joinedAges = getBookingDetails.data.reservationSchema?.map(seat => seat.passengerName).join(", ");
+        const joinedNames = getBookingDetails.data.reservationSchema[0].paxDetails?.map(seat => seat.paxName).join(", ");
+        const joinedAges = getBookingDetails.data.reservationSchema[0].paxDetails?.map(seat => seat.paxAge).join(", ");
 
         setTravellers(joinedNames);
         setTravellersAge(joinedAges);
