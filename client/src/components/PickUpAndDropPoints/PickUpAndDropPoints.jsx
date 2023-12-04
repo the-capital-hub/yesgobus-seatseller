@@ -11,12 +11,13 @@ const PickUpAndDropPoints = ({
     <div
       className="PickUpAndDropPoints"
       style={{
-        backgroundColor: highlight ? "lightgrey" : "white",
+        backgroundColor: highlight ? "#FD5901" : "white",
         fontWeight: highlight ? 700 : "normal",
+        color: highlight ? "white" : "black"
       }}
       onClick={onClick}
     >
-      <p>{time}</p>
+      <p style={{ color: highlight ? "white" : "black" }}>{time}</p>
       <span
         className="locationOne"
         style={{

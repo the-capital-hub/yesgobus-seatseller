@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./BusRouteCard.scss";
 import { Spin } from "antd";
 
-const BusRouteCard = ({ title, location, setLocation, date, suggestions, loading, setLocationQuery }) => {
+const BusRouteCard = ({ title, location, setLocation, date, suggestions, loading, setLocationQuery, style, color }) => {
   const [inputValue, setInputValue] = useState(location);
 
   useEffect(() => {
@@ -58,10 +58,10 @@ const BusRouteCard = ({ title, location, setLocation, date, suggestions, loading
   };
 
   return (
-    <div className="BusRouteCard" ref={inputRef}>
-      <p>{title}</p>
+    <div className="BusRouteCard" ref={inputRef} style={style}>
+      <p style={color}>{title}</p>
       {date ? (
-        <input type="date" value={inputValue} onChange={handleDateChange} />
+        <input  type="date" value={inputValue} onChange={handleDateChange} />
       ) : (
         <input
           type="search"
