@@ -56,7 +56,7 @@
       color: #a94442;
       background-color: #f2dede;
     }
-    
+
 
     .drop-pickup-points-mobile {
       display: flex;
@@ -263,25 +263,18 @@
 
   .seats {
 
-    .mobile-seats {
-      display: block;
-    }
-
-    .seatsLeft {
-      display: none;
-    }
-
-    .seatsRight {
-      display: none;
-    }
-
     .seatMobileRight {
-      .bus {
+      .bus-container {
         transform: rotate(90deg);
         margin-bottom: 20px;
+      }
+
+      .bus {
         // width: 350px;
-        margin-top: 50px;
-        margin-bottom: 50px;
+        // margin-top: 50px;
+        // margin-bottom: 50px;
+        min-height: 150px !important;
+
 
         .driver {
           width: 20%;
@@ -339,10 +332,19 @@
     padding: 10px;
     margin-top: 0;
 
-    .seatsLeft,
-    .seatRight {
+    .seatsLeft {
       display: none;
     }
+
+    .seatsRight {
+      display: none;
+    }
+    
+
+    .mobile-seats {
+      display: block;
+    }
+
 
     .seatMobileRight {
       width: 100%;
