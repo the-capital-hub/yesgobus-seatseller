@@ -29,6 +29,12 @@ import {
     sendVrlRequestController,
     getVrlFiltersController,
     getVrlBusDetailsController,
+
+    //srs buses
+    getSrsCitiesController,
+    getSrsSchedulesController,
+    getSrsSeatDetailsController,
+
 } from "../controllers/busBooking.controller.js";
 import { authenticateUser } from "../middleware/authenticateUser.js";
 
@@ -133,5 +139,10 @@ router.post("/sendVrlRequest/:url", sendVrlRequestController);
 router.post("/getVrlFilters", getVrlFiltersController);
 
 router.post("/getVrlBusDetails", getVrlBusDetailsController);
+
+// SRS buses
+router.get("/getSrsCities", getSrsCitiesController);
+router.get("/getSrsSchedules/:origin_id/:destination_id/:travel_date", getSrsSchedulesController);
+router.get("/getSrsSeatDetails/:schedule_id", getSrsSeatDetailsController);
 
 export default router;

@@ -53,6 +53,7 @@ const Seats = ({
   // const [boardingPoints, setBoardingPoint] = useState([]);
   // const [droppingPoints, setDroppingPoint] = useState([]);
   const [selectedPriceFilter, setSelectedPriceFilter] = useState(null);
+  const [selectedTab, setSelectedTab] = useState("seats");
 
   const [prices, setPrices] = useState([]);
   useEffect(() => {
@@ -190,14 +191,17 @@ const Seats = ({
       const minRow = Math.min(...filteredSeats?.map((seat) => parseInt(seat.Column, 10)));
 
       const seatTable = [];
+      let previousSeatCount = -1;
 
       for (let row = minRow; row < numRows; row++) {
         const seatRow = [];
+        let seatCount = 0;
 
         for (let col = 0; col < numCols; col++) {
           const seat = filteredSeats.find((s) => parseInt(s.Column, 10) === row && parseInt(s.Row, 10) === col);
 
           if (seat) {
+            seatCount++;
             const isHighlighted = seat.BaseFare === highlightedPrice;
             if (seat.Available === "Y") {
               if (selectedSeats.includes(seat.SeatNo)) {
@@ -314,9 +318,10 @@ const Seats = ({
             seatRow.push(<td key={`empty-${row}-${col}`}></td>);
           }
         }
-
-        seatTable.push(<tr key={`row-${row}`}>{seatRow}</tr>);
-        // seatTable.push()
+        if (!(seatCount === 0 && previousSeatCount === 0)) {
+          seatTable.push(<tr key={`row-${row}`}>{seatRow}</tr>);
+        }
+        previousSeatCount = seatCount;
       }
 
       return (
@@ -332,14 +337,17 @@ const Seats = ({
       const numCols = Math.max(...filteredSeats?.map((seat) => parseInt(seat.column, 10))) + 1;
 
       const seatTable = [];
+      let previousSeatCount = -1;
 
       for (let row = 0; row < numRows; row++) {
         const seatRow = [];
+        let seatCount = 0;
 
         for (let col = 0; col < numCols; col++) {
           const seat = filteredSeats.find((s) => parseInt(s.row, 10) === row && parseInt(s.column, 10) === col);
 
           if (seat) {
+            seatCount++;
             const isHighlighted = seat.BaseFare === highlightedPrice;
             if (seat.available === "true") {
               if (selectedSeats.includes(seat.name)) {
@@ -459,8 +467,12 @@ const Seats = ({
             seatRow.push(<td key={`empty-${row}-${col}`}></td>);
           }
         }
+        if (!(seatCount === 0 && previousSeatCount === 0)) {
+          seatTable.push(<tr key={`row-${row}`}>{seatRow}</tr>);
+        }
+        previousSeatCount = seatCount;
 
-        seatTable.push(<tr key={`row-${row}`}>{seatRow}</tr>);
+        // seatTable.push(<tr key={`row-${row}`}>{seatRow}</tr>);
       }
 
       return (
@@ -527,32 +539,158 @@ const Seats = ({
     }
   };
 
-  return (
-    <div className="seats">
-      <div className="seatsLeft">
-        <h5>Select Pickup and Drop Points</h5>
-        <div className="pickup-and-drop-container">
-          <div className="seatsLeftContainer">
-            <span className="title">PICKUP POINT</span>
-            {pickUpLocationOne?.map((boardingPoint, index) => (
-              <PickUpAndDropPoints
-                key={boardingPoint.bpId}
-                time={isVrl ? boardingPoint.time : convertMinutesToTime(boardingPoint.time)}
-                locationOne={boardingPoint.bpName}
-                locationTwo={boardingPoint.address}
-                highlight={bookingDetails.boardingPoint.bpId === boardingPoint.bpId}
-                onClick={() =>
-                  setBookingDetails((prev) => {
-                    return {
-                      ...prev,
-                      boardingPoint,
-                    };
-                  })
-                }
-              />
-            ))}
+  const [error, setError] = useState(null);
+
+  const handleNext = () => {
+    switch (selectedTab) {
+      case "seats":
+        if (bookingDetails.selectedSeats.length > 0) {
+          setError(null);
+          setSelectedTab("pickup");
+        } else {
+          setError("Please select at least one seat.");
+        }
+        break;
+      case "pickup":
+        console.log(bookingDetails);
+        if (bookingDetails.boardingPoint.bpId) {
+          setError(null);
+          setSelectedTab("drop");
+        } else {
+          setError("Please select a pickup location.");
+        }
+        break;
+      case "drop":
+        if (bookingDetails.droppingPoint.bpId) {
+          setError(null);
+          handleContinue();
+        } else {
+          setError("Please select a drop location.");
+
+        }
+        break;
+      default:
+        return null;
+    }
+  }
+
+  const handleBack = () => {
+    switch (selectedTab) {
+      case "pickup": setSelectedTab("seats")
+        break;
+      case "drop": setSelectedTab("pickup")
+        break;
+      default:
+        return null;
+    }
+  }
+
+  const renderMobileContent = () => {
+    switch (selectedTab) {
+      case "seats":
+        return renderSeatTableMobile();
+      case "pickup":
+        return renderPickupPoints();
+      case "drop":
+        return renderDropPoints();
+      default:
+        return null;
+    }
+  };
+
+  const renderSeatTableMobile = () => {
+    return (
+      <>
+        <div className="seatMobileRight">
+          <div className="legend">
+            <SeatLegend title={"Booked"} img={booked} />
+            <SeatLegend title={"Available"} img={available} />
+            <SeatLegend title={"Selected"} img={selectedFill} />
+            <SeatLegend
+              title={"Ladies"}
+              subtitle={"(Available)"}
+              img={ladiesavailable}
+            />
+            <SeatLegend
+              title={"Ladies"}
+              subtitle={"(Booked)"}
+              img={ladiesbooked}
+            />
+
           </div>
-          <div className="seatsLeftContainer">
+          {
+            prices.length > 1 && (
+              <div className="filters">
+                {/* <p className="tag">Seat Price:</p> */}
+                <p
+                  className={`filter ${selectedPriceFilter === null ? 'highlighted' : ''}`}
+                  onClick={() => setSelectedPriceFilter(null)}
+                >
+                  All
+                </p>
+                {prices.map(price => (
+                  <p
+                    key={price}
+                    className={`filter ${selectedPriceFilter === price ? 'highlighted' : ''}`}
+                    onClick={() => setSelectedPriceFilter(price)}
+                  >
+                    ₹{price}
+                  </p>
+                ))}
+              </div>
+            )
+          }
+          <div className="bus-container">
+            <div className="bus">
+              <div className="driver">
+              <img src={driver} alt="driver"/>
+
+              </div>
+
+              <div className="gridContainer">
+                {upperTierSeats.length > 0 && <h4>Lower Tier</h4>}
+                {renderSeatTable(lowerTierSeats, bookingDetails.selectedSeats)}
+
+              </div>
+            </div >
+
+            <div className="bus" >
+              <div className="driver">
+              </div>
+              <div className="gridContainer">
+                {upperTierSeats.length > 0 && (
+                  <>
+                    <h4>Upper Tier</h4>
+                    {renderSeatTable(upperTierSeats, bookingDetails.selectedSeats)}
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="price">
+            <div className="selectedSeat">
+              <span>Selected Seat(s):</span>
+              <p>{bookingDetails.selectedSeats.join(", ") || "None Selected"}</p>
+            </div>
+            <p>₹ {bookingDetails.fare}</p>
+          </div>
+          {error &&
+            <div className="alert">{error}</div>
+          }
+          <div className="continue">
+            <Button onClicked={() => handleNext()} text={"Select Boarding Point"} />
+          </div>
+        </div>
+      </>
+    )
+  };
+
+  const renderDropPoints = () => {
+    return (
+      <>
+        <div className="seatMobileRight">
+          <div className="drop-pickup-points-mobile">
             <span className="title">DROP POINT</span>
             {dropLocationOne?.map((droppingPoint, index) => (
               <PickUpAndDropPoints
@@ -572,96 +710,187 @@ const Seats = ({
               />
             ))}
           </div>
-        </div>
-      </div>
-
-      <div className="seatsRight">
-        <h5>Selected Seats</h5>
-        <div className="legend">
-          <SeatLegend title={"Booked"} img={booked} />
-          <SeatLegend title={"Available"} img={available} />
-          <SeatLegend title={"Selected"} img={selectedFill} />
-          <SeatLegend
-            title={"Ladies"}
-            subtitle={"(Available)"}
-            img={ladiesavailable}
-          />
-          <SeatLegend
-            title={"Ladies"}
-            subtitle={"(Booked)"}
-            img={ladiesbooked}
-          />
-
-        </div>
-        {/* <div className="legend">
-          <SeatLegend  img={singlebooked} single={}/>
-          <SeatLegend  img={singleavailable} />
-          <SeatLegend img={singleselected} />
-          <SeatLegend
-            // title={"Ladies"}
-            // subtitle={"(Available)"}
-            img={singleladiesavailable}
-          />
-          <SeatLegend
-            // title={"Ladies"}
-            // subtitle={"(Booked)"}
-            img={singleladiesbooked}
-          />
-          
-        </div> */}
-        {prices.length > 1 && (
-          <div className="filters">
-            {/* <p className="tag">Seat Price:</p> */}
-            <p
-              className={`filter ${selectedPriceFilter === null ? 'highlighted' : ''}`}
-              onClick={() => setSelectedPriceFilter(null)}
-            >
-              All
-            </p>
-            {prices.map(price => (
-              <p
-                key={price}
-                className={`filter ${selectedPriceFilter === price ? 'highlighted' : ''}`}
-                onClick={() => setSelectedPriceFilter(price)}
-              >
-                ₹{price}
-              </p>
-            ))}
-          </div>
-        )}
+          {error &&
+            <div className="alert">{error}</div>
+          }
 
 
-        <div className="bus">
-          <div className="driver">
-            <img src={driver} alt="driver" />
-          </div>
-
-          <div className="gridContainer">
-            {upperTierSeats.length > 0 && <h4>Lower Tier</h4>}
-            {renderSeatTable(lowerTierSeats, bookingDetails.selectedSeats)}
-
-            {upperTierSeats.length > 0 && (
-              <>
-                <h4>Upper Tier</h4>
-                {renderSeatTable(upperTierSeats, bookingDetails.selectedSeats)}
-              </>
-            )}
+          <div className="continue">
+            <Button onClicked={() => handleBack()} text={"Back"} style={{ marginRight: '10px' }} />
+            <Button onClicked={() => handleNext()} text={"Fill Passenger Details"} />
           </div>
         </div>
+      </>
+    );
+  };
 
+  const renderPickupPoints = () => {
+    return (
+      <div className="seatMobileRight">
+        <div className="drop-pickup-points-mobile">
+          <span className="title">PICKUP POINT</span>
+          {pickUpLocationOne?.map((boardingPoint, index) => (
+            <PickUpAndDropPoints
+              key={boardingPoint.bpId}
+              time={isVrl ? boardingPoint.time : convertMinutesToTime(boardingPoint.time)}
+              locationOne={boardingPoint.bpName}
+              locationTwo={boardingPoint.address}
+              highlight={bookingDetails.boardingPoint.bpId === boardingPoint.bpId}
+              onClick={() =>
+                setBookingDetails((prev) => {
+                  return {
+                    ...prev,
+                    boardingPoint,
+                  };
+                })
+              }
+            />
+          ))}
+        </div>
+        {error &&
+          <div className="alert">{error}</div>
+        }
         <div className="continue">
-          <Button onClicked={() => handleContinue()} text={"Continue"} />
-        </div>
-
-        <div className="price">
-          <div className="selectedSeat">
-            <span>Selected Seat(s):</span>
-            <p>{bookingDetails.selectedSeats.join(", ") || "None Selected"}</p>
-          </div>
-          <p>₹ {bookingDetails.fare}</p>
+          <Button onClicked={() => handleBack()} text={"Back"} style={{ marginRight: '10px' }} />
+          <Button onClicked={() => handleNext()} text={"Select Dropping Point"} />
         </div>
       </div>
-    </div>
+    );
+  };
+
+
+  return (
+    <>
+
+      <div className="seats">
+
+        <div className="mobile-seats">
+          {renderMobileContent()}
+        </div>
+        {/* <div className="desktop-seats-layout"> */}
+
+        <div className="seatsLeft">
+          <h5>Select Pickup and Drop Points</h5>
+          <div className="pickup-and-drop-container">
+            <div className="seatsLeftContainer">
+              <span className="title">PICKUP POINT</span>
+              {pickUpLocationOne?.map((boardingPoint, index) => (
+                <PickUpAndDropPoints
+                  key={boardingPoint.bpId}
+                  time={isVrl ? boardingPoint.time : convertMinutesToTime(boardingPoint.time)}
+                  locationOne={boardingPoint.bpName}
+                  locationTwo={boardingPoint.address}
+                  highlight={bookingDetails.boardingPoint.bpId === boardingPoint.bpId}
+                  onClick={() =>
+                    setBookingDetails((prev) => {
+                      return {
+                        ...prev,
+                        boardingPoint,
+                      };
+                    })
+                  }
+                />
+              ))}
+            </div>
+            <div className="seatsLeftContainer">
+              <span className="title">DROP POINT</span>
+              {dropLocationOne?.map((droppingPoint, index) => (
+                <PickUpAndDropPoints
+                  highlight={bookingDetails.droppingPoint.bpId === droppingPoint.bpId}
+                  key={droppingPoint.bpId}
+                  time={isVrl ? droppingPoint.time : convertMinutesToTime(droppingPoint.time)}
+                  locationOne={droppingPoint.bpName}
+                  locationTwo={droppingPoint.address}
+                  onClick={() =>
+                    setBookingDetails((prev) => {
+                      return {
+                        ...prev,
+                        droppingPoint,
+                      };
+                    })
+                  }
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+
+
+        <div className="seatsRight">
+
+          <h5>Selected Seats</h5>
+          <div className="legend">
+            <SeatLegend title={"Booked"} img={booked} />
+            <SeatLegend title={"Available"} img={available} />
+            <SeatLegend title={"Selected"} img={selectedFill} />
+            <SeatLegend
+              title={"Ladies"}
+              subtitle={"(Available)"}
+              img={ladiesavailable}
+            />
+            <SeatLegend
+              title={"Ladies"}
+              subtitle={"(Booked)"}
+              img={ladiesbooked}
+            />
+
+          </div>
+
+          {prices.length > 1 && (
+            <div className="filters">
+              <p
+                className={`filter ${selectedPriceFilter === null ? 'highlighted' : ''}`}
+                onClick={() => setSelectedPriceFilter(null)}
+              >
+                All
+              </p>
+              {prices.map(price => (
+                <p
+                  key={price}
+                  className={`filter ${selectedPriceFilter === price ? 'highlighted' : ''}`}
+                  onClick={() => setSelectedPriceFilter(price)}
+                >
+                  ₹{price}
+                </p>
+              ))}
+            </div>
+          )}
+
+
+          <div className="bus">
+            <div className="driver">
+              <img src={driver} alt="driver" />
+            </div>
+
+            <div className="gridContainer">
+              {upperTierSeats.length > 0 && <h4>Lower Tier</h4>}
+              {renderSeatTable(lowerTierSeats, bookingDetails.selectedSeats)}
+
+              {upperTierSeats.length > 0 && (
+                <>
+                  <h4>Upper Tier</h4>
+                  {renderSeatTable(upperTierSeats, bookingDetails.selectedSeats)}
+                </>
+              )}
+            </div>
+          </div>
+
+          <div className="continue">
+            <Button onClicked={() => handleContinue()} text={"Continue"} />
+          </div>
+
+          <div className="price">
+            <div className="selectedSeat">
+              <span>Selected Seat(s):</span>
+              <p>{bookingDetails.selectedSeats.join(", ") || "None Selected"}</p>
+            </div>
+            <p>₹ {bookingDetails.fare}</p>
+          </div>
+        </div>
+      </div>
+      {/* </div> */}
+    </>
   );
 };
 

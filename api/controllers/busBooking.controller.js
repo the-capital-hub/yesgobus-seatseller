@@ -23,7 +23,13 @@ import {
   //vrl buses
   sendVrlRequest,
   getVrlFilters,
-  getVrlBusDetails
+  getVrlBusDetails,
+
+  //srs buses
+  getSrsCities,
+  getSrsSchedules,
+  getSrsSeatDetails,
+
 } from "../service/buBooking.service.js";
 import { sendMessage, sendMail } from "../utils/helper.js";
 
@@ -517,3 +523,50 @@ export const getVrlBusDetailsController = async (req, res) => {
     });
   }
 };
+
+
+//vrl travels buses
+export const getSrsCitiesController = async (req, res) => {
+  try {
+    const response = await getSrsCities();
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "Internal Server Error",
+      error: error,
+    })
+  }
+};
+
+export const getSrsSchedulesController = async (req, res) => {
+  try {
+    const { origin_id, destination_id, travel_date } = req.params
+    const response = await getSrsSchedules(origin_id, destination_id, travel_date);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "Internal Server Error",
+      error: error,
+    })
+  }
+};
+
+export const getSrsSeatDetailsController = async (req, res) => {
+  try {
+    const { schedule_id } = req.params
+    const response = await getSrsSeatDetails(schedule_id);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "Internal Server Error",
+      error: error,
+    })
+  }
+};
+
