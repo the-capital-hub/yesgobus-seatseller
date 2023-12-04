@@ -529,10 +529,6 @@ export const sendSrsRequest = async (url, method, data) => {
       headers: headers,
       data: data,
     });
-    // console.log(response.data);
-    // if (!response.data.result) {
-    //   return response.data;
-    // }
 
     return response;
   } catch (error) {
