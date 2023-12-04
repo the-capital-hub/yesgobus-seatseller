@@ -379,7 +379,7 @@ export const getAllBookings = async (userId) => {
 
 
 // vrl travels buses
-export const sendVrlRequest = async (url, data) => {
+export const sendVrlRequest = async (url) => {
   try {
     data.verifyCall = process.env.VERIFY_CALL;
     const response = await axios({
@@ -510,4 +510,67 @@ export const getVrlBusDetails = async (searchArgs, filters) => {
   } catch (error) {
     throw error.message;
   }
+};
+
+
+
+
+// srs buses APIS
+export const sendSrsRequest = async (url, method, data) => {
+  try {
+    const headers = {
+      'api-key': process.env.SRS_API_KEY,
+      'Content-Type': 'application/json',
+      'Accept-Encoding': 'application/gzip',
+    };
+    const response = await axios({
+      method: method,
+      url: `http://gds-stg.ticketsimply.co.in/${url}`,
+      headers: headers,
+      data: data,
+    });
+    // console.log(response.data);
+    // if (!response.data.result) {
+    //   return response.data;
+    // }
+
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw error.message;
+  }
+};
+
+
+export const getSrsCities = async () => {
+  const url = "/gds/api/cities.json";
+  const response = await sendSrsRequest(url, "GET");
+  const key = response.data.result[0];
+  const resultArray = response.data.result?.slice(1).map(row => {
+    const obj = {};
+    key.forEach((header, index) => {
+      obj[header] = row[index];
+    });
+    return obj;
+  });
+  return resultArray;
+};
+
+export const getSrsSchedules = async (origin_id, destination_id, travel_date) => {
+  const url = `/gds/api/schedules/${origin_id}/${destination_id}/${travel_date}.json`;
+  const response = await sendSrsRequest(url, "GET");
+  const key = response.data.result[0];
+  const resultArray = response.data.result?.slice(1).map(row => {
+    const obj = {};
+    key.forEach((header, index) => {
+      obj[header] = row[index];
+    });
+    return obj;
+  });
+  return resultArray;
+};
+
+export const getSrsSeatDetails = async (schedule_id) => {
+  const url = `/gds/api/schedule/${schedule_id}.json`;
+  return sendSrsRequest(url, "GET");
 };
