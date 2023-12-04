@@ -30,9 +30,103 @@
     filter: invert(1);
   }
 }
+.MobileBusRoute{
+ 
+padding-left: 10px;
+padding-right: 10px;
+padding-bottom: 5px;
+.AFFORDABLE{
+  color: #fd5901;
+  padding-top: 5px;
+}
+.btn1{
+  background: #fd5901;
+  border: none;
+  outline: none;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 5px;
+
+}
+.btn2{
+  background: #fd5901;
+  border: none;
+  outline: none;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 5px;
+ 
+}
+  .select_vehicle{
+    padding-top: 10px;
+    padding-bottom: 15px;
+
+
+    display: flex;
+gap: 7px;
+.link{
+  text-decoration: none;
+  color: black;
+}
+  }
+  .outer_border{
+    border: 1px solid gray ;
+    border-radius: 15px;
+    // height: 150px;
+    margin: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-evenly;
+    .inputs{  
+      padding-left: 5px;
+      padding-right: 5px;
+      
+      .fromto{
+        padding-top: 5px;
+      padding-bottom: 5px;
+        border: 1px solid gray;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        .img_rotater{
+          position: relative;
+          .reverse-img{
+            position: absolute;
+            right: 8px;
+            bottom: -14px;
+            rotate: 90deg;
+            background-color: black;
+           padding-left: 7px;
+           padding-right: 6px;
+           padding-top: 5px;
+           padding-bottom: 5px;
+
+
+            object-fit: contain;
+
+            border-radius: 100px;
+          }
+        }
+
+      }   
+     .days{
+      margin-top: 10px;
+      padding-left: 10px;
+      display: flex;
+      gap: 7px;
+     }
+    }
+  }
+}
 
 @media (max-width: 768px) {
   .BusRoute {
+    display: none;
     flex-wrap: wrap;
     button {
       margin-top: 30px;
@@ -41,6 +135,8 @@
 }
 @media (max-width: 426px) {
   .BusRoute {
+    display: none;
+
     flex-direction: column;
     gap: 25px;
     justify-content: space-between;
@@ -50,5 +146,13 @@
       height: 50px;
       width: 150px;
     }
+  }
+  .MobileBusRoute{
+    display: block;
+  }
+}
+@media (min-width: 426px) {
+  .MobileBusRoute{
+    display: none;
   }
 }
