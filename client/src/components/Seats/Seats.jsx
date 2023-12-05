@@ -47,6 +47,8 @@ const Seats = ({
   fare,
   isVrl,
   ReferenceNumber,
+  isSrs,
+  scheduleId,
 }) => {
   //* states
   const navigate = useNavigate();
@@ -109,14 +111,15 @@ const Seats = ({
     // isAC,
     // isSleeper
   ) => {
-
+    const roundToDecimal = (value, decimalPlaces) =>
+      Number(value.toFixed(decimalPlaces));
 
     return setBookingDetails((prev) => {
       let newSelected = [...prev.selectedSeats];
-      let newFare = parseFloat(prev.fare);
-      let newTax = parseFloat(prev.serviceTax);
-      let newOperatorTax = parseFloat(prev.operatorTax);
-      let newTotalFare = parseFloat(prev.totalFare);
+      let newFare = roundToDecimal(parseFloat(prev.fare), 2);
+      let newTax = roundToDecimal(parseFloat(prev.serviceTax), 2);
+      let newOperatorTax = roundToDecimal(parseFloat(prev.operatorTax), 2);
+      let newTotalFare = roundToDecimal(parseFloat(prev.totalFare), 2);
       let newSeatFares = [...prev.seatFares];
       let newSeatTaxes = [...prev.seatTaxes];
       let newSeatTotalFares = [...prev.seatTotalFares];
@@ -129,13 +132,13 @@ const Seats = ({
       if (seatIndex === -1) {
         if (newSelected.length < 5) {
           newSelected.push(seatId);
-          newFare += parseFloat(fare);
-          newTax += parseFloat(serviceTax);
-          newOperatorTax += parseFloat(operatorTax);
-          newTotalFare += parseFloat(totalFare);
-          newSeatFares.push(parseFloat(fare));
-          newSeatTaxes.push(parseFloat(serviceTax));
-          newSeatTotalFares.push(parseFloat(totalFare));
+          newFare += roundToDecimal(parseFloat(fare), 2);
+          newTax += roundToDecimal(parseFloat(serviceTax), 2);
+          newOperatorTax += roundToDecimal(parseFloat(operatorTax), 2);
+          newTotalFare += roundToDecimal(parseFloat(totalFare), 2);
+          newSeatFares.push(roundToDecimal(parseFloat(fare), 2));
+          newSeatTaxes.push(roundToDecimal(parseFloat(serviceTax), 2));
+          newSeatTotalFares.push(roundToDecimal(parseFloat(totalFare), 2));
           // newAC.push(isAC);
           // newSleeper.push(isSleeper);
           newLadiesSeat.push(isLadiesSeat);
@@ -144,10 +147,10 @@ const Seats = ({
         }
       } else {
         newSelected.splice(seatIndex, 1);
-        newFare -= parseFloat(fare);
-        newTax -= parseFloat(serviceTax);
-        newOperatorTax -= parseFloat(operatorTax);
-        newTotalFare -= parseFloat(totalFare);
+        newFare -= roundToDecimal(parseFloat(fare), 2);
+        newTax -= roundToDecimal(parseFloat(serviceTax), 2);
+        newOperatorTax -= roundToDecimal(parseFloat(operatorTax), 2);
+        newTotalFare -= roundToDecimal(parseFloat(totalFare), 2);
         newSeatFares.splice(seatIndex, 1);
         newSeatTaxes.splice(seatIndex, 1);
         newSeatTotalFares.splice(seatIndex, 1);
@@ -174,12 +177,15 @@ const Seats = ({
   };
 
 
+
   const lowerTierSeats = isVrl ?
     seatDetails.filter((seat) => seat.UpLowBerth === "LB") :
-    seatDetails.filter((seat) => seat.zIndex === "0");
+    isSrs ? seatDetails.coach_details.filter((seat) => seat.berth === "Lower Berth") :
+      seatDetails.filter((seat) => seat.zIndex === "0");
   const upperTierSeats = isVrl ?
     seatDetails.filter((seat) => seat.UpLowBerth === "UB") :
-    seatDetails.filter((seat) => seat.zIndex === "1");
+    isSrs ? seatDetails.coach_details.filter((seat) => seat.berth === "Upper Berth") :
+      seatDetails.filter((seat) => seat.zIndex === "1");
 
   const renderSeatTable = (seats, selectedSeats) => {
     if (isVrl) {
@@ -324,6 +330,158 @@ const Seats = ({
         previousSeatCount = seatCount;
       }
 
+      return (
+        <table>
+          <tbody>{seatTable}</tbody>
+        </table>
+      );
+    } else if (isSrs) {
+
+      const filteredSeats = seats;
+      const highlightedPrice = selectedPriceFilter;
+
+      const numRows = Math.max(...filteredSeats?.map((seat) => parseInt(seat.column, 10))) + 1;
+      const numCols = Math.max(...filteredSeats?.map((seat) => parseInt(seat.row, 10))) + 1;
+      const minRow = Math.min(...filteredSeats?.map((seat) => parseInt(seat.column, 10)));
+
+      const seatTable = [];
+      let previousSeatCount = -1;
+
+      for (let row = minRow; row < numRows; row++) {
+        const seatRow = [];
+        let seatCount = 0;
+
+        for (let col = 0; col < numCols; col++) {
+          const seat = filteredSeats.find((s) => parseInt(s.column, 10) === row && parseInt(s.row, 10) === col);
+          if (seat) {
+            seatCount++;
+            const isHighlighted = seatDetails.available[seat.seatName] === highlightedPrice;
+
+
+
+            if (seatDetails.available[seat.seatName]) {
+              if (selectedSeats.includes(seat.seatName)) {
+                seatRow.push(
+                  <td key={seat.seatName}>
+                    <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
+
+                      <img
+                        onClick={() =>
+                          seatSelectionHandler(
+                            seat.seatName,
+                            seatDetails.available[seat.seatName],
+                            seatDetails.available_gst[seat.seatName],
+                            seat.operatorServiceChargeAbsolute,
+                            parseInt(seatDetails.available[seat.seatName]) + parseInt(seatDetails.available_gst[seat.seatName]),
+                            seatDetails.ladies_seats?.includes(seat.seatName),
+                            // seat.ac,
+                            // seat.sleeper
+                          )
+                        }
+                        title={`ID: ${seat.seatName}\nFare: ₹${seatDetails.available[seat.seatName]}`}
+                        src={(seatDetails.seatCategory === 1 || seatDetails.seatCategory === 3) ? singleselected : selectedFill}
+                        alt="selected seat"
+                        className={(seat.width == "2") ? "vertical" : ""}
+                      />
+                    </div>
+                  </td>
+                );
+              } else {
+                if (seatDetails.ladies_seats?.includes(seat.seatName)) {
+                  seatRow.push(
+                    <td key={seat.seatName}>
+                      <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
+
+                        <img
+                          onClick={() =>
+                            seatSelectionHandler(
+                              seat.seatName,
+                              seatDetails.available[seat.seatName],
+                              seatDetails.available_gst[seat.seatName],
+                              seat.operatorServiceChargeAbsolute,
+                              parseInt(seatDetails.available[seat.seatName]) + parseInt(seatDetails.available_gst[seat.seatName]),
+                              seatDetails.ladies_seats?.includes(seat.seatName),
+                              // seat.ac,
+                              // seat.sleeper
+                            )
+                          }
+                          title={`ID: ${seat.seatName}\nFare: ₹${seatDetails.available_gst[seat.seatName]}`}
+                          src={(seatDetails.seatCategory === 1 || seatDetails.seatCategory === 3) ? singleladiesavailable : ladiesavailable}
+                          alt="available ladies"
+                          className={(seat.width == "2") ? "vertical" : ""}
+                        />
+                      </div>
+                    </td>
+                  );
+                } else {
+                  seatRow.push(
+                    <td key={seat.seatName}>
+                      <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
+
+                        <img
+                          onClick={() =>
+                            seatSelectionHandler(
+                              seat.seatName,
+                              seatDetails.available[seat.seatName],
+                              seatDetails.available_gst[seat.seatName],
+                              seat.operatorServiceChargeAbsolute,
+                              parseInt(seatDetails.available[seat.seatName]) + parseInt(seatDetails.available_gst[seat.seatName]),
+                              seatDetails.ladies_seats?.includes(seat.seatName),
+                              // seat.ac,
+                              // seat.sleeper
+                            )
+                          }
+                          title={`ID: ${seat.seatName}\nFare: ₹${seatDetails.available[seat.seatName]}`}
+                          src={(seatDetails.seatCategory === 1 || seatDetails.seatCategory === 3) ? singleavailable : available}
+                          alt="available"
+                          className={(seat.width == "2") ? "vertical" : ""}
+                        />
+                      </div>
+                    </td>
+                  );
+                }
+              }
+            } else {
+              if (seatDetails.ladies_booked_seats?.includes(seat.seatName)) {
+                seatRow.push(
+                  <td key={seat.seatName}>
+                    <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
+
+                      <img
+                        title={`ID: ${seat.seatName}`}
+                        src={(seatDetails.seatCategory === 1 || seatDetails.seatCategory === 3) ? singleladiesbooked : ladiesbooked}
+                        alt="ladiesbooked"
+                        className={(seat.width == "2") ? "vertical" : ""}
+                      />
+                    </div>
+                  </td>
+
+                );
+              } else {
+                seatRow.push(
+                  <td key={seat.seatName}>
+                    <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
+
+                      <img
+                        title={`ID: ${seat.seatName}`}
+                        src={(seatDetails.seatCategory === 1 || seatDetails.seatCategory === 3) ? singlebooked : booked}
+                        alt="booked"
+                        className={(seat.width == "2") ? "vertical" : ""}
+                      />
+                    </div>
+                  </td>
+                );
+              }
+            }
+          } else {
+            seatRow.push(<td key={`empty-${row}-${col}`}></td>);
+          }
+        }
+        if (!(seatCount === 0 && previousSeatCount === 0)) {
+          seatTable.push(<tr key={`row-${row}`}>{seatRow}</tr>);
+        }
+        previousSeatCount = seatCount;
+      }
       return (
         <table>
           <tbody>{seatTable}</tbody>
@@ -532,6 +690,8 @@ const Seats = ({
           cancellationPolicy,
           isVrl,
           ReferenceNumber,
+          isSrs,
+          scheduleId,
         },
       });
     } else {
@@ -643,7 +803,7 @@ const Seats = ({
           <div className="bus-container">
             <div className="bus">
               <div className="driver">
-              <img src={driver} alt="driver"/>
+                <img src={driver} alt="driver" />
 
               </div>
 
@@ -696,7 +856,7 @@ const Seats = ({
               <PickUpAndDropPoints
                 highlight={bookingDetails.droppingPoint.bpId === droppingPoint.bpId}
                 key={droppingPoint.bpId}
-                time={isVrl ? droppingPoint.time : convertMinutesToTime(droppingPoint.time)}
+                time={isVrl || isSrs ? droppingPoint.time : convertMinutesToTime(droppingPoint.time)}
                 locationOne={droppingPoint.bpName}
                 locationTwo={droppingPoint.address}
                 onClick={() =>
@@ -732,7 +892,7 @@ const Seats = ({
           {pickUpLocationOne?.map((boardingPoint, index) => (
             <PickUpAndDropPoints
               key={boardingPoint.bpId}
-              time={isVrl ? boardingPoint.time : convertMinutesToTime(boardingPoint.time)}
+              time={isVrl || isSrs ? boardingPoint.time : convertMinutesToTime(boardingPoint.time)}
               locationOne={boardingPoint.bpName}
               locationTwo={boardingPoint.address}
               highlight={bookingDetails.boardingPoint.bpId === boardingPoint.bpId}
@@ -777,7 +937,7 @@ const Seats = ({
               {pickUpLocationOne?.map((boardingPoint, index) => (
                 <PickUpAndDropPoints
                   key={boardingPoint.bpId}
-                  time={isVrl ? boardingPoint.time : convertMinutesToTime(boardingPoint.time)}
+                  time={isVrl || isSrs ? boardingPoint.time : convertMinutesToTime(boardingPoint.time)}
                   locationOne={boardingPoint.bpName}
                   locationTwo={boardingPoint.address}
                   highlight={bookingDetails.boardingPoint.bpId === boardingPoint.bpId}
@@ -798,7 +958,7 @@ const Seats = ({
                 <PickUpAndDropPoints
                   highlight={bookingDetails.droppingPoint.bpId === droppingPoint.bpId}
                   key={droppingPoint.bpId}
-                  time={isVrl ? droppingPoint.time : convertMinutesToTime(droppingPoint.time)}
+                  time={isVrl || isSrs ? droppingPoint.time : convertMinutesToTime(droppingPoint.time)}
                   locationOne={droppingPoint.bpName}
                   locationTwo={droppingPoint.address}
                   onClick={() =>
