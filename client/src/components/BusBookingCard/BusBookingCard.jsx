@@ -252,40 +252,40 @@ const BusBookingCard = ({
       }
 
     } catch (error) {
-      if (error.response) {
-        toast.error(`Server Error: ${error.response.status}`, {
-          duration: 2000,
-          position: 'top-center',
-          style: {
-            background: 'red',
-            color: 'white',
-          },
-        });
-        console.error("Server Error:", error.response.data);
-        setSeatLoading(false);
-      } else if (error.request) {
-        toast.error('Network Error: Unable to connect to the server', {
-          duration: 2000,
-          position: 'top-center',
-          style: {
-            background: 'red',
-            color: 'white',
-          },
-        });
-        setSeatLoading(false);
-        console.error("Network Error:", error.request);
-      } else {
-        toast.error('An unexpected error occurred', {
-          duration: 2000,
-          position: 'top-center',
-          style: {
-            background: 'red',
-            color: 'white',
-          },
-        });
+      // if (error.response) {
+      //   toast.error(`Server Error: ${error.response.status}`, {
+      //     duration: 2000,
+      //     position: 'top-center',
+      //     style: {
+      //       background: 'red',
+      //       color: 'white',
+      //     },
+      //   });
+      //   console.error("Server Error:", error.response.data);
+      //   setSeatLoading(false);
+      // } else if (error.request) {
+      //   toast.error('Network Error: Unable to connect to the server', {
+      //     duration: 2000,
+      //     position: 'top-center',
+      //     style: {
+      //       background: 'red',
+      //       color: 'white',
+      //     },
+      //   });
+      //   setSeatLoading(false);
+      //   console.error("Network Error:", error.request);
+      // } else {
+      //   toast.error('An unexpected error occurred', {
+      //     duration: 2000,
+      //     position: 'top-center',
+      //     style: {
+      //       background: 'red',
+      //       color: 'white',
+      //     },
+      //   });
         setSeatLoading(false);
         console.error("Something went wrong:", error);
-      }
+      // }
     }
   };
 
