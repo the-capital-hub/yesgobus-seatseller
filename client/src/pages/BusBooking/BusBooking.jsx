@@ -22,6 +22,7 @@ import { useLocation, Navigate } from "react-router-dom";
 import { cityMapping } from "../../utils/cityMapping";
 import { filterIcon } from "../../assets/busbooking";
 import { getVrlBuses } from "../../api/vrlBusesApis";
+import { getSrsBuses } from "../../api/srsBusesApis";
 
 const BusBooking = () => {
   const loggedInUser = localStorage.getItem("loggedInUser");
@@ -32,10 +33,12 @@ const BusBooking = () => {
   const location = useLocation();
   const [noOfBuses, setNoOfBuses] = useState(0);
   const [noOfVrlBuses, setNoVrlOfBuses] = useState(0);
+  const [noOfSrsBuses, setNoSrsOfBuses] = useState(0);
   const [busDetails, setBusDetails] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const [vrlBuses, setVrlBuses] = useState([]);
+  const [srsBuses, setSrsBuses] = useState([]);
   const [vrlSourceCityId, setVrlSourceCityId] = useState("");
   const [vrlDestinationCityId, setVrlDestinationCityId] = useState("");
 
@@ -129,7 +132,8 @@ const BusBooking = () => {
       destinationCity = mapping.sourceCity;
       droppingPoints = mapping.boardingPoints;
     }
-
+    let vrlLength = 0;
+    //vrl buses
     try {
       setLoading(true);
       const requestBody = {
@@ -141,18 +145,42 @@ const BusBooking = () => {
       const vrlResponse = await getVrlBuses(requestBody);
       setVrlBuses(vrlResponse.data);
       setNoVrlOfBuses(vrlResponse.data.length);
+      vrlLength = vrlResponse.data.length;
       setVrlDestinationCityId(vrlResponse.destinationCity);
       setVrlSourceCityId(vrlResponse.sourceCity);
     } catch (error) {
       setVrlBuses([]);
       setNoVrlOfBuses(0);
+      vrlLength = 0;
       console.log(error);
     } finally {
       setLoading(false);
     }
 
+    let srsLength = 0;
+    //srs buses
     try {
-      setLoading(true);
+      if (vrlLength === 0) {
+        setLoading(true);
+      }
+      const srsResponse = await getSrsBuses(sourceCity.trim(), destinationCity.trim(), doj);
+      setSrsBuses(srsResponse);
+      setNoSrsOfBuses(srsResponse.length);
+      srsLength = srsResponse.length;
+    } catch (error) {
+      setSrsBuses([]);
+      setNoSrsOfBuses(0);
+      srsLength = 0
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+
+    //seat seller buses
+    try {
+      if (srsLength === 0) {
+        setLoading(true);
+      }
       const response = await axiosInstance.post(
         `${import.meta.env.VITE_BASE_URL}/api/busBooking/getBusDetails`,
         {
@@ -275,7 +303,6 @@ const BusBooking = () => {
     currentDate.setSeconds(seconds || 0);
 
     const arrivalDateTime = new Date(arrivalTime.replace(/(\d+)-(\d+)-(\d+) (\d+):(\d+) ([APMapm]{2})/, '$2/$1/$3 $4:$5 $6'));
-    console.log(arrivalDateTime);
     const timeDifference = arrivalDateTime - currentDate;
 
     const travelTimeInMinutes = timeDifference / (1000 * 60);
@@ -378,8 +405,9 @@ const BusBooking = () => {
                 date={selectedDate}
                 onDateChange={handleDate}
               />
-              <ColumnNames noOfBuses={noOfBuses + noOfVrlBuses} />
+              <ColumnNames noOfBuses={noOfBuses + noOfVrlBuses + noOfSrsBuses} />
 
+              {/* vrl buses */}
 
               {vrlBuses?.map((bus) => (
                 <div className="bus-card-container" key={bus?.ReferenceNumber}>
@@ -417,6 +445,47 @@ const BusBooking = () => {
                     // cancellationPolicy={bus?.cancellationPolicy}
                     fare={bus?.fares}
                     isVrl={true}
+                  />
+                </div>
+              ))}
+
+              {/* srs buses */}
+              {srsBuses?.map((bus) => (
+                <div className="bus-card-container" key={bus?.id}>
+                  <BusBookingCard
+                    key={bus?.id}
+                    scheduleId={bus?.id}
+                    // inventoryType={bus.inventoryType}
+                    sourceCity={fromLocation}
+                    sourceCityId={bus.origin_id}
+                    destinationCity={toLocation}
+                    destinationCityId={bus.destination_id}
+                    doj={selectedDate}
+                    title={"SRS Travels"}
+                    busName={"SRS Travels"}
+                    busType={bus?.bus_type}
+                    rating={(Math.random() * 1 + 4).toFixed(1)}
+                    noOfReviews={Math.floor(Math.random() * 101) + 37}
+                    pickUpLocation={fromLocation}
+                    pickUpTime={bus?.dep_time}
+                    reachLocation={toLocation}
+                    reachTime={bus?.arr_time}
+
+                    // calucalte total time
+                    travelTime={bus?.duration}
+                    seatsLeft={bus?.available_seats}
+                    // avlWindowSeats={bus?.avlWindowSeats}
+                    price={bus?.show_fare_screen}
+                    // pickUpTimes={pickUpTimes}
+                    pickUpLocationOne={bus?.boarding_stages}
+                    // pickUpLocationTwo={pickUpLocationTwo}
+                    // dropTimes={dropTimes}
+                    dropLocationOne={bus?.dropoff_stages}
+                    // dropLocationTwo={dropLocationTwo}
+                    backSeat={true}
+                    // cancellationPolicy={bus?.cancellationPolicy}
+                    fare={bus?.fare_str}
+                    isSrs={true}
                   />
                 </div>
               ))}

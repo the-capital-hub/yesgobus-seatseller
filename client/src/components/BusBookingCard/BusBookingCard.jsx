@@ -8,6 +8,7 @@ import axiosInstance from "../../utils/service";
 import { Spin } from "antd";
 import toast, { Toaster } from 'react-hot-toast';
 import { getVrlSeatLayout } from "../../api/vrlBusesApis";
+import { getSrsSeatLayout } from "../../api/srsBusesApis";
 
 const BusBookingCard = ({
   tripId,
@@ -40,13 +41,16 @@ const BusBookingCard = ({
   backSeat,
   fare,
   isVrl = false,
-  ReferenceNumber
+  ReferenceNumber,
+  //srs
+  scheduleId,
+  isSrs = false,
 }) => {
   const [showSeats, setShowSeats] = useState(false);
   const [seatDetails, setSeatDetails] = useState([]);
   const [seatLoading, setSeatLoading] = useState(false);
   const [availableSeats, setAvailableSeats] = useState(seatsLeft);
-
+  // const [srsSeats, setSrsSeats] = useState(null);
   const priceToDisplay = (fare) => {
     const prices = fare;
     if (prices?.length === 1) {
@@ -57,6 +61,121 @@ const BusBookingCard = ({
       return `${minPrice} - ${maxPrice}`;
     }
   };
+
+  // srs seat layout
+  const seatTypes = {
+    ".GY": "Gangway",
+    ".DR_IMG": "Driver Image",
+    ".ST_IMG": "Strairs Image",
+    ".WR_IMG": "Wash Room Image",
+    ".BR": "Break",
+    "SS": "Semi Sleeper",
+    "SL": "Sleeper",
+    "LB": "Lower Berth",
+    "UB": "Upper Berth",
+    "BS": "Semi Cama",
+    "PB": "Push Back",
+    "NPB": "No Push Back",
+    "SLB": "Side Lower Berth",
+    "SUB": "Side Upper Berth",
+    "SST": "Single Seat",
+    "NA": "Un Reservable Seat",
+    "ST": "Seater",
+    "DLB": "Double Lower Berth",
+    "DUB": "Double Upper Berth",
+    "WSS": "Window Semi Sleeper",
+    "WST": "Window Seater",
+    "WLB": "Window Lower Berth",
+    "WUB": "Window Upper Berth",
+    "WSL": "Window Single Lower",
+    "WSU": "Window Single Upper",
+    "BU": "Cama Suite",
+    "EC": "Economy Class",
+    "SEMI CAMA": "SEMI CAMA",
+    "SALON CAMA": "SALON CAMA",
+    "CLASICO": "Clasico",
+    "EJECUTIVO": "Ejecutivo",
+    "PREMIUM": "Premium",
+    "SC": "Semi Cama",
+    "CO": "Comun Con",
+    "EX": "Cama",
+    "SP": "SP",
+    "SALON": "SALON",
+    "SALON MIXTO": "SALON MIXTO",
+    "SEMICAMA": "SEMI CAMA",
+    "CAMA": "SALON CAMA",
+    "COMUN": "COMUN",
+    "COMUN CON AIRE": "COMUN CON AIRE",
+    "SCA": "SCA",
+    "SX": "SX",
+    "BLACK": "BLACK",
+    "PULLMAN": "PULLMAN",
+    "CA": "Ejecutivo",
+    "XP": "Cama",
+    "PREMIUM PROMO": "Premium Promo",
+    "SALON CAMA PROMO": "Salon Cama Promo",
+    "SEMICAMA PROMO": "Semicama Promo",
+    "CAMA VIP": "CAMA VIP",
+    "Cama Ejecutivo": "Cama Ejecutivo",
+    "Cama Suite": "Cama Suite",
+    "BJ": "SALON CAMA",
+    "EJ": "SALON CAMA",
+    "SU": "Cama Suite",
+    "BT": "Semi Cama",
+    "SJ": "Semi Cama",
+    "LS": "Semi Cama",
+    "SUITE CAMA": "SUITE CAMA",
+    "COMPARTIDO": "COMPARTIDO",
+    "EXCLUSIVO": "EXCLUSIVO",
+    "SEMI EXCLUSIVO": "SEMI EXCLUSIVO"
+  };
+
+  // const seatCategoryTypes = {
+  //   1: "Seat",
+  //   2: "Sleeper",
+  //   3: "Seat cum Sleeper",
+  //   4: "Any",
+  // }
+
+  // Function to parse the coach_details string
+  function parseCoachDetails(coachDetails) {
+    const rows = coachDetails.split(',');
+    const seatLayout = [];
+
+    rows.forEach((row, rowIndex) => {
+      const columns = row.split('-');
+      columns.forEach((column, columnIndex) => {
+        const seats = column.split('|');
+        const isValid = seats[0].match(/[A-Z0-9.]+/g);
+
+        if (isValid) {
+          seatLayout.push({
+            seatName: seats[0],
+            row: rowIndex + 1,
+            column: columnIndex + 1,
+            berth: seatTypes[seats[1]],
+            // z_index: seatTypes[seats[1]],
+            // width: seatTypes[seats[1]],
+            // length: seatTypes[seats[1]],
+          });
+        }
+      });
+    });
+
+    return seatLayout;
+  }
+
+  // Function to parse the available string
+  function parseAvailable(available) {
+    const seatObject = {};
+    available.split(',').forEach(seatInfo => {
+      const [seatName, fare] = seatInfo.split('|');
+      seatObject[seatName.trim()] = parseFloat(fare);
+    });
+
+    return seatObject;
+  }
+
 
   const fetchSeatData = async () => {
     if (!showSeats === false) {
@@ -77,6 +196,49 @@ const BusBookingCard = ({
         setAvailableSeats(availableSeats.length);
         setSeatLoading(false);
         setShowSeats(!showSeats);
+      }
+      if (isSrs) {
+        const seatsResponse = await getSrsSeatLayout(scheduleId);
+
+        let coach_details = seatsResponse.result.bus_layout.coach_details;
+        let available = seatsResponse.result.bus_layout.available;
+        let available_gst = seatsResponse.result.bus_layout.available_gst;
+        let ladies_seats = seatsResponse.result.bus_layout.ladies_seats?.split(",");
+        let gents_seats = seatsResponse.result.bus_layout.gents_seats?.split(",");
+        let ladies_booked_seats = seatsResponse.result.bus_layout.ladies_booked_seats?.split(",");
+        let gents_booked_seats = seatsResponse.result.bus_layout.gents_booked_seats?.split(",");
+        let boarding_stages = seatsResponse.result.bus_layout.boarding_stages;
+        let dropoff_stages = seatsResponse.result.bus_layout.dropoff_stages;
+        let seatCategory = seatsResponse.result.bus_type_id;
+
+        const boardingPointlocationsAndTimes = boarding_stages?.split("~").map(entry => {
+          const [bpId, time, address, land_mark, contact, bpName] = entry.split("|");
+          return { bpId, bpName, time };
+        });
+        const droppingPointlocationsAndTimes = dropoff_stages?.split("~").map(entry => {
+          const [bpId, time, address, land_mark, contact, bpName] = entry.split("|");
+          return { bpId, bpName, time };
+        });
+
+        const parsedCoachDetails = parseCoachDetails(coach_details);
+        const parsedAvailable = parseAvailable(available);
+        const parsedAvailable_gst = parseAvailable(available_gst);
+
+        setSeatDetails({
+          coach_details: parsedCoachDetails,
+          available: parsedAvailable,
+          available_gst: parsedAvailable_gst,
+          ladies_seats,
+          gents_seats,
+          ladies_booked_seats,
+          gents_booked_seats,
+          boardingPointlocationsAndTimes,
+          droppingPointlocationsAndTimes,
+          seatCategory
+        });
+        setSeatLoading(false);
+        setShowSeats(!showSeats);
+
       } else {
         const response = await axiosInstance.get(
           `${import.meta.env.VITE_BASE_URL}/api/busBooking/getSeatLayout/${tripId}`,
@@ -90,40 +252,40 @@ const BusBookingCard = ({
       }
 
     } catch (error) {
-      if (error.response) {
-        toast.error(`Server Error: ${error.response.status}`, {
-          duration: 2000,
-          position: 'top-center',
-          style: {
-            background: 'red',
-            color: 'white',
-          },
-        });
-        console.error("Server Error:", error.response.data);
-        setSeatLoading(false);
-      } else if (error.request) {
-        toast.error('Network Error: Unable to connect to the server', {
-          duration: 2000,
-          position: 'top-center',
-          style: {
-            background: 'red',
-            color: 'white',
-          },
-        });
-        setSeatLoading(false);
-        console.error("Network Error:", error.request);
-      } else {
-        toast.error('An unexpected error occurred', {
-          duration: 2000,
-          position: 'top-center',
-          style: {
-            background: 'red',
-            color: 'white',
-          },
-        });
+      // if (error.response) {
+      //   toast.error(`Server Error: ${error.response.status}`, {
+      //     duration: 2000,
+      //     position: 'top-center',
+      //     style: {
+      //       background: 'red',
+      //       color: 'white',
+      //     },
+      //   });
+      //   console.error("Server Error:", error.response.data);
+      //   setSeatLoading(false);
+      // } else if (error.request) {
+      //   toast.error('Network Error: Unable to connect to the server', {
+      //     duration: 2000,
+      //     position: 'top-center',
+      //     style: {
+      //       background: 'red',
+      //       color: 'white',
+      //     },
+      //   });
+      //   setSeatLoading(false);
+      //   console.error("Network Error:", error.request);
+      // } else {
+      //   toast.error('An unexpected error occurred', {
+      //     duration: 2000,
+      //     position: 'top-center',
+      //     style: {
+      //       background: 'red',
+      //       color: 'white',
+      //     },
+      //   });
         setSeatLoading(false);
         console.error("Something went wrong:", error);
-      }
+      // }
     }
   };
 
@@ -258,10 +420,14 @@ const BusBookingCard = ({
           destinationCityId={destinationCityId}
           doj={doj}
           // pickUpTimes={pickUpTimes}
-          pickUpLocationOne={isVrl ? vrlPickupLocations : Array.isArray(pickUpLocationOne) ? pickUpLocationOne : [pickUpLocationOne]}
+          pickUpLocationOne={isVrl ? vrlPickupLocations :
+            isSrs ? seatDetails.boardingPointlocationsAndTimes :
+              Array.isArray(pickUpLocationOne) ? pickUpLocationOne : [pickUpLocationOne]}
           // pickUpLocationTwo={pickUpLocationTwo}
           // dropTimes={dropTimes}
-          dropLocationOne={isVrl ? vrlDropLocations : Array.isArray(dropLocationOne) ? dropLocationOne : [dropLocationOne]}
+          dropLocationOne={isVrl ? vrlDropLocations :
+            isSrs ? seatDetails.droppingPointlocationsAndTimes :
+              Array.isArray(dropLocationOne) ? dropLocationOne : [dropLocationOne]}
           // dropLocationTwo={dropLocationTwo}
           backSeat={backSeat}
           busName={busName}
@@ -272,6 +438,8 @@ const BusBookingCard = ({
           fare={isVrl ? vrlPrices : fare}
           isVrl={isVrl}
           ReferenceNumber={ReferenceNumber}
+          scheduleId={scheduleId}
+          isSrs={isSrs}
         />
       )}
       <Toaster />

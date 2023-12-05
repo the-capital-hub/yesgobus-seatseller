@@ -5,6 +5,7 @@ import BusBooking from "../modals/busBooking.modal.js";
 import City from "../modals/cities.modal.js";
 import VrlCity from "../modals/vrlcities.modal.js";
 import Tickets from "../modals/ticket.modal.js";
+import SrsCity from "../modals/srscities.modal.js";
 
 const sendRequest = async (url, method, data) => {
   try {
@@ -379,7 +380,7 @@ export const getAllBookings = async (userId) => {
 
 
 // vrl travels buses
-export const sendVrlRequest = async (url) => {
+export const sendVrlRequest = async (url, data) => {
   try {
     data.verifyCall = process.env.VERIFY_CALL;
     const response = await axios({
@@ -526,13 +527,13 @@ export const sendSrsRequest = async (url, method, data) => {
     const response = await axios({
       method: method,
       url: `http://gds-stg.ticketsimply.co.in/${url}`,
+
       headers: headers,
       data: data,
     });
 
     return response;
   } catch (error) {
-    console.log(error);
     throw error.message;
   }
 };
@@ -553,7 +554,11 @@ export const getSrsCities = async () => {
 };
 
 export const getSrsSchedules = async (origin_id, destination_id, travel_date) => {
-  const url = `/gds/api/schedules/${origin_id}/${destination_id}/${travel_date}.json`;
+  const [srsSourceCity, srsDesctinationCity] = await Promise.all([
+    SrsCity.findOne({ name: capitalizeFirstLetter(origin_id) }),
+    SrsCity.findOne({ name: capitalizeFirstLetter(destination_id) }),
+  ]);
+  const url = `/gds/api/schedules/${srsSourceCity.id}/${srsDesctinationCity.id}/${travel_date}.json`;
   const response = await sendSrsRequest(url, "GET");
   const key = response.data.result[0];
   const resultArray = response.data.result?.slice(1).map(row => {
@@ -568,5 +573,79 @@ export const getSrsSchedules = async (origin_id, destination_id, travel_date) =>
 
 export const getSrsSeatDetails = async (schedule_id) => {
   const url = `/gds/api/schedule/${schedule_id}.json`;
-  return sendSrsRequest(url, "GET");
+  const response = await sendSrsRequest(url, "GET");
+  return response.data;
+};
+
+export const getSrsOperatorSchedules = async (travel_id, travel_date) => {
+  const url = `/gds/api/operator_schedules/${travel_id}/${travel_date}.json`;
+  const response = await sendSrsRequest(url, "GET");
+  const key = response.data.result[0];
+  const resultArray = response.data.result?.slice(1).map(row => {
+    const obj = {};
+    key.forEach((header, index) => {
+      obj[header] = row[index];
+    });
+    return obj;
+  });
+  return resultArray;
+};
+
+export const getSrsAvailabilities = async (origin_id, destination_id, travel_date) => {
+  const url = `/gds/api/availabilities/${origin_id}/${destination_id}/${travel_date}.json`;
+  const response = await sendSrsRequest(url, "GET");
+  const key = response.data.result[0];
+  const resultArray = response.data.result?.slice(1).map(row => {
+    const obj = {};
+    key.forEach((header, index) => {
+      obj[header] = row[index];
+    });
+    return obj;
+  });
+  return resultArray;
+};
+
+export const getSrsAvailability = async (schedule_id) => {
+  const url = `/gds/api/availability/${schedule_id}.json`;
+  const response = await sendSrsRequest(url, "GET");
+  const key = response.data.result[0];
+  const resultArray = response.data.result?.slice(1).map(row => {
+    const obj = {};
+    key.forEach((header, index) => {
+      obj[header] = row[index];
+    });
+    return obj;
+  });
+  return resultArray;
+};
+
+export const getSrsBlockSeat = async (schedule_id, args) => {
+  const url = `/gds/api/tentative_booking/${schedule_id}.json`;
+  const response = await sendSrsRequest(url, "POST", args);
+  return response.data;
+};
+
+//pass the ticket number from the block seat response
+export const srsConfirmBooking = async (ticket_number) => {
+  const url = `/gds/api/confirm_booking/${ticket_number}.json?api_key=${process.env.SRS_API_KEY}`;
+  const response = await sendSrsRequest(url, "POST");
+  return response.data;
+};
+
+export const getSrsBookingDetails = async (ticket_number, agent_ref_number) => {
+  const url = `/gds/api/booking_details.json?pnr_number=${ticket_number}&agent_ref_number=${agent_ref_number}`;
+  const response = await sendSrsRequest(url, "GET");
+  return response.data;
+};
+
+export const getSrsCanCancelDetails = async (ticket_number, seat_numbers) => {
+  const url = `/gds/api/can_cancel.json?ticket_number=${ticket_number}&seat_numbers=${seat_numbers}`;
+  const response = await sendSrsRequest(url, "GET");
+  return response.data;
+};
+
+export const srsCancelBooking = async (ticket_number, seat_numbers) => {
+  const url = `/gds/api/cancel_booking.json?ticket_number=${ticket_number}&seat_numbers=${seat_numbers}`;
+  const response = await sendSrsRequest(url, "GET");
+  return response.data;
 };
