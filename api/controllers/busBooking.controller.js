@@ -29,6 +29,14 @@ import {
   getSrsCities,
   getSrsSchedules,
   getSrsSeatDetails,
+  getSrsOperatorSchedules,
+  getSrsAvailabilities,
+  getSrsAvailability,
+  getSrsBlockSeat,
+  srsConfirmBooking,
+  getSrsBookingDetails,
+  getSrsCanCancelDetails,
+  srsCancelBooking,
 
 } from "../service/buBooking.service.js";
 import { sendMessage, sendMail } from "../utils/helper.js";
@@ -557,7 +565,7 @@ export const getSrsSchedulesController = async (req, res) => {
 
 export const getSrsSeatDetailsController = async (req, res) => {
   try {
-    const { schedule_id } = req.params
+    const { schedule_id } = req.params;
     const response = await getSrsSeatDetails(schedule_id);
     res.status(200).send(response);
   } catch (error) {
@@ -570,3 +578,124 @@ export const getSrsSeatDetailsController = async (req, res) => {
   }
 };
 
+export const getSrsOperatorSchedulesController = async (req, res) => {
+  try {
+    const { travel_id, travel_date } = req.params;
+    const response = await getSrsOperatorSchedules(travel_id, travel_date);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "Internal Server Error",
+      error: error,
+    })
+  }
+};
+
+export const getSrsAvailabilitiesController = async (req, res) => {
+  try {
+    const { origin_id, destination_id, travel_date } = req.params
+    const response = await getSrsAvailabilities(origin_id, destination_id, travel_date);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "Internal Server Error",
+      error: error,
+    })
+  }
+};
+
+
+export const getSrsAvailabilityController = async (req, res) => {
+  try {
+    const { schedule_id } = req.params;
+    const response = await getSrsAvailability(schedule_id);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "Internal Server Error",
+      error: error,
+    })
+  }
+};
+
+
+export const getSrsBlockSeatController = async (req, res) => {
+  try {
+    const { schedule_id } = req.params;
+    const response = await getSrsBlockSeat(schedule_id, req.body);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "Internal Server Error",
+      error: error,
+    })
+  }
+};
+
+export const srsConfirmBookingController = async (req, res) => {
+  try {
+    const { ticket_number } = req.params;
+    const response = await srsConfirmBooking(ticket_number);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "Internal Server Error",
+      error: error,
+    })
+  }
+};
+
+export const getSrsBookingDetailsController = async (req, res) => {
+  try {
+    const { ticket_number, agent_ref_number } = req.params;
+    const response = await getSrsBookingDetails(ticket_number, agent_ref_number);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "Internal Server Error",
+      error: error,
+    })
+  }
+};
+
+export const getSrsCanCancelDetailsController = async (req, res) => {
+  try {
+    const { ticket_number, seat_numbers } = req.params;
+    const response = await getSrsCanCancelDetails(ticket_number, seat_numbers);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "Internal Server Error",
+      error: error,
+    })
+  }
+};
+
+export const srsCancelBookingController = async (req, res) => {
+  try {
+    const { ticket_number, seat_numbers } = req.params;
+    const response = await srsCancelBooking(ticket_number, seat_numbers);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "Internal Server Error",
+      error: error,
+    })
+  }
+};

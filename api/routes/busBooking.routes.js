@@ -34,6 +34,14 @@ import {
     getSrsCitiesController,
     getSrsSchedulesController,
     getSrsSeatDetailsController,
+    getSrsOperatorSchedulesController,
+    getSrsAvailabilitiesController,
+    getSrsAvailabilityController,
+    getSrsBlockSeatController,
+    srsConfirmBookingController,
+    getSrsBookingDetailsController,
+    getSrsCanCancelDetailsController,
+    srsCancelBookingController,
 
 } from "../controllers/busBooking.controller.js";
 import { authenticateUser } from "../middleware/authenticateUser.js";
@@ -144,5 +152,13 @@ router.post("/getVrlBusDetails", getVrlBusDetailsController);
 router.get("/getSrsCities", getSrsCitiesController);
 router.get("/getSrsSchedules/:origin_id/:destination_id/:travel_date", getSrsSchedulesController);
 router.get("/getSrsSeatDetails/:schedule_id", getSrsSeatDetailsController);
+router.get("/getSrsOperatorSchedules/:travel_id/:travel_date", getSrsOperatorSchedulesController);
+router.get("/getSrsAvailabilities/:origin_id/:destination_id/:travel_date", getSrsAvailabilitiesController);
+router.get("/getSrsAvailability/:schedule_id", getSrsAvailabilityController);
+router.post("/getSrsBlockSeat/:schedule_id", getSrsBlockSeatController);
+router.post("/srsConfirmBooking/:ticket_number", srsConfirmBookingController);
+router.get("/getSrsBookingDetails/:ticket_number/:agent_ref_number", getSrsBookingDetailsController);
+router.get("/getSrsCanCancelDetails/:ticket_number/:seat_numbers", getSrsCanCancelDetailsController);
+router.get("/srsCancelBooking/:ticket_number/:seat_numbers", srsCancelBookingController);
 
 export default router;
