@@ -15,7 +15,7 @@ router.post("/signin", signInController);
 router.post("/googleSignIn", googleSignInController);
 router.post("/facebookSignIn", facebookSignInController);
 
-router.use(authenticateUser);
+// router.use(authenticateUser);
 
 router.patch("/updateProfile/:userId", updateUserProfileController);
 
