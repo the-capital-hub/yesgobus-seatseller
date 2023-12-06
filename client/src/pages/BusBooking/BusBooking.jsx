@@ -98,6 +98,9 @@ const BusBooking = () => {
     filters,
     returnDate
   ) => {
+    setBusDetails([]);
+    setVrlBuses([]);
+    setSrsBuses([]);
     if (sourceCity === null ||
       sourceCity === undefined ||
       sourceCity === "" ||
@@ -119,6 +122,7 @@ const BusBooking = () => {
     setSelectedDate(doj);
     setNoOfBuses(0);
     setNoVrlOfBuses(0);
+    setNoSrsOfBuses(0);
 
     let boardingPoints = [];
     let droppingPoints = [];
@@ -132,7 +136,7 @@ const BusBooking = () => {
       destinationCity = mapping.sourceCity;
       droppingPoints = mapping.boardingPoints;
     }
-    let vrlLength = 0;
+
     //vrl buses
     try {
       setLoading(true);
@@ -145,42 +149,34 @@ const BusBooking = () => {
       const vrlResponse = await getVrlBuses(requestBody);
       setVrlBuses(vrlResponse.data);
       setNoVrlOfBuses(vrlResponse.data.length);
-      vrlLength = vrlResponse.data.length;
       setVrlDestinationCityId(vrlResponse.destinationCity);
       setVrlSourceCityId(vrlResponse.sourceCity);
     } catch (error) {
       setVrlBuses([]);
       setNoVrlOfBuses(0);
-      vrlLength = 0;
       console.log(error);
-    } finally {
-      setLoading(false);
     }
 
-    let srsLength = 0;
     //srs buses
     try {
-      if (vrlLength === 0) {
-        setLoading(true);
+      console.log(filters);
+      if (filters && filters?.busPartners && filters.busPartners.length > 0 &&  !filters?.busPartners?.includes("SRS Travels")) {
+        setSrsBuses([]);
+        setNoSrsOfBuses(0);
+      } else {
+        const srsResponse = await getSrsBuses(sourceCity.trim(), destinationCity.trim(), doj);
+        const filteredBuses = srsResponse.filter(bus => bus?.status === "New" || bus.status === "Update");
+        setSrsBuses(filteredBuses);
+        setNoSrsOfBuses(filteredBuses.length);
       }
-      const srsResponse = await getSrsBuses(sourceCity.trim(), destinationCity.trim(), doj);
-      setSrsBuses(srsResponse);
-      setNoSrsOfBuses(srsResponse.length);
-      srsLength = srsResponse.length;
     } catch (error) {
       setSrsBuses([]);
       setNoSrsOfBuses(0);
-      srsLength = 0
       console.log(error);
-    } finally {
-      setLoading(false);
     }
 
     //seat seller buses
     try {
-      if (srsLength === 0) {
-        setLoading(true);
-      }
       const response = await axiosInstance.post(
         `${import.meta.env.VITE_BASE_URL}/api/busBooking/getBusDetails`,
         {
@@ -205,7 +201,6 @@ const BusBooking = () => {
     } catch (error) {
       setBusDetails([]);
       setNoOfBuses(0);
-      // console.error("Something went wrong:", error);
       setLoading(false);
     } finally {
       setLoading(false);
@@ -327,6 +322,7 @@ const BusBooking = () => {
             destinationCity={toLocation}
             doj={selectedDate}
             onFilterChange={handleFilter}
+            isSrs={noOfSrsBuses > 0}
           />
         </div>
 

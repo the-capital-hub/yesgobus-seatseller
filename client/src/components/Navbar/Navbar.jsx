@@ -5,47 +5,44 @@ import Button from "../Button/Button";
 import "./Navbar.scss";
 import { blacklogo } from "../../assets/homepage";
 import UserIcon from "../SvgIcons/UserIcon";
+import { useSelector } from "react-redux";
+import { selectIsMobileApp } from "../../stores/slices/designSlice";
 
 const Navbar = ({ page }) => {
 
-  let translateElement;
+  const isMobileApp = useSelector(selectIsMobileApp);
 
-  const googleTranslateElementInit = () => {
-    translateElement = new window.google.translate.TranslateElement(
-      {
-        pageLanguage: 'en',
-        includedLanguages: 'en,kn',
-        layout: window.google.translate.TranslateElement.InlineLayout.TOP_RIGHT,
-      },
-      "google_translate_element"
-    );
+  // let translateElement;
 
-    // google.elements.transliteration.LanguageDetect.events.listen(translateElement, 'pageTranslated', (e) => {
-    //   const detectedLanguage = e.detectedLanguage.toLowerCase();
-    //   if (detectedLanguage !== 'en') {
-    //     translateElement.showInvisible();
-    //     translateElement.selectLanguage('en');
-    //   }
-    // });
-  };
+  // const googleTranslateElementInit = () => {
+  //   translateElement = new window.google.translate.TranslateElement(
+  //     {
+  //       pageLanguage: 'en',
+  //       includedLanguages: 'en,kn',
+  //       layout: window.google.translate.TranslateElement.InlineLayout.TOP_RIGHT,
+  //     },
+  //     "google_translate_element"
+  //   );
 
-  function changeLanguage(languageCode) {
-    translateElement.showInvisible();
-    translateElement.selectLanguage(languageCode);
-  }
+  // };
 
-  useEffect(() => {
-    const translateElement = document.getElementById("google_translate_element");
-    if (translateElement) {
-      translateElement.innerHTML = "";
-    }
-    const script = document.createElement("script");
-    script.src =
-      "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-    script.async = true;
-    document.body.appendChild(script);
-    window.googleTranslateElementInit = googleTranslateElementInit;
-  }, []);
+  // function changeLanguage(languageCode) {
+  //   translateElement.showInvisible();
+  //   translateElement.selectLanguage(languageCode);
+  // }
+
+  // useEffect(() => {
+  //   const translateElement = document.getElementById("google_translate_element");
+  //   if (translateElement) {
+  //     translateElement.innerHTML = "";
+  //   }
+  //   const script = document.createElement("script");
+  //   script.src =
+  //     "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+  //   script.async = true;
+  //   document.body.appendChild(script);
+  //   window.googleTranslateElementInit = googleTranslateElementInit;
+  // }, []);
 
 
   const [showMenu, setShowMenu] = useState(false);
@@ -105,10 +102,10 @@ const Navbar = ({ page }) => {
       <div className="right">
         {loggedInUser ? (
           <Link to={`/profile`} className="user">
-            <span className="user-icon">
+            <span className={page === "home" ? "user-icon" : "user-icon icon-change "}>
               <UserIcon />
             </span>
-            {JSON.parse(loggedInUser).fullName}
+            <div className="user-name">{JSON.parse(loggedInUser).fullName}</div>
           </Link>
         ) : (
           <a href="/login">
@@ -117,22 +114,29 @@ const Navbar = ({ page }) => {
         )}
         {/* <div id="google_translate_element"></div> */}
       </div>
-      <div id="google_translate_element"></div>
-      {page === "home" ? (
+      {/* {page === "home" ? (
         <img
           className="hamburger"
           onClick={() => setShowMenu(!showMenu)}
           src={hamburger}
           alt=""
         />
-      ) : (
-        <img
+      ) : ( */}
+      <>
+        {/* <img
           className="hamburger"
           onClick={() => setShowMenu(!showMenu)}
           src={blackhamburger}
           alt=""
-        />
-      )}
+        /> */}
+        <div className={`select_vehicle`}>
+          {!isMobileApp && <button className="btn"><Link to={"/"} className="link">Home</Link></button>}
+          <button className="btn"><Link to={"/busbooking"} className="link">Bus</Link></button>
+          <button className="btn"><Link to={"/cabs"} className="link">Cab</Link></button>
+          <button className="btn"><Link to={"/contactus"} className="link">ContactUs</Link></button>
+        </div>
+      </>
+      {/* )} */}
       {showMenu && menu}
     </nav>
   );

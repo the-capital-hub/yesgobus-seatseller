@@ -17,7 +17,7 @@ import toast, { Toaster } from 'react-hot-toast';
 const Login = () => {
   const loggedInUser = localStorage.getItem("loggedInUser");
   if (loggedInUser) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/busbooking" replace />;
   }
 
   const navigate = useNavigate();
