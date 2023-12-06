@@ -49,19 +49,9 @@ import "./landingPage.scss";
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../utils/service";
 import { useNavigate } from "react-router-dom";
-import { selectIsMobileApp } from "../../stores/slices/designSlice";
-import { Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-
 
 const LandingPage = () => {
   const navigate = useNavigate();
-  const isMobileApp = useSelector(selectIsMobileApp);
-
-  if (isMobileApp) {
-    return <Navigate to='login' />
-  }
-
 
   let currentDate = new Date();
   const year = currentDate.getFullYear();
