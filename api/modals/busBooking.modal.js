@@ -14,6 +14,49 @@ const { Schema } = mongoose;
 //   time: String,
 // });
 
+const seatDetailSchema = new mongoose.Schema({
+  seat_number: String,
+  fare: String,
+  title: String,
+  name: String,
+  age: String,
+  sex: String,
+  is_primary: Boolean,
+  id_card_type: String,
+  id_card_number: String,
+  id_card_issued_by: String,
+});
+
+const contactDetailSchema = new mongoose.Schema({
+  mobile_number: String,
+  emergency_name: String,
+  email: String,
+});
+
+const customerCompanyGstSchema = new mongoose.Schema({
+  name: String,
+  gst_id: String,
+  address: String,
+});
+
+const bookTicketSchema = new mongoose.Schema({
+  seat_details: {
+    seat_detail: [seatDetailSchema],
+  },
+  contact_detail: contactDetailSchema,
+});
+
+const srsBlockSeatDetails = new mongoose.Schema({
+  book_ticket: bookTicketSchema,
+  origin_id: String,
+  destination_id: String,
+  boarding_at: String,
+  drop_of: String,
+  no_of_seats: Number,
+  travel_date: Date,
+  customer_company_gst: customerCompanyGstSchema,
+});
+
 const paxDetailsSchema = new mongoose.Schema({
   seatName: String,
   paxName: String,
@@ -111,7 +154,12 @@ const busBookingSchema = new Schema({
   isVrl: {
     type: Boolean,
     default: false
-  }
+  },
+  isSrs: {
+    type: Boolean,
+    default: false
+  },
+  srsBlockSeatDetails: srsBlockSeatDetails,
 },
   {
     timestamps: true,
