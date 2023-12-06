@@ -13,8 +13,19 @@ import axiosInstance from "../../utils/service";
 import { facebookLoginAPI, googleLoginAPI } from "../../api/authentication";
 import { LoginSocialFacebook } from "reactjs-social-login";
 import toast, { Toaster } from 'react-hot-toast';
+import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
 
 const Login = () => {
+
+  useEffect(() => {
+    GoogleAuth.initialize({
+      clientId: '100318910449-h74ooih65luj6ambadl5ik50arsafo4a.apps.googleusercontent.com',
+      scopes: ['profile', 'email'],
+      grantOfflineAccess: true,
+    });
+  })
+
+
   const loggedInUser = localStorage.getItem("loggedInUser");
   if (loggedInUser) {
     return <Navigate to="/" replace />;
@@ -230,53 +241,62 @@ const Login = () => {
     }
   };
 
+  // Google sigin for mobile APP
+  const googleLoginHandle = async () => {
+    let googleUser = await GoogleAuth.signIn();
+    console.log(googleUser.authentication.idToken);
+    const credential = googleUser.authentication.idToken;
+    googleUserVerifyHandler({ credential });
+  }
+
+
   // Google Login //
-  useEffect(() => {
-    if (window.google && window.google.accounts) {
-      const googleAccounts = window.google.accounts;
-      googleAccounts.id.initialize({
-        client_id: import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID,
-        callback: googleUserVerifyHandler,
-      });
+  // useEffect(() => {
+  //   if (window.google && window.google.accounts) {
+  //     const googleAccounts = window.google.accounts;
+  //     googleAccounts.id.initialize({
+  //       client_id: import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID,
+  //       callback: googleUserVerifyHandler,
+  //     });
 
-      googleAccounts.id.renderButton(document.getElementById("googlesignin"), {
-        // theme: "filled_blue",
-        // shape: "circle",
-        ux_mode: "popup",
-        // text: "continue_with",
-        size: "large",
-      });
-    } else {
-      console.error("Google Accounts API is not available.");
-    }
+  //     googleAccounts.id.renderButton(document.getElementById("googlesignin"), {
+  //       // theme: "filled_blue",
+  //       // shape: "circle",
+  //       ux_mode: "popup",
+  //       // text: "continue_with",
+  //       size: "large",
+  //     });
+  //   } else {
+  //     console.error("Google Accounts API is not available.");
+  //   }
 
-    // // Facebook login
-    // // Initialize the Facebook SDK when it's loaded
-    // window.fbAsyncInit = function () {
-    //   FB.init({
-    //     appId: import.meta.env.VITE_FACEBOOK_APP_ID,
-    //     cookie: true,
-    //     xfbml: true,
-    //     version: "v18.0",
-    //   });
-    //   FB.AppEvents.logPageView();
-    // };
+  //   // // Facebook login
+  //   // // Initialize the Facebook SDK when it's loaded
+  //   // window.fbAsyncInit = function () {
+  //   //   FB.init({
+  //   //     appId: import.meta.env.VITE_FACEBOOK_APP_ID,
+  //   //     cookie: true,
+  //   //     xfbml: true,
+  //   //     version: "v18.0",
+  //   //   });
+  //   //   FB.AppEvents.logPageView();
+  //   // };
 
-    // // Load the Facebook SDK asynchronously
-    // (function (d, s, id) {
-    //   var js,
-    //     fjs = d.getElementsByTagName(s)[0];
-    //   if (d.getElementById(id)) return;
-    //   js = d.createElement(s);
-    //   js.id = id;
-    //   js.src = "https://connect.facebook.net/en_US/sdk.js";
-    //   fjs.parentNode.insertBefore(js, fjs);
-    // })(document, "script", "facebook-jssdk");
+  //   // // Load the Facebook SDK asynchronously
+  //   // (function (d, s, id) {
+  //   //   var js,
+  //   //     fjs = d.getElementsByTagName(s)[0];
+  //   //   if (d.getElementById(id)) return;
+  //   //   js = d.createElement(s);
+  //   //   js.id = id;
+  //   //   js.src = "https://connect.facebook.net/en_US/sdk.js";
+  //   //   fjs.parentNode.insertBefore(js, fjs);
+  //   // })(document, "script", "facebook-jssdk");
 
-    // if (window.FB) {
-    //   window.FB.XFBML.parse();
-    // }
-  }, []);
+  //   // if (window.FB) {
+  //   //   window.FB.XFBML.parse();
+  //   // }
+  // }, []);
 
   // // Facebook login callback
   // const facebookLoginHandler = async () => {
@@ -308,25 +328,26 @@ const Login = () => {
   const googleUserVerifyHandler = async ({ credential }) => {
     try {
       setLoading(true);
-      const loadingToast = toast.loading('Logging in...');
+      // const loadingToast = toast.loading('Logging in...');
       const { data, token } = await googleLoginAPI(credential);
       localStorage.setItem("token", token);
       localStorage.setItem("loggedInUser", JSON.stringify(data));
-      toast.dismiss(loadingToast);
+      // toast.dismiss(loadingToast);
 
-      toast.success('Login Successful', {
-        duration: 2000,
-        position: 'top-center',
-        style: {
-          background: 'green',
-          color: 'white',
-        },
-      });
-      setTimeout(() => {
-        navigate('/');
-      }, 2000);
+      // toast.success('Login Successful', {
+      //   duration: 2000,
+      //   position: 'top-center',
+      //   style: {
+      //     background: 'green',
+      //     color: 'white',
+      //   },
+      // });
+      // setTimeout(() => {
+        navigate('/busbooking');
+      // }, 2000);
     } catch (error) {
       console.log(error);
+      navigate('/');
       toast.error('Error', {
         duration: 2000,
         position: 'top-center',
@@ -372,9 +393,9 @@ const Login = () => {
 
   return (
     <div className="Login">
-      <div className="navbarlogin">
+      {/* <div className="navbarlogin">
         <img className="logo" src={logoblack} alt="" />
-      </div>
+      </div> */}
       <div className="loginContainer">
         <img className="img" src={image} alt="" />
         <hr />
@@ -422,7 +443,7 @@ const Login = () => {
           <div className="links">
             <p>Continue with</p>
             <div className="linksContainer">
-              <div id="googlesignin" className="link"></div>
+              {/* <div id="googlesignin" className="link"></div> */}
               <LoginSocialFacebook
                 appId={import.meta.env.VITE_FACEBOOK_APP_ID}
                 onReject={(error) => console.log(error)}
@@ -433,6 +454,10 @@ const Login = () => {
                   <span>Facebook</span>
                 </div>
               </LoginSocialFacebook>
+              <div className="link" onClick={googleLoginHandle}>
+                <img src={google} alt="" id="googlesigninn" />
+                <span>Google</span>
+              </div>
               {/* <div className="link">
                 <div
                   className="fb-login-button"
@@ -447,10 +472,10 @@ const Login = () => {
                 />
               </div> */}
               {/* 
-              <div className="link">
-                <img src={google} alt="" id="googlesignin" />
-                <span>Google</span>
-              </div> 
+              // <div className="link">
+              //   <img src={google} alt="" id="googlesignin" />
+              //   <span>Google</span>
+              // </div> 
               <div className="link">
                 <img src={facebook} alt="" />
                 <span>Facebook</span>

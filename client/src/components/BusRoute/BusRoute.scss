@@ -30,51 +30,58 @@
     filter: invert(1);
   }
 }
-.MobileBusRoute{
- 
-padding-left: 10px;
-padding-right: 10px;
-padding-bottom: 5px;
-.AFFORDABLE{
-  color: #fd5901;
-  padding-top: 5px;
-}
-.btn1{
-  background: #fd5901;
-  border: none;
-  outline: none;
-  padding-left: 15px;
-  padding-right: 15px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  border-radius: 5px;
 
-}
-.btn2{
-  background: #fd5901;
-  border: none;
-  outline: none;
-  padding-left: 15px;
-  padding-right: 15px;
-  padding-top: 5px;
+.MobileBusRoute {
+
+  padding-left: 10px;
+  padding-right: 10px;
   padding-bottom: 5px;
-  border-radius: 5px;
- 
-}
-  .select_vehicle{
+
+  .AFFORDABLE {
+    color: #fd5901;
+    padding-top: 5px;
+  }
+
+  .btn1 {
+    background: #fd5901;
+    border: none;
+    outline: none;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+
+  }
+
+  .btn2 {
+    background: #fd5901;
+    border: none;
+    outline: none;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+
+  }
+
+  .select_vehicle {
     padding-top: 10px;
     padding-bottom: 15px;
 
 
     display: flex;
-gap: 7px;
-.link{
-  text-decoration: none;
-  color: black;
-}
+    gap: 7px;
+
+    .link {
+      text-decoration: none;
+      color: black;
+    }
   }
-  .outer_border{
-    border: 1px solid gray ;
+
+  .outer_border {
+    border: 1px solid gray;
     border-radius: 15px;
     // height: 150px;
     margin: 5px;
@@ -82,29 +89,32 @@ gap: 7px;
     padding-bottom: 5px;
     display: flex;
     flex-direction: column;
-    justify-content:space-evenly;
-    .inputs{  
+    justify-content: space-evenly;
+
+    .inputs {
       padding-left: 5px;
       padding-right: 5px;
-      
-      .fromto{
+
+      .fromto {
         padding-top: 5px;
-      padding-bottom: 5px;
+        padding-bottom: 5px;
         border: 1px solid gray;
         border-radius: 10px;
         margin-bottom: 10px;
-        .img_rotater{
+
+        .img_rotater {
           position: relative;
-          .reverse-img{
+
+          .reverse-img {
             position: absolute;
             right: 8px;
             bottom: -14px;
             rotate: 90deg;
             background-color: black;
-           padding-left: 7px;
-           padding-right: 6px;
-           padding-top: 5px;
-           padding-bottom: 5px;
+            padding-left: 7px;
+            padding-right: 6px;
+            padding-top: 5px;
+            padding-bottom: 5px;
 
 
             object-fit: contain;
@@ -113,13 +123,14 @@ gap: 7px;
           }
         }
 
-      }   
-     .days{
-      margin-top: 10px;
-      padding-left: 10px;
-      display: flex;
-      gap: 7px;
-     }
+      }
+
+      .days {
+        margin-top: 10px;
+        padding-left: 10px;
+        display: flex;
+        gap: 7px;
+      }
     }
   }
 }
@@ -128,11 +139,13 @@ gap: 7px;
   .BusRoute {
     display: none;
     flex-wrap: wrap;
+
     button {
       margin-top: 30px;
     }
   }
 }
+
 @media (max-width: 426px) {
   .BusRoute {
     display: none;
@@ -140,6 +153,7 @@ gap: 7px;
     flex-direction: column;
     gap: 25px;
     justify-content: space-between;
+
     button {
       font-size: 0.9rem;
       margin: auto;
@@ -147,12 +161,14 @@ gap: 7px;
       width: 150px;
     }
   }
-  .MobileBusRoute{
+
+  .MobileBusRoute {
     display: block;
   }
 }
+
 @media (min-width: 426px) {
-  .MobileBusRoute{
+  .MobileBusRoute {
     display: none;
   }
 }

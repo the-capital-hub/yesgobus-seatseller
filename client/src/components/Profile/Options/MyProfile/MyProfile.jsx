@@ -3,6 +3,31 @@ import "./MyProfile.scss";
 import axiosInstance from "../../../../utils/service";
 
 export default function MyProfile() {
+
+  useEffect(() => {
+    const translateElement = document.getElementById("google_translate_element");
+    if (translateElement) {
+      translateElement.innerHTML = "";
+    }
+    const script = document.createElement("script");
+    script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    script.async = true;
+    document.body.appendChild(script);
+
+    script.onload = () => {
+      window.googleTranslateElementInit = () => {
+        new window.google.translate.TranslateElement(
+          {
+            pageLanguage: 'en',
+            includedLanguages: 'en,kn',
+            layout: window.google.translate.TranslateElement.InlineLayout.TOP_RIGHT,
+          },
+          'google_translate_element'
+        );
+      };
+    };
+  }, []);
+
   const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
 
   const [formData, setFormData] = useState({
@@ -104,6 +129,11 @@ export default function MyProfile() {
           Save
         </button>
       </form>
+      <div className="container">
+  <h1>Change Language:</h1>
+  <div id="google_translate_element"></div>
+</div>
+
     </div>
   );
 }

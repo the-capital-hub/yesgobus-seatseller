@@ -101,12 +101,21 @@ export default function TicketView() {
         setBookingDetails(getBookingDetails.data);
         // const joinedNames = getBookingDetails.data.inventoryItems?.map(seat => seat.passengers.name).join(", ");
         // const joinedAges = getBookingDetails.data.inventoryItems?.map(seat => seat.passengers.age).join(", ");
+        if (getBookingDetails.data.isVrl) {
+          const joinedNames = getBookingDetails.data.reservationSchema[0].paxDetails?.map(seat => seat.paxName).join(", ");
+          const joinedAges = getBookingDetails.data.reservationSchema[0].paxDetails?.map(seat => seat.paxAge).join(", ");
 
-        const joinedNames = getBookingDetails.data.reservationSchema[0].paxDetails?.map(seat => seat.paxName).join(", ");
-        const joinedAges = getBookingDetails.data.reservationSchema[0].paxDetails?.map(seat => seat.paxAge).join(", ");
+          setTravellers(joinedNames);
+          setTravellersAge(joinedAges);
+        } else if (getBookingDetails.data.isSrs) {
+          const joinedNames = getBookingDetails.data.srsBlockSeatDetails.book_ticket.seat_details.seat_detail?.map(seat => seat.name).join(", ");
+          const joinedAges = getBookingDetails.data.srsBlockSeatDetails.book_ticket.seat_details.seat_detail?.map(seat => seat.age).join(", ");
+          setTravellers(joinedNames);
+          setTravellersAge(joinedAges);
+        } else if (!getBookingDetails.data.isVrl && !getBookingDetails.data.isSrs) {
 
-        setTravellers(joinedNames);
-        setTravellersAge(joinedAges);
+        }
+
         if (downloadParam === "1" && downloaded === false) {
           handleDownloadPDF();
           setTimeout(() => {
@@ -154,7 +163,7 @@ export default function TicketView() {
             </p>
             <div>
               {/* <p className="location">{isVrl ? bookingDetails?.bboardingPoint : ticketDetails?.pickUpLocation}</p> */}
-              <p className="sub-location">{bookingDetails?.isVrl ? bookingDetails?.boardingPoint : ticketDetails?.pickUpLocationAddress}</p>
+              <p className="sub-location">{bookingDetails?.isVrl || bookingDetails?.isSrs  ? bookingDetails?.boardingPoint : ticketDetails?.pickUpLocationAddress}</p>
             </div>
           </div>
 
@@ -165,7 +174,7 @@ export default function TicketView() {
             </p>
             <div>
               {/* <p className="location">{ticketDetails?.dropLocation}</p> */}
-              <p className="sub-location">{bookingDetails?.isVrl ? bookingDetails?.droppingPoint : ticketDetails?.dropLocationAddress}</p>
+              <p className="sub-location">{bookingDetails?.isVrl || bookingDetails?.isSrs ? bookingDetails?.droppingPoint : ticketDetails?.dropLocationAddress}</p>
             </div>
           </div>
         </div>
@@ -229,7 +238,7 @@ export default function TicketView() {
                   className="font-24"
                   style={{ width: "50%", minWidth: "40ch" }}
                 >
-                  <p>Yesgobus Booking ID {bookingDetails?.isVrl ? bookingDetails._id : bookingDetails?.tin}</p>
+                  <p>Yesgobus Booking ID {bookingDetails?.isVrl || bookingDetails?.isSrs ? bookingDetails._id : bookingDetails?.tin}</p>
                   <p>Operator PNR :{bookingDetails?.isVrl ? bookingDetails.opPNR : ticketDetails?.pnr}</p>
                   <div className="price">
                     <p>₹ {bookingDetails?.totalAmount}</p>
