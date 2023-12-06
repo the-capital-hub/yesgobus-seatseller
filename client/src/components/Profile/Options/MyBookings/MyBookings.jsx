@@ -19,13 +19,14 @@ export default function MyBookings() {
           }/api/busBooking/getAllBookings/${loggedInUser._id}`
         );
         const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);
         const upcomingBookings = [];
         const completedBookings = [];
         const cancelledBookings = [];
-
         getBookingDetails.data.forEach(booking => {
           const doj = new Date(booking.doj);
-          if (doj > currentDate && booking.bookingStatus === "paid") {
+          doj.setHours(0, 0, 0, 0);
+          if (doj >= currentDate && booking.bookingStatus === "paid") {
             upcomingBookings.push(booking);
           } else if (doj < currentDate && booking.bookingStatus === "paid") {
             completedBookings.push(booking);

@@ -4,17 +4,21 @@ import { WatermarkIcon } from "../../../../assets/contact";
 import { cancelTicket } from "../../../../api/authentication";
 import { Modal, Button, Spin } from "antd";
 import { vrlCancelDetails, vrlConfirmCancel } from "../../../../api/vrlBusesApis";
+import { getSrsCanCancelDetails, srsCancelBooking } from "../../../../api/srsBusesApis";
+
 export default function BookingsList({ bookingData, selectedTab, setCancelled, cancelled }) {
   const [loading, setLoading] = useState(false);
   const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
   const [ticketToCancel, setTicketToCancel] = useState(null);
   const [vrlTicketCancelData, setVrlTickerCancelData] = useState(null);
+  const [srsTicketCancelData, setSrsTickerCancelData] = useState(null);
+
   function formatDate(dateString) {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   }
 
-  const handleCancelTicket = async (bookingData, tid, isVrl, pnr) => {
+  const handleCancelTicket = async (bookingData, tid, isVrl, pnr, isSrs) => {
     if (isVrl) {
       let { data: vrlCancelDetailsResponse } = await vrlCancelDetails({
         pnrNo: parseInt(pnr)
@@ -28,7 +32,18 @@ export default function BookingsList({ bookingData, selectedTab, setCancelled, c
       setVrlTickerCancelData(vrlCancelDetailsResponse);
       setTicketToCancel(bookingData);
       setIsCancelModalVisible(true);
-    } else {
+    } else if (isSrs) {
+      const srsCancelDetailsResponse = await getSrsCanCancelDetails(bookingData.blockKey, bookingData.selectedSeats);
+      if (srsCancelDetailsResponse.result.is_ticket_cancellable.is_cancellable === false) {
+        alert("Unable to Cancel Ticket Because Minimum Cancelation Minute is reached.");
+        return;
+      }
+
+      setSrsTickerCancelData(srsCancelDetailsResponse.result.is_ticket_cancellable);
+      setTicketToCancel(bookingData);
+      setIsCancelModalVisible(true);
+
+    } else if (!isVrl && !isSrs) {
       setTicketToCancel(bookingData);
       setIsCancelModalVisible(true);
     }
@@ -49,7 +64,16 @@ export default function BookingsList({ bookingData, selectedTab, setCancelled, c
           alert("Booking Cancelled. Refund will be processed soon");
           setCancelled(!cancelled);
         }
-      } else {
+      } else if (ticketToCancel.isSrs) {
+        const refundData = {
+          merchantTransactionId: ticketToCancel.merchantTransactionId,
+        };
+        const srsCancelBookingResponse = await srsCancelBooking(ticketToCancel.blockKey, ticketToCancel.selectedSeats, refundData);
+        if (srsCancelBookingResponse) {
+          alert("Booking Cancelled. Refund will be processed soon");
+          setCancelled(!cancelled);
+        }
+      } else if (!ticketToCancel.isVrl && !ticketToCancel.isSrs) {
         const seatNbrsToCancel = ticketToCancel.selectedSeats.split(',').map(seat => seat.trim());
         const cancelTicketData = {
           etsTicketNo: ticketToCancel.tid,
@@ -78,14 +102,14 @@ export default function BookingsList({ bookingData, selectedTab, setCancelled, c
     setIsCancelModalVisible(false);
   };
 
-  const TicketOptions = ({ selectedTab, bookingData, tid, isVrl, pnr }) => {
+  const TicketOptions = ({ selectedTab, bookingData, tid, isVrl, pnr, isSrs }) => {
     if (selectedTab === "upcoming") {
       return (
         <>
           <Link to={`/busbooking/ticket?bookingId=${bookingData._id}`}>
             <button className="orange-btn">Download Ticket</button>
           </Link>
-          <button className="red-btn" onClick={() => handleCancelTicket(bookingData, tid, isVrl, pnr)}>Cancel Ticket</button>
+          <button className="red-btn" onClick={() => handleCancelTicket(bookingData, tid, isVrl, pnr, isSrs)}>Cancel Ticket</button>
         </>
       );
     } else if (selectedTab === "completed") {
@@ -135,7 +159,7 @@ export default function BookingsList({ bookingData, selectedTab, setCancelled, c
                 justifyContent: `${selectedTab === "upcoming" ? "" : "center"}`,
               }}
             >
-              <TicketOptions selectedTab={selectedTab} bookingData={booking} tid={booking.tid} isVrl={booking.isVrl} pnr={booking.opPNR} />
+              <TicketOptions selectedTab={selectedTab} bookingData={booking} tid={booking.tid} isVrl={booking.isVrl} isSrs={booking.isSrs} pnr={booking.opPNR} />
             </div>
           </div>
         ))}
@@ -172,6 +196,13 @@ export default function BookingsList({ bookingData, selectedTab, setCancelled, c
               <p>Total Fare: {vrlTicketCancelData.TotalFare}</p>
               <p>Refund Amount: {vrlTicketCancelData.RefundAmount}</p>
               <p>Seat Names: {vrlTicketCancelData.SeatNames}</p>
+            </div>
+          )}
+          {srsTicketCancelData && (
+            <div>
+              <p>Cancel Percent {srsTicketCancelData.cancel_percent}</p>
+              <p>Refund Amount: {srsTicketCancelData.refund_amount}</p>
+              <p>Cancellation Charges: {srsTicketCancelData.cancellation_charges}</p>
             </div>
           )}
         </div>

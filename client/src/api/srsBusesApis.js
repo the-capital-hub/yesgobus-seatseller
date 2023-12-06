@@ -56,3 +56,77 @@ export const srsConfirmBooking = async (ticket_number) => {
     throw error.message;
   }
 };
+
+export const getSrsCanCancelDetails = async (ticket_number, seat_names) => {
+  try {
+    const response = await axiosInstance.post(
+      `${import.meta.env.VITE_BASE_URL}/api/busBooking/getSrsCanCancelDetails/${ticket_number}/${seat_names}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error.message;
+  }
+};
+
+export const srsCancelBooking = async (ticket_number, seat_names, refundData) => {
+  try {
+    const cancelTicketResponse = await axiosInstance.post(
+      `${import.meta.env.VITE_BASE_URL}/api/busBooking/srsCancelBooking/${ticket_number}/${seat_names}`
+    );
+    if (!cancelTicketResponse.data.result) {
+      throw new Error(cancelTicketResponse.response.message);
+    } else if (cancelTicketResponse.data.result) {
+      cancelTicketResponse = cancelTicketResponse.data.result.cancel_ticket;
+      refundData.amount = parseFloat(cancelTicketResponse.refund_amount);
+      const { data: refundResponse } = await axiosInstance.post(`${import.meta.env.VITE_BASE_URL}/api/payment/refundPayment`, refundData);
+      if (refundResponse) {
+        const updateDetails = {
+          bookingStatus: "cancelled",
+          totalRefundAmount: cancelTicketResponse.refund_amount,
+          // cancelChargesPercentage: cancelTicketResponse.cancelChargesPercentage,
+          cancellationCharges: cancelTicketResponse.cancellation_charges,
+        }
+        const { data: updateBookingResponse } = await axiosInstance.patch(`${import.meta.env.VITE_BASE_URL}/api/busBooking/updateBooking/${bookingId}`, updateDetails);
+        // send mail
+        const mailBody = {
+          fullName: updateBookingResponse?.data.customerName,
+          sourceCity: updateBookingResponse?.data.sourceCity,
+          destinationCity: updateBookingResponse?.data.destinationCity,
+          seats: updateBookingResponse?.data.selectedSeats,
+          amount: updateBookingResponse?.data.totalAmount,
+          pickUpLocation: updateBookingResponse?.data.boardingPoint,
+          opPNR: updateBookingResponse?.data.opPNR,
+          doj: formatDate(updateBookingResponse?.data.doj),
+          to: updateBookingResponse?.data.customerEmail,
+        }
+        const sendMail = await axiosInstance.post(
+          `${import.meta.env.VITE_BASE_URL
+          }/api/busBooking/sendCancelTicketEmail`,
+          mailBody
+        );
+
+        //send sms
+        const messageBody = {
+          fullName: updateBookingResponse?.data.customerName,
+          sourceCity: updateBookingResponse?.data.sourceCity,
+          destinationCity: updateBookingResponse?.data.destinationCity,
+          seats: updateBookingResponse?.data.selectedSeats,
+          amount: updateBookingResponse?.data.totalAmount,
+          pickUpLocation: updateBookingResponse?.data.boardingPoint,
+          opPNR: updateBookingResponse?.data.opPNR,
+          doj: formatDate(updateBookingResponse?.data.doj),
+          to: updateBookingResponse?.data.customerPhone,
+        }
+        const sendMessage = await axiosInstance.post(
+          `${import.meta.env.VITE_BASE_URL
+          }/api/busBooking/sendCancelTicketMessage`,
+          messageBody,
+        );
+
+        return updateBookingResponse;
+      }
+    }
+  } catch (error) {
+    throw error.message;
+  }
+};

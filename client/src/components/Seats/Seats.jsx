@@ -162,10 +162,10 @@ const Seats = ({
       return {
         ...prev,
         selectedSeats: newSelected,
-        fare: newFare,
-        serviceTax: newTax,
-        operatorTax: newOperatorTax,
-        totalFare: newTotalFare,
+        fare: roundToDecimal(parseFloat(newFare), 2),
+        serviceTax: roundToDecimal(parseFloat(newTax), 2),
+        operatorTax: roundToDecimal(parseFloat(newOperatorTax), 2),
+        totalFare: roundToDecimal(parseFloat(newTotalFare), 2),
         seatFares: newSeatFares,
         seatTaxes: newSeatTaxes,
         seatTotalFares: newSeatTotalFares,
@@ -180,11 +180,11 @@ const Seats = ({
 
   const lowerTierSeats = isVrl ?
     seatDetails.filter((seat) => seat.UpLowBerth === "LB") :
-    isSrs ? seatDetails.coach_details.filter((seat) => seat.berth === "Lower Berth") :
+    isSrs ? seatDetails.coach_details.filter((seat) => seat.z_index === 0) :
       seatDetails.filter((seat) => seat.zIndex === "0");
   const upperTierSeats = isVrl ?
     seatDetails.filter((seat) => seat.UpLowBerth === "UB") :
-    isSrs ? seatDetails.coach_details.filter((seat) => seat.berth === "Upper Berth") :
+    isSrs ? seatDetails.coach_details.filter((seat) => seat.z_index === 1) :
       seatDetails.filter((seat) => seat.zIndex === "1");
 
   const renderSeatTable = (seats, selectedSeats) => {
@@ -339,7 +339,6 @@ const Seats = ({
 
       const filteredSeats = seats;
       const highlightedPrice = selectedPriceFilter;
-
       const numRows = Math.max(...filteredSeats?.map((seat) => parseInt(seat.column, 10))) + 1;
       const numCols = Math.max(...filteredSeats?.map((seat) => parseInt(seat.row, 10))) + 1;
       const minRow = Math.min(...filteredSeats?.map((seat) => parseInt(seat.column, 10)));
@@ -355,7 +354,8 @@ const Seats = ({
           const seat = filteredSeats.find((s) => parseInt(s.column, 10) === row && parseInt(s.row, 10) === col);
           if (seat) {
             seatCount++;
-            const isHighlighted = seatDetails.available[seat.seatName] === highlightedPrice;
+            console.log(highlightedPrice)
+            const isHighlighted = parseFloat(seatDetails.available[seat.seatName]) === parseFloat(highlightedPrice);
 
 
 
@@ -371,7 +371,7 @@ const Seats = ({
                             seat.seatName,
                             seatDetails.available[seat.seatName],
                             seatDetails.available_gst[seat.seatName],
-                            seat.operatorServiceChargeAbsolute,
+                            0,
                             parseInt(seatDetails.available[seat.seatName]) + parseInt(seatDetails.available_gst[seat.seatName]),
                             seatDetails.ladies_seats?.includes(seat.seatName),
                             // seat.ac,
@@ -379,9 +379,9 @@ const Seats = ({
                           )
                         }
                         title={`ID: ${seat.seatName}\nFare: ₹${seatDetails.available[seat.seatName]}`}
-                        src={(seatDetails.seatCategory === 1 || seatDetails.seatCategory === 3) ? singleselected : selectedFill}
+                        src={(seat.width === 1) ? singleselected : selectedFill}
                         alt="selected seat"
-                        className={(seat.width == "2") ? "vertical" : ""}
+                      // className={(seat.width == "2") ? "vertical" : ""}
                       />
                     </div>
                   </td>
@@ -398,7 +398,7 @@ const Seats = ({
                               seat.seatName,
                               seatDetails.available[seat.seatName],
                               seatDetails.available_gst[seat.seatName],
-                              seat.operatorServiceChargeAbsolute,
+                              0,
                               parseInt(seatDetails.available[seat.seatName]) + parseInt(seatDetails.available_gst[seat.seatName]),
                               seatDetails.ladies_seats?.includes(seat.seatName),
                               // seat.ac,
@@ -406,9 +406,9 @@ const Seats = ({
                             )
                           }
                           title={`ID: ${seat.seatName}\nFare: ₹${seatDetails.available_gst[seat.seatName]}`}
-                          src={(seatDetails.seatCategory === 1 || seatDetails.seatCategory === 3) ? singleladiesavailable : ladiesavailable}
+                          src={(seat.width === 1) ? singleladiesavailable : ladiesavailable}
                           alt="available ladies"
-                          className={(seat.width == "2") ? "vertical" : ""}
+                        // className={(seat.width == "2") ? "vertical" : ""}
                         />
                       </div>
                     </td>
@@ -424,7 +424,7 @@ const Seats = ({
                               seat.seatName,
                               seatDetails.available[seat.seatName],
                               seatDetails.available_gst[seat.seatName],
-                              seat.operatorServiceChargeAbsolute,
+                              0,
                               parseInt(seatDetails.available[seat.seatName]) + parseInt(seatDetails.available_gst[seat.seatName]),
                               seatDetails.ladies_seats?.includes(seat.seatName),
                               // seat.ac,
@@ -432,9 +432,9 @@ const Seats = ({
                             )
                           }
                           title={`ID: ${seat.seatName}\nFare: ₹${seatDetails.available[seat.seatName]}`}
-                          src={(seatDetails.seatCategory === 1 || seatDetails.seatCategory === 3) ? singleavailable : available}
+                          src={(seat.width === 1) ? singleavailable : available}
                           alt="available"
-                          className={(seat.width == "2") ? "vertical" : ""}
+                        // className={(seat.width == "2") ? "vertical" : ""}
                         />
                       </div>
                     </td>
@@ -449,9 +449,9 @@ const Seats = ({
 
                       <img
                         title={`ID: ${seat.seatName}`}
-                        src={(seatDetails.seatCategory === 1 || seatDetails.seatCategory === 3) ? singleladiesbooked : ladiesbooked}
+                        src={(seat.width === 1) ? singleladiesbooked : ladiesbooked}
                         alt="ladiesbooked"
-                        className={(seat.width == "2") ? "vertical" : ""}
+                      // className={(seat.width == "2") ? "vertical" : ""}
                       />
                     </div>
                   </td>
@@ -464,9 +464,9 @@ const Seats = ({
 
                       <img
                         title={`ID: ${seat.seatName}`}
-                        src={(seatDetails.seatCategory === 1 || seatDetails.seatCategory === 3) ? singlebooked : booked}
+                        src={(seat.width === 1) ? singlebooked : booked}
                         alt="booked"
-                        className={(seat.width == "2") ? "vertical" : ""}
+                      // className={(seat.width == "2") ? "vertical" : ""}
                       />
                     </div>
                   </td>
@@ -796,11 +796,15 @@ const Seats = ({
                   >
                     ₹{price}
                   </p>
+                  
                 ))}
+                <p>1231</p>
+                <p>1231</p>
+                <p>1231</p>
               </div>
             )
           }
-          <div className="bus-container">
+          <div className="bus-container" style={upperTierSeats.length === 0 ? { marginBottom: '130px', marginTop: '130px' } : {}}>
             <div className="bus">
               <div className="driver">
                 <img src={driver} alt="driver" />
@@ -813,19 +817,20 @@ const Seats = ({
 
               </div>
             </div >
+            {upperTierSeats.length > 0 && (
+              <div className="bus" >
+                <div className="driver">
+                </div>
+                <div className="gridContainer">
 
-            <div className="bus" >
-              <div className="driver">
-              </div>
-              <div className="gridContainer">
-                {upperTierSeats.length > 0 && (
                   <>
                     <h4>Upper Tier</h4>
                     {renderSeatTable(upperTierSeats, bookingDetails.selectedSeats)}
                   </>
-                )}
+
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           <div className="price">
