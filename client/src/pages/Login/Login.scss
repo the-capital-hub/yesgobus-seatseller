@@ -65,6 +65,9 @@
           width: 400px;
           border: 1px solid #fd5901;
         }
+        input {
+          width: 300px;
+        }
       }
 
       .or {
@@ -145,6 +148,9 @@
             #in {
               width: 280px;
             }
+            input {
+              width: 300px;
+            }
           }
           button {
             font-size: 13px;
@@ -175,6 +181,9 @@
         }
         .Input {
           #in {
+            width: 600px;
+          }
+          input {
             width: 300px;
           }
         }

@@ -17,11 +17,13 @@ import KycPayments from "./pages/KYC/KycPayment/KycPayment";
 import MobileNavbar from "./components/Mobile/Busresultsnavbar/busresultsnavbar";
 import { useEffect } from "react";
 import { Capacitor } from "@capacitor/core";
-import { setIsMobileApp } from "./stores/slices/designSlice";
-import { useDispatch } from "react-redux";
+import { setIsMobileApp, selectIsMobileApp } from "./stores/slices/designSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { App as CapacitorApp } from '@capacitor/app';
 
 function App() {
   const dispatch = useDispatch();
+  const isMobileApp = useSelector(selectIsMobileApp);
 
   useEffect(() => {
 
@@ -40,10 +42,23 @@ function App() {
     //   });
   }, []);
 
+  CapacitorApp.addListener('backButton', ({ canGoBack }) => {
+    if (!canGoBack) {
+      CapacitorApp.exitApp();
+    } else {
+      window.history.back();
+    }
+  });
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route
+          path="/"
+          element={
+            isMobileApp ? <BusBooking /> : <LandingPage />
+          }
+        />
         <Route path="/busbooking" element={<BusBooking />} />
         <Route path="/busbooking/payment" element={<Payment />} />
         <Route path="/login" element={<Login />} />
