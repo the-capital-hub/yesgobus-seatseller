@@ -8,7 +8,7 @@ import { cityMapping } from "../../utils/cityMapping";
 import { map } from "../../assets/homepage";
 import { getVrlBusFilters } from "../../api/vrlBusesApis";
 
-const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange }) => {
+const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs }) => {
   const [range, setRange] = useState([100, 3000]);
   const [filters, setFilters] = useState([]);
   const [boardingPointsFilter, setBoardingPointsFilter] = useState([]);
@@ -27,6 +27,20 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange }) => {
       maxPrice: newRange[1],
     });
   };
+
+  useEffect(() => {
+    if (isSrs) {
+      const allFilters = filters;
+      const allBusPartner = filters.busPartners;
+      if (!allBusPartner.includes("SRS Travels")) {
+        allBusPartner.push("SRS Travels");
+        setFilters({
+          ...allFilters,
+          busPartners: allBusPartner,
+        });
+      }
+    }
+  }, [isSrs, filters])
 
   useEffect(() => {
     const getFilters = async () => {
@@ -73,8 +87,8 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange }) => {
         ...(response?.data?.data?.busPartners || []),
       ].filter(point => point !== null);
 
-      if(vrlResponse?.data) {
-        combiledBusPartners.push("VRL Travels")
+      if (vrlResponse?.data) {
+        combiledBusPartners.push("VRL Travels");
       }
 
       // Create Set objects to remove duplicates

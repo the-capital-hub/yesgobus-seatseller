@@ -16,22 +16,49 @@ import KycLandingPage from "./pages/KYC/KycLandingPage/KycLandingPage";
 import KycPayments from "./pages/KYC/KycPayment/KycPayment";
 import MobileNavbar from "./components/Mobile/Busresultsnavbar/busresultsnavbar";
 import { useEffect } from "react";
-import toast, { Toaster } from 'react-hot-toast';
+import { Capacitor } from "@capacitor/core";
+import { setIsMobileApp, selectIsMobileApp } from "./stores/slices/designSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { App as CapacitorApp } from '@capacitor/app';
 
 function App() {
-  // Remove already saved cache
-  // useEffect(() => {
-  //   caches.keys().then((names) => {
-  //     names.forEach((name) => {
-  //       caches.delete(name);
-  //     });
-  //   });
-  // }, []);
+  const dispatch = useDispatch();
+  const isMobileApp = useSelector(selectIsMobileApp);
+
+  useEffect(() => {
+
+    const currentPlatform = Capacitor.getPlatform();
+
+    if (currentPlatform === "android" || currentPlatform === "ios") {
+      dispatch(setIsMobileApp(true));
+    } else {
+      dispatch(setIsMobileApp(false));
+    }
+
+    //   caches.keys().then((names) => {
+    //     names.forEach((name) => {
+    //       caches.delete(name);
+    //     });
+    //   });
+  }, []);
+
+  CapacitorApp.addListener('backButton', ({ canGoBack }) => {
+    if (!canGoBack) {
+      CapacitorApp.exitApp();
+    } else {
+      window.history.back();
+    }
+  });
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route
+          path="/"
+          element={
+            isMobileApp ? <BusBooking /> : <LandingPage />
+          }
+        />
         <Route path="/busbooking" element={<BusBooking />} />
         <Route path="/busbooking/payment" element={<Payment />} />
         <Route path="/login" element={<Login />} />

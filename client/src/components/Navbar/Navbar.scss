@@ -78,6 +78,10 @@
   .hamburger {
     display: none;
   }
+
+  .select_vehicle {
+    display: none;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -86,9 +90,9 @@
     flex-direction: row-reverse;
 
 
-    .left {
-      display: none;
-    }
+    // .left {
+    //   display: none;
+    // }
   }
 
   .burger {
@@ -135,6 +139,11 @@
       display: block;
       height: 30px;
     }
+
+    .select_vehicle {
+      display: none;
+    }
+
   }
 }
 
@@ -144,55 +153,104 @@
     padding: 10px 10px;
   }
 
+
+
   .burger {
+
+    .right {
+      .user-name {
+        display: none;
+      }
+      .icon-change {
+        position: absolute;
+      }
+    }
+
+    .left {
+      display: none;
+    }
+
     .hamburger {
       height: 20px;
+    }
+
+    .bus-page {
+      margin-top: 35px;
+    }
+    .contactus-page {
+
+    }
+    
+    .select_vehicle {
+      
+      padding-top: 10px;
+      padding-bottom: 15px;
+      position: absolute;
+      left: 10px;
+      display: flex;
+      gap: 7px;
+
+      .link {
+        text-decoration: none;
+        color: rgb(255, 255, 255);
+      }
+
+      .btn {
+        background: #fd5901;
+        border: none;
+        outline: none;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        border-radius: 5px;
+      }
     }
   }
 }
 
-#google_translate_element {
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  top: -10px;
-  color: black;
-  padding: 10px;
-  border-radius: 5px;
-  z-index: 9999;
-  font-weight: bold;
-}
+// // #google_translate_element {
+// //   position: fixed;
+// //   left: 50%;
+// //   transform: translateX(-50%);
+// //   top: -10px;
+// //   color: black;
+// //   padding: 10px;
+// //   border-radius: 5px;
+// //   z-index: 9999;
+// //   font-weight: bold;
+// // }
 
 
-.goog-te-banner-frame {
-  display: none;
-  margin-top: -20px;
-}
+// .goog-te-banner-frame {
+//   display: none;
+//   margin-top: -20px;
+// }
 
-.goog-logo-link {
-  display: none !important;
-}
+// .goog-logo-link {
+//   display: none !important;
+// }
 
-.goog-te-gadget {
-  color: transparent !important;
-}
+// .goog-te-gadget {
+//   color: transparent !important;    
+// }
 
-.VIpgJd-ZVi9od-l4eHX-hSRGPd {
-  display: none !important;
-}
+// .VIpgJd-ZVi9od-l4eHX-hSRGPd {
+//   display: none !important;
+// }
 
-.VIpgJd-ZVi9od-ORHb-OEVmcd {
-  top: -40px !important;
-}
+// .VIpgJd-ZVi9od-ORHb-OEVmcd {
+//   top: -40px !important;
+// }
 
-.translated-ltr {
-  margin-top: -40px !important;
-}
+// .translated-ltr {
+//   margin-top: -40px !important;
+// }
 
-.VIpgJd-ZVi9od-aZ2wEe-wOHMyf {
-  display: none;
-}
+// .VIpgJd-ZVi9od-aZ2wEe-wOHMyf {
+//   display: none;
+// }
 
-#goog-gt-tt {
-  display: none !important;
-}
+// #goog-gt-tt {
+//   display: none !important;
+// }

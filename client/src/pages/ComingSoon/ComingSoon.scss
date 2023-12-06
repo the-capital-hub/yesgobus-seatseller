@@ -1,13 +1,14 @@
 .coming_soon {
-
-  .navbar,
-  .burger {
+  .navbar {
+    padding: 0px 50px;
+    height: 130px;
     .left {
-      a {
-        color: black;
-      }
+        a {
+            color: black;
+        }
     }
-  }
+}
+
 
   .heroImg {
     display: flex;
