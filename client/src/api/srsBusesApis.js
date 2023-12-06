@@ -70,7 +70,7 @@ export const getSrsCanCancelDetails = async (ticket_number, seat_names) => {
 
 export const srsCancelBooking = async (ticket_number, seat_names, refundData) => {
   try {
-    const cancelTicketResponse = await axiosInstance.post(
+    let cancelTicketResponse = await axiosInstance.post(
       `${import.meta.env.VITE_BASE_URL}/api/busBooking/srsCancelBooking/${ticket_number}/${seat_names}`
     );
     if (!cancelTicketResponse.data.result) {
