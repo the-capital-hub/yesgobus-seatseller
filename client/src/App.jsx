@@ -19,7 +19,7 @@ import { useEffect } from "react";
 import { Capacitor } from "@capacitor/core";
 import { setIsMobileApp, selectIsMobileApp } from "./stores/slices/designSlice";
 import { useDispatch, useSelector } from "react-redux";
-
+import { App as CapacitorApp } from '@capacitor/app';
 
 function App() {
   const dispatch = useDispatch();
@@ -41,6 +41,14 @@ function App() {
     //     });
     //   });
   }, []);
+
+  CapacitorApp.addListener('backButton', ({ canGoBack }) => {
+    if (!canGoBack) {
+      CapacitorApp.exitApp();
+    } else {
+      window.history.back();
+    }
+  });
 
   return (
     <BrowserRouter>
