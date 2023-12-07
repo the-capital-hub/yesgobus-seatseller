@@ -3,6 +3,7 @@
   --orange: rgba(253, 89, 1, 1);
   --px-ticket: 30px;
   --border-color: rgba(163, 163, 163, 1);
+
   h1,
   h2,
   h3,
@@ -12,6 +13,7 @@
   p {
     margin: 0;
   }
+
   max-width: 1920px;
   margin-inline: auto;
   padding-bottom: 4em;
@@ -33,7 +35,7 @@
     margin-inline: auto;
 
     // border: 1px solid red;
-    padding: 1em 50px;
+    padding: 1em 15px;
     margin-block: 2em;
 
     display: flex;
@@ -42,6 +44,7 @@
 
     @media (min-width: 768px) {
       flex-direction: row;
+      
     }
 
     &::after {
@@ -124,6 +127,7 @@
         margin-top: auto;
         display: flex;
         flex-direction: column;
+
         button {
           font-size: 1rem;
           border-radius: 0;

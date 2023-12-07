@@ -51,7 +51,7 @@
         display: flex;
         align-items: center;
         border: 2px solid #fd5901;
-        background: rgba(0, 0, 0, 0.69);
+        background: rgba(0, 0, 0, 1);
         backdrop-filter: blur(10px);
         padding: 0px 30px;
         justify-content: space-evenly;
@@ -419,18 +419,10 @@
             }
           }
           .buttons {
-            display: none;
-            .dayButton {
-              padding: 5px 10px;
-            }
-
-            .highlighted {
-              background-color: #fd5901;
-              color: white;
-            }
+            flex-direction: row;
           }
           button {
-            width: 35%;
+
           }
         }
       }

@@ -203,7 +203,13 @@ const LandingPage = () => {
               title={"- - -"}
               subtitle={"Return Optional"}
             /> */}
-            {/* <div className="buttons">
+
+            <Button
+              className="search-btn"
+              text={"Search"}
+              onClicked={handleSearchClick}
+            />
+            <div className="buttons">
               <button
                 onClick={handleTodayButtonClick}
                 className={
@@ -220,13 +226,9 @@ const LandingPage = () => {
               >
                 Tomorrow
               </button>
-            </div> */}
-            <Button
-              className="search-btn"
-              text={"Search"}
-              onClicked={handleSearchClick}
-            />
+            </div>
           </div>
+
         </div>
       </div>
 

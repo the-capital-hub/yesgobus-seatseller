@@ -159,7 +159,6 @@ const BusBooking = () => {
 
     //srs buses
     try {
-      console.log(filters);
       if (filters && filters?.busPartners && filters.busPartners.length > 0 &&  !filters?.busPartners?.includes("SRS Travels")) {
         setSrsBuses([]);
         setNoSrsOfBuses(0);

@@ -17,19 +17,19 @@ import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
 
 const Login = () => {
 
+  const loggedInUser = localStorage.getItem("loggedInUser");
+  if (loggedInUser) {
+    return <Navigate to="/" replace />;
+  }
+
   useEffect(() => {
     GoogleAuth.initialize({
       clientId: '100318910449-h74ooih65luj6ambadl5ik50arsafo4a.apps.googleusercontent.com',
       scopes: ['profile', 'email'],
       grantOfflineAccess: true,
     });
-  })
+  }, [])
 
-
-  const loggedInUser = localStorage.getItem("loggedInUser");
-  if (loggedInUser) {
-    return <Navigate to="/" replace />;
-  }
 
   const navigate = useNavigate();
   const [showLogin, setShowLogin] = useState(true);
@@ -343,7 +343,7 @@ const Login = () => {
       //   },
       // });
       // setTimeout(() => {
-        navigate('/busbooking');
+      navigate('/busbooking');
       // }, 2000);
     } catch (error) {
       console.log(error);

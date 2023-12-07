@@ -21,8 +21,12 @@ const BusRouteCard = ({ title, location, setLocation, date, suggestions, loading
   };
 
   const handleDateChange = (e) => {
-    const newInputValue = e.target.value;
-    setInputValue(newInputValue);
+    const inputDate = e.target.value;
+    if (inputDate < currentDate) {
+      setInputValue(currentDate);
+    } else {
+      setInputValue(inputDate);
+    }
   };
 
   const handleSuggestionClick = (suggestion) => {
@@ -56,12 +60,12 @@ const BusRouteCard = ({ title, location, setLocation, date, suggestions, loading
   const handleInputClick = () => {
     setShowSuggestions(true);
   };
-
+  const currentDate = new Date().toISOString().split('T')[0];
   return (
     <div className="BusRouteCard" ref={inputRef} style={style}>
       <p style={color}>{title}</p>
       {date ? (
-        <input  type="date" value={inputValue} onChange={handleDateChange} />
+        <input type="date" min={currentDate} value={inputValue} onChange={handleDateChange} />
       ) : (
         <input
           type="search"
