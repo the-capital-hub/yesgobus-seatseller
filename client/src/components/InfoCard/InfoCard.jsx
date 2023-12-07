@@ -27,8 +27,12 @@ const InfoCard = ({
   };
 
   const handleDateChange = (e) => {
-    const inputValue = e.target.value;
-    onChanged(inputValue);
+    const inputDate = e.target.value;
+    if (inputDate < currentDate) {
+      onChanged(currentDate);
+    } else {
+      onChanged(inputDate);
+    }
   };
 
   const handleSuggestionClick = (suggestion) => {
@@ -52,6 +56,7 @@ const InfoCard = ({
   const handleInputClick = () => {
     setShowSuggestions(true);
   };
+  const currentDate = new Date().toISOString().split('T')[0];
 
   return (
     <div className="infoCard" ref={infoCardRef}>
@@ -63,6 +68,7 @@ const InfoCard = ({
             <input
               type="date"
               className="date"
+              min={currentDate}
               value={title}
               onChange={handleDateChange}
             />
