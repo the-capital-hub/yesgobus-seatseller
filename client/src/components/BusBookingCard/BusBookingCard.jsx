@@ -450,7 +450,8 @@ const BusBookingCard = ({
         referenceNumber: ReferenceNumber,
       });
       let seatData = seatsResponse.data?.ITSSeatDetails;
-      seatData = seatData?.filter(seat => !seat.SeatNo.startsWith('T'));
+      // seatData = seatData?.filter(seat => !seat.SeatNo.startsWith('T'));
+      seatData = seatData?.filter(seat => seat.BlockType === 0);
       const availableSeats = seatData?.filter(seat => seat.Available === "Y");
       setSeatDetails(seatData);
       setAvailableSeats(availableSeats.length);
@@ -573,7 +574,8 @@ const BusBookingCard = ({
       referenceNumber: ReferenceNumber,
     });
     let seatData = seatsResponse.data?.ITSSeatDetails;
-    seatData = seatData?.filter(seat => !seat.SeatNo.startsWith('T'));
+    // seatData = seatData?.filter(seat => !seat.SeatNo.startsWith('T'));
+    seatData = seatData?.filter(seat => seat.BlockType === 0);
     const availableSeats = seatData?.filter(seat => seat.Available === "Y");
     setAvailableSeats(availableSeats.length);
     const uniqueBaseFaresSet = new Set();

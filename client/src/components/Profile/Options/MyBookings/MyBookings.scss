@@ -29,21 +29,27 @@
     border-bottom: 1px solid rgba(210, 210, 210, 1);
 
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 3em;
-
+    gap: 1px;
+    flex-wrap: wrap;
+    
     @media (min-width: 1200px) {
       flex-direction: row;
+      gap: 2rem;
     }
 
     .tab__btn {
       border: none;
       outline: none;
       background-color: transparent;
-
-      font-size: 20px;
+      font-size: 1rem;
       font-weight: 500;
+
+      @media (min-width: 1200px) {
+        font-size: 20px;
+      }
+
     }
 
     .tab__btn.active {
@@ -52,7 +58,9 @@
   }
 
   .booking__details {
-    margin: 2em;
+    @media (min-width: 1200px) {
+          margin: 2em;
+    }
     border: 1px solid rgba(210, 210, 210, 1);
 
     .booking-details-container {
@@ -62,7 +70,6 @@
     
     .journey__details {
       background-color: rgba(0, 240, 110, 0.2);
-
       display: flex;
       flex-direction: column;
       align-items: center;
