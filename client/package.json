@@ -9,7 +9,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "deploy": "aws s3 sync dist/ s3://yesgobus.com",
-    "prod": "npm run build && npm run deploy",
+    "prod": "npm run build && npm run deploy && npx cap sync",
     "copy:netlify": "copy netlify.toml dist\\"
   },
   "dependencies": {
