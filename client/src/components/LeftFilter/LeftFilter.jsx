@@ -31,7 +31,7 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs })
   useEffect(() => {
     if (isSrs) {
       const allFilters = filters;
-      const allBusPartner = filters.busPartners;
+      const allBusPartner = filters.busPartners || [];
       if (!allBusPartner.includes("SRS Travels")) {
         allBusPartner.push("SRS Travels");
         setFilters({

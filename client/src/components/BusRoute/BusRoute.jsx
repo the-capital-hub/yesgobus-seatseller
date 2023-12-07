@@ -116,8 +116,8 @@ const BusRoute = ({
           onClicked={() => onSearch(locationOne, locationTwo, departureDate)}
         />
       </div>
-      <div className="MobileBusRoute" >
-        <h4>PROVIDING QUALITY SERVICES AT </h4>
+      <div className="MobileBusRoute" style={{ background: "black" }}>
+        <h4 style={{ color: "white" }}>PROVIDING QUALITY SERVICES AT </h4>
         <h4 className="AFFORDABLE">AFFORDABLE PRICES</h4>
         {/* <div className="select_vehicle">
           <button className="btn1">   <Link
@@ -134,9 +134,9 @@ const BusRoute = ({
 
           >Cab</Link></button>
         </div> */}
-        
+
         <div>
-          <h4>Bus Ticket</h4>
+          <h4 style={{ color: "white" }}>Bus Ticket</h4>
           <div className="outer_border">
             <div className="inputs">
               <div className="fromto">
@@ -148,7 +148,7 @@ const BusRoute = ({
                   loading={loading}
                   setLocationQuery={setLocationOneQuery}
                   style={{ borderTop: 'none', backgroundColor: 'transparent', paddingLeft: "10px", paddingTop: "0px", paddingBottom: "0px", paddingRight: "0px", maxWidth: "100%" }}
-                  color={{ color: "black" }}
+                  // color={{ color: "#fd5901" }}
 
                 />
                 <div className="img_rotater">
@@ -183,7 +183,7 @@ const BusRoute = ({
                   loading={loading}
                   setLocationQuery={setLocationTwoQuery}
                   style={{ borderTop: 'none', backgroundColor: 'transparent', paddingLeft: "10px", paddingTop: "0px", paddingBottom: "0px", paddingRight: "0px", maxWidth: "100%" }}
-                  color={{ color: "black" }}
+                  // color={{ color: "#fd5901" }}
 
                 />
               </div>
@@ -193,7 +193,7 @@ const BusRoute = ({
                 setLocation={(value) => onSearch(locationOne, locationTwo, value)}
                 date={true}
                 style={{ borderTop: 'none', backgroundColor: 'transparent', paddingLeft: "10px", paddingTop: "0px", paddingBottom: "0px", paddingRight: "5px", maxWidth: "100%" }}
-                color={{ color: "black" }}
+                // color={{ color: "#fd5901" }}
               />
               {/* <div className="days">
 <button className="btn1">Today</button>
