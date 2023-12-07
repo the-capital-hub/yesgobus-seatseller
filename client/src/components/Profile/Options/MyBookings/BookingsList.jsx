@@ -118,7 +118,7 @@ export default function BookingsList({ bookingData, selectedTab, setCancelled, c
           <Link to={`/busbooking/ticket?bookingId=${bookingData._id}`}>
             <button className="orange-btn">Download Ticket</button>
           </Link>
-          <button className="green-btn">Completed</button>;
+          <button className="green-btn">Completed</button>
         </>
       )
     } else if (selectedTab === "cancelled") {
@@ -138,7 +138,7 @@ export default function BookingsList({ bookingData, selectedTab, setCancelled, c
       </div>
       <div className="booking-details-container">
         {bookingData?.[selectedTab]?.map((booking, index) => (
-          <div key={index}>
+          <div key={index} style={{border: "1px solid"}}>
             {/* Journey details */}
             <div className="journey__details">
               <h1>
@@ -161,7 +161,9 @@ export default function BookingsList({ bookingData, selectedTab, setCancelled, c
             >
               <TicketOptions selectedTab={selectedTab} bookingData={booking} tid={booking.tid} isVrl={booking.isVrl} isSrs={booking.isSrs} pnr={booking.opPNR} />
             </div>
+          
           </div>
+          
         ))}
       </div>
       {loading ? (
