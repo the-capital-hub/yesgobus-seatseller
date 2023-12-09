@@ -1,6 +1,24 @@
 .search-page-wrapper {
   .booking-location-container {
-    background-image: url("../../../assets/cabs/placeholder/map.png");
+    position: relative;
+
+    #bookingLocation {
+      position: relative;
+      z-index: 1;
+      background-color: white;
+    }
+
+    .map-image {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      aspect-ratio: 1/ 1.5;
+
+      position: absolute;
+      top: 65px;
+      left: 0;
+      right: 0;
+    }
   }
 
   .btn-base {
