@@ -1,5 +1,6 @@
 import { useReducer } from "react";
 import { Outlet } from "react-router-dom";
+import "./CabLayout.scss";
 
 const initialState = {
   destination: "",
