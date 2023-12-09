@@ -1,6 +1,6 @@
 import React from "react";
 import "./RideDetailsCard.scss";
-// import { CiSquareAlert } from "react-icons/ci";
+import { CiSquareAlert } from "react-icons/ci";
 
 function RideDetailsCard({ image, time, title, secondTitle, price }) {
   return (
@@ -15,9 +15,9 @@ function RideDetailsCard({ image, time, title, secondTitle, price }) {
           <p>{secondTitle}</p>
         </div>
         <div className="pricing">
-        {/* <CiSquareAlert /> */}
+          <CiSquareAlert size={18} />
 
-<h5>&#8377; {price}</h5>
+          <h5>&#8377; {price}</h5>
         </div>
       </div>
     </div>
