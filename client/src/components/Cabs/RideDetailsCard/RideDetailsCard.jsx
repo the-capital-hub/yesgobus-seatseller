@@ -16,8 +16,7 @@ function RideDetailsCard({ image, time, title, secondTitle, price }) {
         </div>
         <div className="pricing">
           <CiSquareAlert size={18} />
-
-          <h5>&#8377; {price}</h5>
+          <h5>&#8377;{price}</h5>
         </div>
       </div>
     </div>
