@@ -10,9 +10,7 @@
     "preview": "vite preview",
     "deploy": "aws s3 sync dist/ s3://yesgobus.com",
     "prod": "npm run build && npm run deploy && npx cap sync",
-    "copy:netlify": "copy netlify.toml dist\\",
-    "ionic:build": "npm run build",
-    "ionic:serve": "npm run dev"
+    "copy:netlify": "copy netlify.toml dist\\"
   },
   "dependencies": {
     "@capacitor/android": "^5.5.1",
@@ -23,8 +21,6 @@
     "@codetrix-studio/capacitor-google-auth": "^3.3.6",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@ionic/react": "^7.6.0",
-    "@ionic/react-router": "^7.6.0",
     "@mui/material": "^5.14.6",
     "@reduxjs/toolkit": "^2.0.1",
     "antd": "^5.8.6",
