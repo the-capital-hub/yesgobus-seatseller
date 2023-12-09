@@ -54,6 +54,10 @@ function BookingPage() {
           </Card>
         </div>
       </div>
+      <div className="book_button">
+
+      <button>Book Any</button>
+      </div>
     </section>
   );
 }
