@@ -1,0 +1,17 @@
+.search-page-wrapper {
+  .booking-location-container {
+    background-image: url("../../../assets/cabs/placeholder/map.png");
+  }
+
+  .btn-base {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-size: 1rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+}
