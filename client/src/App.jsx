@@ -21,6 +21,7 @@ import { setIsMobileApp, selectIsMobileApp } from "./stores/slices/designSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { App as CapacitorApp } from "@capacitor/app";
 import CabRoutes from "./routes/CabRoutes";
+import "./App.scss";
 
 function App() {
   const dispatch = useDispatch();
