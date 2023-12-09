@@ -1,0 +1,12 @@
+.location-container {
+  padding: 1.5rem 1rem;
+  border: 1px solid #c0bdbd;
+  border-radius: 10px;
+
+  .location-pins {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    //   justify-content: center;
+  }
+}
