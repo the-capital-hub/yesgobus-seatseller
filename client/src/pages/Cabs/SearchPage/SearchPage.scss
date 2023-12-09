@@ -1,11 +1,8 @@
 .search-page-wrapper {
-  padding-block: 2rem;
   display: flex;
   flex-direction: column;
 
   .booking-location-container {
-    position: relative;
-
     #bookingLocation {
       position: relative;
       z-index: 1;
@@ -14,11 +11,10 @@
 
     .map-image {
       width: 100%;
-      height: auto;
+      height: 50vh;
       object-fit: cover;
       aspect-ratio: 1/ 1.5;
 
-      position: absolute;
       top: 65px;
       left: 0;
       right: 0;
@@ -26,9 +22,13 @@
   }
 
   .favorites-container {
-    border: 1px solid red;
     position: relative;
     z-index: 1;
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
   .btn-base {
@@ -39,7 +39,8 @@
 
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: start;
     gap: 0.5rem;
+    margin: 1rem;
   }
 }

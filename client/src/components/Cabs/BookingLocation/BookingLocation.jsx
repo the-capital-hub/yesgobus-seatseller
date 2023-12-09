@@ -24,7 +24,6 @@ export default function BookingLocation() {
           <div className="">
             <AutoComplete
               placeholder="Your Current Location"
-              defaultValue={"Your Current Location"}
               options={[]}
               filterOption={true}
               bordered={false}
@@ -35,7 +34,6 @@ export default function BookingLocation() {
           <div className="">
             <AutoComplete
               placeholder="Enter Destination"
-              defaultValue={"Enter Destination"}
               options={[]}
               filterOption={true}
               bordered={false}

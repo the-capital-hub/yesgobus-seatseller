@@ -1,6 +1,7 @@
-import { useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { Outlet } from "react-router-dom";
 import "./CabLayout.scss";
+import { Capacitor } from "@capacitor/core";
 
 const initialState = {
   destination: "",
@@ -20,7 +21,7 @@ const reducer = (state, action) => {
 
 const CabLayout = () => {
   const [rideLocations, dispatch] = useReducer(reducer, initialState);
-
+  const [isMobielApp, setIsMobileApp] = useState(true);
   const setDestination = (destination) => {
     dispatch({ type: "SET_DESTINATION", payload: destination });
   };
@@ -28,6 +29,22 @@ const CabLayout = () => {
   const setCurrentLocation = (location) => {
     dispatch({ type: "SET_CURRENT_LOCATION", payload: location });
   };
+
+  useEffect(() => {
+    const currentPlatform = Capacitor.getPlatform();
+
+    if (currentPlatform === "android" || currentPlatform === "ios") {
+      setIsMobileApp(true);
+      console.log(`Running on ${currentPlatform}`);
+    } else {
+      setIsMobileApp(false);
+      console.log("Not running on Android or iOS");
+    }
+  }, []);
+
+  // if(!isMobielApp) {
+  //   return ======
+  // }
 
   return (
     <div className="cab-layout">
