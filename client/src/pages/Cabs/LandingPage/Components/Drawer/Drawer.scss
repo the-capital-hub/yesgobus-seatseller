@@ -1,0 +1,34 @@
+#navigation-drawer {
+  .ant-drawer-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    a {
+      color: black;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      font-size: 1.2rem;
+
+      display: flex;
+      gap: 10px;
+      align-items: center;
+
+      svg {
+        height: 25px;
+      }
+
+      //   &.active {
+      &.tempActive {
+        color: #fd5901;
+      }
+    }
+
+    img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+  }
+}
