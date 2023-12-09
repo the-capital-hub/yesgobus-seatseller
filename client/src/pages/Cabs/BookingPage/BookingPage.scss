@@ -1,0 +1,22 @@
+.book_any_cab_page{
+    .map{
+        img{
+            width: 100%;
+            height: auto;
+        }
+    }
+  .recommended{
+    h4{
+        padding: 15px;
+    }
+    .recommended_Cab{
+        padding: 15px;
+        .ant-card{
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            .ant-card-body{
+                padding: 0px;
+            }
+        }
+    }
+  }
+}
