@@ -1,0 +1,55 @@
+.book_any_cab_page {
+  .map {
+    position: relative;
+    img {
+      width: 100%;
+      height: auto;
+    }
+    .back_btn{
+        position: absolute;
+        top: 7px;
+        left: 5px;
+        color: black;
+        background: #FFFFFF;
+        padding: 10px;
+        border-radius: 100%;
+
+    }
+  }
+  .recommended {
+    h4 {
+      padding: 15px;
+      font-weight: 600;
+    }
+    .recommended_Cab {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      padding: 15px;
+      .ant-card {
+        box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2),
+          0 0px 10px 0 rgba(0, 0, 0, 0.19);
+        .ant-card-body {
+          padding: 0px;
+          .Donate_program {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding-left: 10px;
+            padding-right: 10px;
+            color: #fd5901;
+            .rs {
+              padding: 5px;
+              background: #fd5901;
+              border-radius: 100%;
+            }
+            h4 {
+              margin-right: auto;
+            }
+          }
+        }
+      }
+    }
+  }
+}
