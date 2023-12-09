@@ -10,7 +10,7 @@ export default function SearchPage() {
       <button
         type="button"
         className="btn-base"
-        style={{ marginBottom: "3rem" }}
+        style={{ marginBottom: "2rem" }}
       >
         <IoArrowBack size={24} /> Pick-up
       </button>
