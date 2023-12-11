@@ -19,14 +19,15 @@ import { useEffect } from "react";
 import { Capacitor } from "@capacitor/core";
 import { setIsMobileApp, selectIsMobileApp } from "./stores/slices/designSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { App as CapacitorApp } from '@capacitor/app';
+import { App as CapacitorApp } from "@capacitor/app";
+import CabRoutes from "./routes/CabRoutes";
+import "./App.scss";
 
 function App() {
   const dispatch = useDispatch();
   const isMobileApp = useSelector(selectIsMobileApp);
 
   useEffect(() => {
-
     const currentPlatform = Capacitor.getPlatform();
 
     if (currentPlatform === "android" || currentPlatform === "ios") {
@@ -42,7 +43,7 @@ function App() {
     //   });
   }, []);
 
-  CapacitorApp.addListener('backButton', ({ canGoBack }) => {
+  CapacitorApp.addListener("backButton", ({ canGoBack }) => {
     if (!canGoBack) {
       CapacitorApp.exitApp();
     } else {
@@ -55,9 +56,7 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={
-            isMobileApp ? <BusBooking /> : <LandingPage />
-          }
+          element={isMobileApp ? <BusBooking /> : <LandingPage />}
         />
         <Route path="/busbooking" element={<BusBooking />} />
         <Route path="/busbooking/payment" element={<Payment />} />
@@ -73,13 +72,15 @@ function App() {
         <Route path="/busbooking/ticket" element={<TicketView />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/contactus" element={<ContactUs />} />
-        <Route path="/cabs" element={<ComingSoon />} />
+        {/* <Route path="/cabs" element={<ComingSoon />} />
         <Route path="/cabs/kyc" element={<KYC />} />
-        <Route path="/cabs/kyc/payment" element={<KycPayments />} />
+        <Route path="/cabs/kyc/payment" element={<KycPayments />} /> */}
 
         {/* <Route path="/cabs/kyc" element={<KycLandingPage />} /> */}
 
         <Route path="/mobile_navbar" element={<MobileNavbar />} />
+
+        <Route path="/cabs/*" element={<CabRoutes />} />
       </Routes>
     </BrowserRouter>
   );

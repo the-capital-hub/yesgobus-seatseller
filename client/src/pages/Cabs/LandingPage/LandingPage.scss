@@ -1,0 +1,67 @@
+.cab-landing-page {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  .map {
+    position: relative;
+
+    header {
+      position: fixed;
+      padding: 10px;
+      padding-top: 30px;
+      width: 100%;
+      display: flex;
+
+      .your-location-input {
+        border: 1px solid lightgray;
+        border-radius: 0.7rem;
+        width: 100%;
+        padding: 10px;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+        input {
+          margin-left: 10px;
+        }
+      }
+    }
+
+    img {
+      max-height: 60vh;
+      width: 100vw;
+      object-fit: cover;
+    }
+
+    .inside-map-input {
+      position: absolute;
+      top: -180px;
+      left: -180px;
+      z-index: 1;
+    }
+  }
+
+  section.content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+
+    .destination-input {
+      width: 95%;
+      margin: 10px;
+
+      input {
+        margin-left: 10px;
+      }
+    }
+
+    .previous-destinations {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 10px;
+      padding-top: 0px;
+    }
+  }
+}

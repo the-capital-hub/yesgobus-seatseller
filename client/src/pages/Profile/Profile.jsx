@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Profile.scss";
 import { Navbar } from "../../components";
 import UserIcon from "../../components/SvgIcons/UserIcon";
@@ -12,6 +12,17 @@ import { Button } from "../../components";
 export default function Profile() {
   const [profileOption, setProfileOption] = useState("profile");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const getQueryParam = (name) => {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name);
+    };
+    const ticketParam = getQueryParam('ticket');
+    if (ticketParam === 'true') {
+      setProfileOption('booking');
+    }
+  }, []);
 
   const Options = {
     profile: <MyProfile />,
@@ -32,9 +43,8 @@ export default function Profile() {
         {/* Sidebar */}
         <aside className="profile__sidebar">
           <button
-            className={`sidebar__button user ${
-              profileOption === "profile" ? "active" : ""
-            } `}
+            className={`sidebar__button user ${profileOption === "profile" ? "active" : ""
+              } `}
             onClick={() => {
               setProfileOption("profile");
             }}
@@ -43,9 +53,8 @@ export default function Profile() {
             My Profile
           </button>
           <button
-            className={`sidebar__button ${
-              profileOption === "booking" ? "active" : ""
-            } `}
+            className={`sidebar__button ${profileOption === "booking" ? "active" : ""
+              } `}
             onClick={() => {
               setProfileOption("booking");
             }}

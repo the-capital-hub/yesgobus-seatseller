@@ -1,0 +1,20 @@
+.short-location-card {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border-bottom: 1px solid rgb(211, 211, 211);
+  padding-bottom: 5px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .details {
+    h4 {
+      margin-bottom: 5px;
+    }
+    p {
+      font-size: 14px;
+    }
+  }
+}

@@ -1,0 +1,40 @@
+.ride_cancel_card{
+    margin-top: 10px;
+    .heading{
+        padding: 10px;
+        text-align: center;
+        font-weight: 600;
+    }
+    .progress_bar{
+        .ant-progress-outer{
+            margin: 0;
+        }
+        .ant-progress-text{
+    display: none;
+        }
+    }
+    .image_with_cancel{
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        button{
+            width: 100%;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            background: white;
+            border: 0px;
+            outline: none;
+            border-radius: 8px;
+            box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2),
+            0 0px 10px 0 rgba(0, 0, 0, 0.19);
+            font-weight: 600;
+            &:hover{
+                background: rgb(241, 241, 241);
+
+            }
+        }
+    }
+}
