@@ -19,6 +19,7 @@
         width: 100%;
         padding: 10px;
         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
         input {
           margin-left: 10px;
         }
@@ -29,6 +30,13 @@
       max-height: 60vh;
       width: 100vw;
       object-fit: cover;
+    }
+
+    .inside-map-input {
+      position: absolute;
+      top: -180px;
+      left: -180px;
+      z-index: 1;
     }
   }
 
@@ -42,10 +50,12 @@
     .destination-input {
       width: 95%;
       margin: 10px;
+
       input {
         margin-left: 10px;
       }
     }
+
     .previous-destinations {
       display: flex;
       flex-direction: column;
