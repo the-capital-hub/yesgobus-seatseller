@@ -25,14 +25,14 @@ const Drawer = ({ showDrawer, setShowDrawer }) => {
         <AiFillHome />
         Home
       </NavLink>
-      <NavLink to="" onClick={toggleDrawer}>
+      <NavLink to="/profile?ticket=true" onClick={toggleDrawer}>
         <TbTicket />
         Tickets
       </NavLink>
-      <NavLink to="" onClick={toggleDrawer}>
+      {/* <NavLink to="" onClick={toggleDrawer}>
         <IoWalletOutline />
         Wallet
-      </NavLink>
+      </NavLink> */}
       <NavLink to="" onClick={toggleDrawer}>
         <TbMessageQuestion />
         Help

@@ -7,6 +7,16 @@ import Drawer from "./Components/Drawer/Drawer.jsx";
 import { IoSearch } from "react-icons/io5";
 import ShortLocationCard from "../../../components/cabs/ShortLocationCard/ShortLocationCard.jsx";
 import { useNavigate } from "react-router-dom";
+import GoogleMapReact from 'google-map-react'
+
+
+const defaultProps = {
+  center: {
+    lat: 10.99835602,
+    lng: 77.01502627
+  },
+  zoom: 11
+};
 
 const prevLocations = [
   {
@@ -42,14 +52,21 @@ function LandingPage() {
       <div className="cab-landing-page">
         <section className="map">
           <header>
-            <Input
-              size="large"
-              placeholder="Your current location"
-              prefix={<GrMenu size={20} onClick={() => setShowDrawer(true)} />}
-              className="your-location-input"
-            />
           </header>
-          <img src={placeholder.map} alt="map" />
+          <div style={{ height: '60vh', width: '100vw', objectFit: "cover", position: "relative" }}>
+            <GoogleMapReact
+              bootstrapURLKeys={{ key: import.meta.env.VITE_GOOGLE_KEY }}
+              defaultCenter={defaultProps.center}
+              defaultZoom={defaultProps.zoom}
+            >
+              <Input
+                size="large"
+                placeholder="Your current location"
+                prefix={<GrMenu size={20} onClick={() => setShowDrawer(true)} />}
+                className="your-location-input inside-map-input"
+              />
+            </GoogleMapReact>
+          </div>
         </section>
         <section className="content">
           <Input
