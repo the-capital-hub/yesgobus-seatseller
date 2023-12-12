@@ -140,7 +140,7 @@ const Navbar = ({ page }) => {
         {isMobileApp &&
           <button className="btn"><Link to={"/cabs"} className="link">Cab</Link></button>
         }
-          <button className="btn"><Link to={"/contactus"} className="link">ContactUs</Link></button>
+          <button className="btn"><Link to={"/contactus"} className="link">Contact Us</Link></button>
         </div>
       </>
       {/* )} */}
