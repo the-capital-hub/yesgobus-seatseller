@@ -58,9 +58,12 @@ const Navbar = ({ page }) => {
       <a href="/busbooking">
         <span>Bus</span>
       </a>
-      <a href="/cabs">
-        <span>Cabs</span>
-      </a>
+      {isMobileApp &&
+        <a href="/cabs">
+          <span>Cabs</span>
+        </a>
+      }
+
       <a href="/contactus">
         <span>Contact Us</span>
       </a>
@@ -91,9 +94,11 @@ const Navbar = ({ page }) => {
         <a href="/busbooking">
           <span>Bus</span>
         </a>
-        <a href="/cabs">
-          <span>Cabs</span>
-        </a>
+        {isMobileApp &&
+          <a href="/cabs">
+            <span>Cabs</span>
+          </a>
+        }
         <a href="/contactus">
           <span>Contact Us</span>
         </a>
@@ -132,8 +137,10 @@ const Navbar = ({ page }) => {
         <div className={`select_vehicle`}>
           {!isMobileApp && <button className="btn"><Link to={"/"} className="link">Home</Link></button>}
           <button className="btn"><Link to={"/busbooking"} className="link">Bus</Link></button>
+        {isMobileApp &&
           <button className="btn"><Link to={"/cabs"} className="link">Cab</Link></button>
-          <button className="btn"><Link to={"/contactus"} className="link">ContactUs</Link></button>
+        }
+          <button className="btn"><Link to={"/contactus"} className="link">Contact Us</Link></button>
         </div>
       </>
       {/* )} */}

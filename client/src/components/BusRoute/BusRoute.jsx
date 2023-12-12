@@ -6,7 +6,6 @@ import "./BusRoute.scss";
 import axiosInstance from "../../utils/service";
 import { Link } from "react-router-dom";
 
-
 const BusRoute = ({
   locationOne,
   locationTwo,
@@ -19,6 +18,18 @@ const BusRoute = ({
   const [sourceCity, setSourceCity] = useState(locationOne);
   const [destinationCity, setDestinationCity] = useState(locationTwo);
   const [loading, setLoading] = useState(false);
+  const [highlighted, setHighlighted] = useState(true);
+
+  const handleDateChange = (isToday) => {
+    const currentDate = new Date();
+    const nextDate = new Date(currentDate);
+    nextDate.setDate(currentDate.getDate() + (isToday ? 0 : 1));
+    const formattedDate = `${nextDate.getFullYear()}-${String(
+      nextDate.getMonth() + 1
+    ).padStart(2, "0")}-${String(nextDate.getDate()).padStart(2, "0")}`;
+    onSearch(sourceCity, destinationCity, formattedDate);
+    setHighlighted(isToday);
+  };
 
   useEffect(() => {
     setSourceCity(locationOne);
@@ -77,6 +88,7 @@ const BusRoute = ({
           suggestions={locationOneSuggestions}
           loading={loading}
           setLocationQuery={setLocationOneQuery}
+          startRecording={() => startRecording(setSourceCity)}
         />
         <img
           src={twowayarrow}
@@ -104,6 +116,7 @@ const BusRoute = ({
           suggestions={locationTwoSuggestions}
           loading={loading}
           setLocationQuery={setLocationTwoQuery}
+          startRecording={() => startRecording(setDestinationCity)}
         />
         <BusRouteCard
           title="Select Date"
@@ -118,38 +131,31 @@ const BusRoute = ({
       </div>
       <div className="MobileBusRoute" style={{ background: "black" }}>
         <h4 style={{ color: "white" }}>PROVIDING QUALITY SERVICES AT </h4>
-        <h4 className="AFFORDABLE">AFFORDABLE PRICES</h4>
-        {/* <div className="select_vehicle">
-          <button className="btn1">   <Link
-            to={
-              "/busbooking"
-            }
-            className="link"
-          >Bus</Link></button>
-          <button className="btn2"><Link
-            to={
-              "/cabs"
-            }
-            className="link"
-
-          >Cab</Link></button>
-        </div> */}
-
+        <h4 className="orange-text">AFFORDABLE PRICES</h4>
         <div>
-          <h4 style={{ color: "white" }}>Bus Ticket</h4>
+          {/* <h5 style={{ color: "white" }}>Bus Ticket</h5> */}
           <div className="outer_border">
             <div className="inputs">
               <div className="fromto">
                 <BusRouteCard
                   title="From"
                   location={sourceCity}
-                  setLocation={(value) => onSearch(value, locationTwo, departureDate)}
+                  setLocation={(value) =>
+                    onSearch(value, locationTwo, departureDate)
+                  }
                   suggestions={locationOneSuggestions}
                   loading={loading}
                   setLocationQuery={setLocationOneQuery}
-                  style={{ borderTop: 'none', backgroundColor: 'transparent', paddingLeft: "10px", paddingTop: "0px", paddingBottom: "0px", paddingRight: "0px", maxWidth: "100%" }}
-                  // color={{ color: "#fd5901" }}
-
+                  style={{
+                    borderTop: "none",
+                    backgroundColor: "transparent",
+                    paddingLeft: "10px",
+                    paddingTop: "0px",
+                    paddingBottom: "20px",
+                    paddingRight: "10px",
+                    maxWidth: "100%",
+                  }}
+                // color={{ color: "#fd5901" }}
                 />
                 <div className="img_rotater">
                   <img
@@ -168,37 +174,66 @@ const BusRoute = ({
                       }
                       setDestinationCity(locationOne);
                       setSourceCity(locationTwo);
-                      console.log(sourceCity);
                       onSearch(locationTwo, locationOne, departureDate);
                     }}
                   />
-
                   <hr />
                 </div>
                 <BusRouteCard
                   title="To"
                   location={destinationCity}
-                  setLocation={(value) => onSearch(locationOne, value, departureDate)}
+                  setLocation={(value) =>
+                    onSearch(locationOne, value, departureDate)
+                  }
                   suggestions={locationTwoSuggestions}
                   loading={loading}
                   setLocationQuery={setLocationTwoQuery}
-                  style={{ borderTop: 'none', backgroundColor: 'transparent', paddingLeft: "10px", paddingTop: "0px", paddingBottom: "0px", paddingRight: "0px", maxWidth: "100%" }}
-                  // color={{ color: "#fd5901" }}
-
+                  style={{
+                    borderTop: "none",
+                    backgroundColor: "transparent",
+                    paddingLeft: "10px",
+                    paddingTop: "0px",
+                    paddingBottom: "20px",
+                    paddingRight: "10px",
+                    maxWidth: "100%",
+                  }}
                 />
               </div>
               <BusRouteCard
                 title="Select Date"
                 location={departureDate}
-                setLocation={(value) => onSearch(locationOne, locationTwo, value)}
+                setLocation={(value) =>
+                  onSearch(locationOne, locationTwo, value)
+                }
                 date={true}
-                style={{ borderTop: 'none', backgroundColor: 'transparent', paddingLeft: "10px", paddingTop: "0px", paddingBottom: "0px", paddingRight: "5px", maxWidth: "100%" }}
-                // color={{ color: "#fd5901" }}
+                style={{
+                  borderTop: "none",
+                  backgroundColor: "transparent",
+                  paddingLeft: "10px",
+                  paddingTop: "0px",
+                  paddingBottom: "0px",
+                  paddingRight: "5px",
+                  maxWidth: "100%",
+                }}
               />
-              {/* <div className="days">
-<button className="btn1">Today</button>
-<button className="btn2">Tomorrow</button>
-  </div> */}
+              <div className="days">
+                <button
+                  onClick={() => handleDateChange(true)}
+                  className={
+                    highlighted ? "dayButton highlighted" : "dayButton"
+                  }
+                >
+                  Today
+                </button>
+                <button
+                  onClick={() => handleDateChange(false)}
+                  className={
+                    !highlighted ? "dayButton highlighted" : "dayButton"
+                  }
+                >
+                  Tomorrow
+                </button>
+              </div>
             </div>
           </div>
         </div>

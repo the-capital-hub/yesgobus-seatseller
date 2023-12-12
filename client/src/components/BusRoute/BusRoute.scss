@@ -32,14 +32,17 @@
 }
 
 .MobileBusRoute {
-
+  padding: 20px 0;
   padding-left: 10px;
   padding-right: 10px;
-  padding-bottom: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 
-  .AFFORDABLE {
+  .orange-text {
     color: #fd5901;
     padding-top: 5px;
+    margin-bottom: 10px;
   }
 
   .btn1 {
@@ -51,7 +54,6 @@
     padding-top: 5px;
     padding-bottom: 5px;
     border-radius: 5px;
-
   }
 
   .btn2 {
@@ -63,13 +65,11 @@
     padding-top: 5px;
     padding-bottom: 5px;
     border-radius: 5px;
-
   }
 
   .select_vehicle {
     padding-top: 10px;
     padding-bottom: 15px;
-
 
     display: flex;
     gap: 7px;
@@ -104,7 +104,7 @@
 
         .img_rotater {
           position: relative;
-
+          
           .reverse-img {
             position: absolute;
             right: 8px;
@@ -115,14 +115,12 @@
             padding-right: 6px;
             padding-top: 5px;
             padding-bottom: 5px;
-
-
+            
             object-fit: contain;
 
             border-radius: 100px;
           }
         }
-
       }
 
       .days {
@@ -130,6 +128,16 @@
         padding-left: 10px;
         display: flex;
         gap: 7px;
+
+        .dayButton {
+          border: none;
+          border-radius: 5px;
+          padding: 5px 7px;
+          background-color: white;
+          &.highlighted {
+            background-color: #fd5901;
+          }
+        }
       }
     }
   }

@@ -14,6 +14,8 @@ import { facebookLoginAPI, googleLoginAPI } from "../../api/authentication";
 import { LoginSocialFacebook } from "reactjs-social-login";
 import toast, { Toaster } from 'react-hot-toast';
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
+import { useSelector } from "react-redux";
+import { selectIsMobileApp } from "../../stores/slices/designSlice";
 
 const Login = () => {
 
@@ -21,6 +23,7 @@ const Login = () => {
   if (loggedInUser) {
     return <Navigate to="/" replace />;
   }
+  const isMobileApp = useSelector(selectIsMobileApp);
 
   useEffect(() => {
     GoogleAuth.initialize({
@@ -406,16 +409,20 @@ const Login = () => {
             {showLogin ? (
               <>
                 <h1>Log In</h1>
-                <p>
-                  Dont have an account?
-                  <span
-                    style={{ cursor: "pointer" }}
-                    onClick={handleLoginChange}
-                  >
-                    {" "}
-                    Create an account
-                  </span>
-                </p>
+
+                {isMobileApp &&
+                  <p>
+                    Dont have an account?
+                    <span
+                      style={{ cursor: "pointer" }}
+                      onClick={handleLoginChange}
+                    >
+                      {" "}
+                      Create an account
+                    </span>
+                  </p>
+                }
+
               </>
             ) : (
               <>
