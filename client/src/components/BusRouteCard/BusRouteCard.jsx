@@ -82,7 +82,7 @@ const BusRouteCard = ({ title, location, setLocation, date, suggestions, loading
             </li>
           ) : (
             suggestions
-              // .filter(({ city_name }) => !/\d/.test(city_name) && !city_name.includes(" "))
+              .filter(({ name }) => !/\d/.test(name) && !name.includes(" "))
               .map((suggestion) => (
                 <li
                   key={suggestion._id}
