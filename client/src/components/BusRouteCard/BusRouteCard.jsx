@@ -1,9 +1,47 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./BusRouteCard.scss";
 import { Spin } from "antd";
+import MicImage from "../../assets/busbooking/micimg.svg";
+import { SpeechRecognition } from "@capacitor-community/speech-recognition";
 
 const BusRouteCard = ({ title, location, setLocation, date, suggestions, loading, setLocationQuery, style, color }) => {
+  const [recording, setRecording] = useState(false);
+
+  useEffect(() => {
+    SpeechRecognition.requestPermissions();
+  }, []);
+
+  async function startRecording(setSpeechLocation) {
+    const available = await SpeechRecognition.available();
+    if (available) {
+      setRecording(true);
+      SpeechRecognition.start({
+        language: "en-US",
+        // maxResults: 2,
+        prompt: "Say something",
+        partialResults: true,
+        popup: false,
+      });
+
+      SpeechRecognition.addListener("partialResults", async (data) => {
+        if (data.matches && data.matches.length > 0) {
+          setInputValue(data.matches[0]);
+          setSpeechLocation(data.matches[0]);
+          setShowSuggestions(true);
+          setRecording(false);
+          await SpeechRecognition.stop();
+        }
+      });
+    }
+  }
+
+  // async function stopRecording() {
+  //   setRecording(false);
+  //   await SpeechRecognition.stop();
+  // }
+
   const [inputValue, setInputValue] = useState(location);
+
 
   useEffect(() => {
     setInputValue(location);
@@ -67,12 +105,16 @@ const BusRouteCard = ({ title, location, setLocation, date, suggestions, loading
       {date ? (
         <input type="date" min={currentDate} value={inputValue} onChange={handleDateChange} />
       ) : (
-        <input
-          type="search"
-          value={inputValue}
-          onInput={handleInputChange}
-          onClick={handleInputClick}
-        />
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <input
+            type="search"
+            value={inputValue}
+            onInput={handleInputChange}
+            onClick={handleInputClick}
+          />
+          <img src={MicImage} width="30" height="30" onClick={() => startRecording(setLocationQuery)} />
+
+        </div>
       )}
       {showSuggestions && (
         <ul className="suggestion-list">
@@ -82,7 +124,7 @@ const BusRouteCard = ({ title, location, setLocation, date, suggestions, loading
             </li>
           ) : (
             suggestions
-              // .filter(({ city_name }) => !/\d/.test(city_name) && !city_name.includes(" "))
+              .filter(({ name }) => !/\d/.test(name) && !name.includes(" "))
               .map((suggestion) => (
                 <li
                   key={suggestion._id}
