@@ -19,7 +19,6 @@
         width: 100%;
         padding: 10px;
         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-
         input {
           margin-left: 10px;
         }
@@ -32,12 +31,6 @@
       object-fit: cover;
     }
 
-    .inside-map-input {
-      position: absolute;
-      top: -180px;
-      left: -180px;
-      z-index: 1;
-    }
   }
 
   section.content {
@@ -64,4 +57,18 @@
       padding-top: 0px;
     }
   }
+}
+
+
+.map-marker {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  text-align: center;
+}
+
+
+.pin-text {
+  font-size: 14px;
+  font-weight: bold;
+  color: black; 
 }
