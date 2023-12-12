@@ -1,9 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./BusRouteCard.scss";
 import { Spin } from "antd";
+import { useSpeechRecognition } from 'react-speech-kit';
+import MicImage from "../../assets/busbooking/micimg.svg";
 
 const BusRouteCard = ({ title, location, setLocation, date, suggestions, loading, setLocationQuery, style, color }) => {
   const [inputValue, setInputValue] = useState(location);
+  const [value, setValue] = useState('');
+  const { listen, listening, stop } = useSpeechRecognition({
+    onResult: (result) => {
+      setInputValue(result);
+      setLocationQuery(result);
+      setShowSuggestions(true);
+    },
+  });
 
   useEffect(() => {
     setInputValue(location);
@@ -67,12 +77,15 @@ const BusRouteCard = ({ title, location, setLocation, date, suggestions, loading
       {date ? (
         <input type="date" min={currentDate} value={inputValue} onChange={handleDateChange} />
       ) : (
-        <input
-          type="search"
-          value={inputValue}
-          onInput={handleInputChange}
-          onClick={handleInputClick}
-        />
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <input
+            type="search"
+            value={inputValue}
+            onInput={handleInputChange}
+            onClick={handleInputClick}
+          />
+          <img src={MicImage} width="30" height="30" onMouseDown={listen} onMouseUp={stop} />
+        </div>
       )}
       {showSuggestions && (
         <ul className="suggestion-list">

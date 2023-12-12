@@ -149,8 +149,8 @@ const BusRoute = ({
                     backgroundColor: "transparent",
                     paddingLeft: "10px",
                     paddingTop: "0px",
-                    paddingBottom: "0px",
-                    paddingRight: "0px",
+                    paddingBottom: "20px",
+                    paddingRight: "10px",
                     maxWidth: "100%",
                   }}
                   // color={{ color: "#fd5901" }}
@@ -191,8 +191,8 @@ const BusRoute = ({
                     backgroundColor: "transparent",
                     paddingLeft: "10px",
                     paddingTop: "0px",
-                    paddingBottom: "0px",
-                    paddingRight: "0px",
+                    paddingBottom: "20px",
+                    paddingRight: "10px",
                     maxWidth: "100%",
                   }}
                 />
