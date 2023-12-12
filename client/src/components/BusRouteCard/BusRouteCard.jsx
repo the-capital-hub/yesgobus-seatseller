@@ -1,19 +1,47 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./BusRouteCard.scss";
 import { Spin } from "antd";
-import { useSpeechRecognition } from 'react-speech-kit';
 import MicImage from "../../assets/busbooking/micimg.svg";
+import { SpeechRecognition } from "@capacitor-community/speech-recognition";
 
 const BusRouteCard = ({ title, location, setLocation, date, suggestions, loading, setLocationQuery, style, color }) => {
+  const [recording, setRecording] = useState(false);
+
+  useEffect(() => {
+    SpeechRecognition.requestPermissions();
+  }, []);
+
+  async function startRecording(setSpeechLocation) {
+    const available = await SpeechRecognition.available();
+    if (available) {
+      setRecording(true);
+      SpeechRecognition.start({
+        language: "en-US",
+        // maxResults: 2,
+        prompt: "Say something",
+        partialResults: true,
+        popup: false,
+      });
+
+      SpeechRecognition.addListener("partialResults", async (data) => {
+        if (data.matches && data.matches.length > 0) {
+          setInputValue(data.matches[0]);
+          setSpeechLocation(data.matches[0]);
+          setShowSuggestions(true);
+          setRecording(false);
+          await SpeechRecognition.stop();
+        }
+      });
+    }
+  }
+
+  // async function stopRecording() {
+  //   setRecording(false);
+  //   await SpeechRecognition.stop();
+  // }
+
   const [inputValue, setInputValue] = useState(location);
-  const [value, setValue] = useState('');
-  const { listen, listening, stop } = useSpeechRecognition({
-    onResult: (result) => {
-      setInputValue(result);
-      setLocationQuery(result);
-      setShowSuggestions(true);
-    },
-  });
+
 
   useEffect(() => {
     setInputValue(location);
@@ -84,7 +112,8 @@ const BusRouteCard = ({ title, location, setLocation, date, suggestions, loading
             onInput={handleInputChange}
             onClick={handleInputClick}
           />
-          <img src={MicImage} width="30" height="30" onMouseDown={listen} onMouseUp={stop} />
+          <img src={MicImage} width="30" height="30" onClick={() => startRecording(setLocationQuery)} />
+
         </div>
       )}
       {showSuggestions && (
