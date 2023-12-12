@@ -159,7 +159,7 @@ const BusBooking = () => {
 
     //srs buses
     try {
-      if (filters && filters?.busPartners && filters.busPartners.length > 0 &&  !filters?.busPartners?.includes("SRS Travels")) {
+      if (filters && filters?.busPartners && filters.busPartners.length > 0 && !filters?.busPartners?.includes("SRS Travels")) {
         setSrsBuses([]);
         setNoSrsOfBuses(0);
       } else {
@@ -176,27 +176,27 @@ const BusBooking = () => {
 
     //seat seller buses
     try {
-      const response = await axiosInstance.post(
-        `${import.meta.env.VITE_BASE_URL}/api/busBooking/getBusDetails`,
-        {
-          sourceCity: sourceCity.trim(),
-          destinationCity: destinationCity.trim(),
-          doj: doj,
-          // boardingPoints,
-          // droppingPoints,
-          ...filters,
-        }
-      );
-      if (response.data.data[0] !== null) {
-        setBusDetails(response.data.data);
-        setNoOfBuses(response.data.data.length);
-      } else {
-        setBusDetails([]);
-        setNoOfBuses(0);
-      }
-      setSourceCityId(response.data.sourceCity);
-      setDestinationCityId(response.data.destinationCity);
-      setLoading(false);
+      //   const response = await axiosInstance.post(
+      //     `${import.meta.env.VITE_BASE_URL}/api/busBooking/getBusDetails`,
+      //     {
+      //       sourceCity: sourceCity.trim(),
+      //       destinationCity: destinationCity.trim(),
+      //       doj: doj,
+      //       // boardingPoints,
+      //       // droppingPoints,
+      //       ...filters,
+      //     }
+      //   );
+      //   if (response.data.data[0] !== null) {
+      //     setBusDetails(response.data.data);
+      //     setNoOfBuses(response.data.data.length);
+      //   } else {
+      //     setBusDetails([]);
+      //     setNoOfBuses(0);
+      //   }
+      //   setSourceCityId(response.data.sourceCity);
+      //   setDestinationCityId(response.data.destinationCity);
+      //   setLoading(false);
     } catch (error) {
       setBusDetails([]);
       setNoOfBuses(0);

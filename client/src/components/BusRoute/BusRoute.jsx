@@ -88,6 +88,7 @@ const BusRoute = ({
           suggestions={locationOneSuggestions}
           loading={loading}
           setLocationQuery={setLocationOneQuery}
+          startRecording={() => startRecording(setSourceCity)}
         />
         <img
           src={twowayarrow}
@@ -115,6 +116,7 @@ const BusRoute = ({
           suggestions={locationTwoSuggestions}
           loading={loading}
           setLocationQuery={setLocationTwoQuery}
+          startRecording={() => startRecording(setDestinationCity)}
         />
         <BusRouteCard
           title="Select Date"
@@ -149,11 +151,11 @@ const BusRoute = ({
                     backgroundColor: "transparent",
                     paddingLeft: "10px",
                     paddingTop: "0px",
-                    paddingBottom: "0px",
-                    paddingRight: "0px",
+                    paddingBottom: "20px",
+                    paddingRight: "10px",
                     maxWidth: "100%",
                   }}
-                  // color={{ color: "#fd5901" }}
+                // color={{ color: "#fd5901" }}
                 />
                 <div className="img_rotater">
                   <img
@@ -191,8 +193,8 @@ const BusRoute = ({
                     backgroundColor: "transparent",
                     paddingLeft: "10px",
                     paddingTop: "0px",
-                    paddingBottom: "0px",
-                    paddingRight: "0px",
+                    paddingBottom: "20px",
+                    paddingRight: "10px",
                     maxWidth: "100%",
                   }}
                 />
