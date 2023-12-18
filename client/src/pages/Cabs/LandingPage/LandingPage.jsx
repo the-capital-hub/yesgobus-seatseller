@@ -59,27 +59,22 @@ function LandingPage() {
 
   const handleSearch = async (value) => {
     try {
+
       const response = await fetch(
-        `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(
-          value
-        )}&key=ad473aed95274b389856f2733cc276d3`
-      );
+        `https://api.geoapify.com/v1/geocode/search?text=${value}&apiKey=${import.meta.env.VITE_GEOAPIFY_API}`
+      )
       const data = await response.json();
-      if (data.results.length > 0) {
-        setShowLocation(value);
-        const result = data.results[0].geometry;
-        setSearchedLocation({
-          center: {
-            lat: result.lat,
-            lng: result.lng,
-          },
-        });
-      } else {
-        // Handle no results
-        console.error('No results found');
-      }
+      console.log(data);
+      const lat = data.features[0].properties.lat;
+      const lng = data.features[0].properties.lon;
+      console.log(lat, lng);
+      setSearchedLocation({
+        center: {
+          lat: lat,
+          lng: lng,
+        },
+      });
     } catch (error) {
-      // Handle errors
       console.error('Error fetching location:', error);
     }
   };
