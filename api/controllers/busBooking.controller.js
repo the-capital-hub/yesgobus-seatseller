@@ -37,6 +37,7 @@ import {
   getSrsBookingDetails,
   getSrsCanCancelDetails,
   srsCancelBooking,
+  getSrsFilters,
 
 } from "../service/buBooking.service.js";
 import { sendMessage, sendMail } from "../utils/helper.js";
@@ -696,6 +697,19 @@ export const srsCancelBookingController = async (req, res) => {
       status: 500,
       message: "Internal Server Error",
       error: error,
+    })
+  }
+};
+
+export const getSrsFiltersController = async (req, res) => {
+  try {
+    const response = await getSrsFilters(req.query);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: "An error occurred while getting filters"
     })
   }
 };

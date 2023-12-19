@@ -11,6 +11,17 @@ export const getSrsBuses = async (sourceCity, destinationCity, doj) => {
   }
 };
 
+export const getSrsBuseFilters = async (sourceCity, destinationCity, doj) => {
+  try {
+    const response = await axiosInstance.get(
+      `${import.meta.env.VITE_BASE_URL}/api/busBooking/getSrsFilters?sourceCity=${sourceCity}&destinationCity=${destinationCity}&doj=${doj}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error.message;
+  }
+};
+
 export const getSrsSeatLayout = async (schedule_id) => {
   try {
     const response = await axiosInstance.get(

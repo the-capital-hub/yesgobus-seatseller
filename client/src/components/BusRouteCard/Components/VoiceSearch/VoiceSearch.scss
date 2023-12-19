@@ -1,0 +1,36 @@
+.voice-search-wrapper {
+  .modal-trigger {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+  }
+}
+
+// Has to be outsie wrapper
+.drawer-body {
+  //   border: 1px solid red;
+  display: flex;
+
+  .drawer-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .modal-mic {
+      background-color: #333;
+      padding: 0.5rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .search-result {
+      font-size: 1.25rem;
+    }
+  }
+}
