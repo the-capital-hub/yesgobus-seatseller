@@ -7,8 +7,9 @@ import axiosInstance from "../../utils/service";
 import { cityMapping } from "../../utils/cityMapping";
 import { map } from "../../assets/homepage";
 import { getVrlBusFilters } from "../../api/vrlBusesApis";
+import { getSrsBuseFilters } from "../../api/srsBusesApis";
 
-const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs }) => {
+const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs, allSrsBusOperators }) => {
   const [range, setRange] = useState([100, 3000]);
   const [filters, setFilters] = useState([]);
   const [boardingPointsFilter, setBoardingPointsFilter] = useState([]);
@@ -32,8 +33,8 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs })
     if (isSrs) {
       const allFilters = filters;
       const allBusPartner = filters.busPartners || [];
-      if (!allBusPartner.includes("SRS Travels")) {
-        allBusPartner.push("SRS Travels");
+      if (!allBusPartner.includes(...allSrsBusOperators)) {
+        allBusPartner.push(...allSrsBusOperators);
         setFilters({
           ...allFilters,
           busPartners: allBusPartner,
@@ -46,17 +47,28 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs })
     const getFilters = async () => {
       let response = {};
       let vrlResponse = {};
+      let srsResponse = {};
 
       try {
-        response = await axiosInstance.get(
-          `${import.meta.env.VITE_BASE_URL}/api/busBooking/getFilters`,
-          {
-            params: {
-              sourceCity: sourceCity,
-              destinationCity: destinationCity,
-              doj: doj,
-            },
-          }
+        // response = await axiosInstance.get(
+        //   `${import.meta.env.VITE_BASE_URL}/api/busBooking/getFilters`,
+        //   {
+        //     params: {
+        //       sourceCity: sourceCity,
+        //       destinationCity: destinationCity,
+        //       doj: doj,
+        //     },
+        //   }
+        // );
+      } catch (error) {
+        console.error("Error fetching filters:", error);
+      }
+
+      try {
+        srsResponse = await getSrsBuseFilters(
+          sourceCity,
+          destinationCity,
+          doj
         );
       } catch (error) {
         console.error("Error fetching filters:", error);
@@ -75,12 +87,14 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs })
       // Ensure that the values are arrays before spreading
       const combinedBoardingPoints = [
         ...(vrlResponse?.data?.boardingPoints || []),
+        ...(srsResponse?.boardingPoints || []),
         ...(response?.data?.data?.boardingPoints || []),
       ].filter(point => point !== null);
 
       const combinedDroppingPoints = [
         ...(vrlResponse?.data?.droppingPoints || []),
         ...(response?.data?.data?.droppingPoints || []),
+        ...(srsResponse?.droppingPoints || []),
       ].filter(point => point !== null);
 
       const combiledBusPartners = [

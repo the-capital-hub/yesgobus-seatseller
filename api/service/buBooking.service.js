@@ -6,6 +6,7 @@ import City from "../modals/cities.modal.js";
 import VrlCity from "../modals/vrlcities.modal.js";
 import Tickets from "../modals/ticket.modal.js";
 import SrsCity from "../modals/srscities.modal.js";
+import { stages } from "../utils/stages.js";
 
 const sendRequest = async (url, method, data) => {
   try {
@@ -526,7 +527,11 @@ export const sendSrsRequest = async (url, method, data) => {
     };
     const response = await axios({
       method: method,
-      url: `http://gds-stg.ticketsimply.co.in/${url}`,
+      //test
+      // url: `http://gds-stg.ticketsimply.co.in/${url}`,
+
+      //live
+      url: `https://gds.ticketsimply.com/${url}`,
 
       headers: headers,
       data: data,
@@ -561,13 +566,37 @@ export const getSrsSchedules = async (origin_id, destination_id, travel_date) =>
   const url = `/gds/api/schedules/${srsSourceCity.id}/${srsDesctinationCity.id}/${travel_date}.json`;
   const response = await sendSrsRequest(url, "GET");
   const key = response.data.result[0];
-  const resultArray = response.data.result?.slice(1).map(row => {
+  let resultArray = response.data.result?.slice(1).map(row => {
     const obj = {};
     key.forEach((header, index) => {
       obj[header] = row[index];
     });
     return obj;
   });
+
+  resultArray = resultArray.map(bus => {
+    bus.boarding_stages = bus.boarding_stages?.split(',').map(item => {
+      const [stage, time] = item.split('|');
+      return stages[stage];
+    });
+
+    bus.dropoff_stages = bus.dropoff_stages?.split(',').map(item => {
+      const [stage, time] = item.split('|');
+      return stages[stage];
+    });
+
+    return bus;
+  });
+
+  resultArray = resultArray.reduce((acc, bus) => {
+    if (bus.operator_service_name.toLowerCase().startsWith('srs')) {
+      acc.unshift(bus);
+    } else {
+      acc.push(bus);
+    }
+    return acc;
+  }, []);
+
   return resultArray;
 };
 
@@ -648,4 +677,20 @@ export const srsCancelBooking = async (ticket_number, seat_numbers) => {
   const url = `/gds/api/cancel_booking.json?ticket_number=${ticket_number}&seat_numbers=${seat_numbers}`;
   const response = await sendSrsRequest(url, "GET");
   return response.data;
+};
+
+export const getSrsFilters = async (args) => {
+  try {
+    let searchResponse = await getSrsSchedules(args.sourceCity, args.destinationCity, args.doj);
+
+    const boardingPoints = searchResponse.flatMap(bus => bus.boarding_stages);
+    const droppingPoints = searchResponse.flatMap(bus => bus.dropoff_stages);
+
+    return {
+      boardingPoints,
+      droppingPoints,
+    };
+  } catch (error) {
+    throw error.message;
+  }
 };
