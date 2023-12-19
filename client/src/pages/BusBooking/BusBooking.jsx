@@ -39,6 +39,10 @@ const BusBooking = () => {
 
   const [vrlBuses, setVrlBuses] = useState([]);
   const [srsBuses, setSrsBuses] = useState([]);
+  const [srsBusesForFilter, setSrsBusesForFilter] = useState([]);
+  const [allSrsBusOperators, setSrsBusOperators] = useState([]);
+  const [allSrsBusBoarding, setSrsBusBoarding] = useState([]);
+  const [allSrsBusDropping, setSrsBusDropping] = useState([]);
   const [vrlSourceCityId, setVrlSourceCityId] = useState("");
   const [vrlDestinationCityId, setVrlDestinationCityId] = useState("");
 
@@ -157,19 +161,42 @@ const BusBooking = () => {
       console.log(error);
     }
 
+
     //srs buses
     try {
-      if (filters && filters?.busPartners && filters.busPartners.length > 0 && !filters?.busPartners?.includes("SRS Travels")) {
-        setSrsBuses([]);
-        setNoSrsOfBuses(0);
+      if (filters && (filters.busPartners.length > 0 || filters.boardingPoints.length > 0 || filters.droppingPoints.length > 0)) {
+        let filteredBuses = srsBusesForFilter;
+        if (filters.busPartners.length > 0) {
+          filteredBuses = filteredBuses.filter(bus =>
+            filters?.busPartners
+              .map(partner => partner.toLowerCase())
+              .includes(bus?.operator_service_name.toLowerCase())
+          );
+        }
+        if (filters.boardingPoints.length > 0) {
+          filteredBuses = filteredBuses.filter(bus =>
+            filters.boardingPoints.some(point => bus.boarding_stages.includes(point))
+          );
+        }
+        if (filters.droppingPoints.length > 0) {
+          filteredBuses = filteredBuses.filter(bus =>
+            filters.droppingPoints.some(point => bus.dropoff_stages.includes(point))
+          );
+        }
+        setSrsBuses(filteredBuses);
+        setNoSrsOfBuses(filteredBuses.length);
       } else {
         const srsResponse = await getSrsBuses(sourceCity.trim(), destinationCity.trim(), doj);
         const filteredBuses = srsResponse.filter(bus => bus?.status === "New" || bus.status === "Update");
         setSrsBuses(filteredBuses);
+        setSrsBusesForFilter(filteredBuses);
         setNoSrsOfBuses(filteredBuses.length);
+        const operators = [...new Set(filteredBuses.map(bus => bus.operator_service_name))];
+        setSrsBusOperators(operators);
       }
     } catch (error) {
       setSrsBuses([]);
+      setSrsBusesForFilter([]);
       setNoSrsOfBuses(0);
       console.log(error);
     }
@@ -248,6 +275,17 @@ const BusBooking = () => {
   };
 
 
+  const priceToDisplaySrs = (fare) => {
+    const prices = fare.split("/");
+    if (prices.length === 1) {
+      return prices[0];
+    } else {
+      const minPrice = Math.min(...prices).toFixed(2);
+      const maxPrice = Math.max(...prices).toFixed(2);
+      return `${minPrice} - ${maxPrice}`;
+    }
+  }
+
   const formatTravelTime = (durationInMins) => {
     const hours = Math.floor(durationInMins / 60);
     const minutes = durationInMins % 60;
@@ -322,6 +360,7 @@ const BusBooking = () => {
             doj={selectedDate}
             onFilterChange={handleFilter}
             isSrs={noOfSrsBuses > 0}
+            allSrsBusOperators={allSrsBusOperators}
           />
         </div>
 
@@ -456,8 +495,8 @@ const BusBooking = () => {
                     destinationCity={toLocation}
                     destinationCityId={bus.destination_id}
                     doj={selectedDate}
-                    title={"SRS Travels"}
-                    busName={"SRS Travels"}
+                    title={bus?.operator_service_name}
+                    busName={bus?.operator_service_name}
                     busType={bus?.bus_type}
                     rating={(Math.random() * 1 + 4).toFixed(1)}
                     noOfReviews={Math.floor(Math.random() * 101) + 37}
@@ -470,7 +509,7 @@ const BusBooking = () => {
                     travelTime={bus?.duration}
                     seatsLeft={bus?.available_seats}
                     // avlWindowSeats={bus?.avlWindowSeats}
-                    price={bus?.show_fare_screen}
+                    price={priceToDisplaySrs(bus?.show_fare_screen)}
                     // pickUpTimes={pickUpTimes}
                     pickUpLocationOne={bus?.boarding_stages}
                     // pickUpLocationTwo={pickUpLocationTwo}
@@ -479,7 +518,7 @@ const BusBooking = () => {
                     // dropLocationTwo={dropLocationTwo}
                     backSeat={true}
                     // cancellationPolicy={bus?.cancellationPolicy}
-                    fare={bus?.fare_str}
+                    fare={bus?.show_fare_screen}
                     isSrs={true}
                   />
                 </div>

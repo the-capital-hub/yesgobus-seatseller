@@ -590,11 +590,10 @@ const BusBookingCard = ({
     if (!fare) {
       return [];
     }
-    const fareComponents = fare.split(',');
-    const uniqueFares = fareComponents.reduce((acc, fareComponent) => {
-      const [, fareValue] = fareComponent.split(':');
-      if (fareValue && !acc.includes(fareValue)) {
-        acc.push(fareValue);
+    const fareComponents = fare.split('/');
+    const uniqueFares = fareComponents.reduce((acc, fare) => {
+      if (fare && !acc.includes(fare)) {
+        acc.push(fare);
       }
       return acc;
     }, []);
