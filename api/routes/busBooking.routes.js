@@ -42,6 +42,7 @@ import {
     getSrsBookingDetailsController,
     getSrsCanCancelDetailsController,
     srsCancelBookingController,
+    getSrsFiltersController,
 
 } from "../controllers/busBooking.controller.js";
 import { authenticateUser } from "../middleware/authenticateUser.js";
@@ -160,5 +161,6 @@ router.post("/srsConfirmBooking/:ticket_number", srsConfirmBookingController);
 router.get("/getSrsBookingDetails/:ticket_number/:agent_ref_number", getSrsBookingDetailsController);
 router.get("/getSrsCanCancelDetails/:ticket_number/:seat_numbers", getSrsCanCancelDetailsController);
 router.get("/srsCancelBooking/:ticket_number/:seat_numbers", srsCancelBookingController);
+router.get("/getSrsFilters", getSrsFiltersController);
 
 export default router;
