@@ -1,10 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./BusRouteCard.scss";
 import { Spin } from "antd";
-import MicImage from "../../assets/busbooking/micimg.svg";
+import MicImage from "../../assets/busbooking/micImg.svg";
 import { SpeechRecognition } from "@capacitor-community/speech-recognition";
 
-const BusRouteCard = ({ title, location, setLocation, date, suggestions, loading, setLocationQuery, style, color }) => {
+const BusRouteCard = ({
+  title,
+  location,
+  setLocation,
+  date,
+  suggestions,
+  loading,
+  setLocationQuery,
+  style,
+  color,
+}) => {
   const [recording, setRecording] = useState(false);
 
   useEffect(() => {
@@ -41,7 +51,6 @@ const BusRouteCard = ({ title, location, setLocation, date, suggestions, loading
   // }
 
   const [inputValue, setInputValue] = useState(location);
-
 
   useEffect(() => {
     setInputValue(location);
@@ -98,22 +107,31 @@ const BusRouteCard = ({ title, location, setLocation, date, suggestions, loading
   const handleInputClick = () => {
     setShowSuggestions(true);
   };
-  const currentDate = new Date().toISOString().split('T')[0];
+  const currentDate = new Date().toISOString().split("T")[0];
   return (
     <div className="BusRouteCard" ref={inputRef} style={style}>
       <p style={color}>{title}</p>
       {date ? (
-        <input type="date" min={currentDate} value={inputValue} onChange={handleDateChange} />
+        <input
+          type="date"
+          min={currentDate}
+          value={inputValue}
+          onChange={handleDateChange}
+        />
       ) : (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
           <input
             type="search"
             value={inputValue}
             onInput={handleInputChange}
             onClick={handleInputClick}
           />
-          <img src={MicImage} width="30" height="30" onClick={() => startRecording(setLocationQuery)} />
-
+          <img
+            src={MicImage}
+            width="30"
+            height="30"
+            onClick={() => startRecording(setLocationQuery)}
+          />
         </div>
       )}
       {showSuggestions && (
