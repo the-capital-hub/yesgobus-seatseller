@@ -12,13 +12,12 @@ import { useEffect, useState } from "react";
 import axiosInstance from "../../utils/service";
 import { facebookLoginAPI, googleLoginAPI } from "../../api/authentication";
 import { LoginSocialFacebook } from "reactjs-social-login";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
 import { useSelector } from "react-redux";
 import { selectIsMobileApp } from "../../stores/slices/designSlice";
 
 const Login = () => {
-
   const loggedInUser = localStorage.getItem("loggedInUser");
   if (loggedInUser) {
     return <Navigate to="/" replace />;
@@ -27,12 +26,12 @@ const Login = () => {
 
   useEffect(() => {
     GoogleAuth.initialize({
-      clientId: '100318910449-h74ooih65luj6ambadl5ik50arsafo4a.apps.googleusercontent.com',
-      scopes: ['profile', 'email'],
+      clientId:
+        "100318910449-h74ooih65luj6ambadl5ik50arsafo4a.apps.googleusercontent.com",
+      scopes: ["profile", "email"],
       grantOfflineAccess: true,
     });
-  }, [])
-
+  }, []);
 
   const navigate = useNavigate();
   const [showLogin, setShowLogin] = useState(true);
@@ -144,7 +143,7 @@ const Login = () => {
   const handleSubmit = async () => {
     if (showLogin) {
       setLoading(true);
-      const loadingToast = toast.loading('Logging in...');
+      const loadingToast = toast.loading("Logging in...");
       try {
         const response = await axiosInstance.post(
           `${import.meta.env.VITE_BASE_URL}/api/user/signin`,
@@ -159,81 +158,80 @@ const Login = () => {
           const loggedInUser = response.data.data;
           localStorage.setItem("token", token);
           localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
-          toast.success('Login Successful', {
+          toast.success("Login Successful", {
             duration: 2000,
-            position: 'top-center',
+            position: "top-center",
             style: {
-              background: 'green',
-              color: 'white',
+              background: "green",
+              color: "white",
             },
           });
           setTimeout(() => {
-            navigate('/');
+            navigate("/");
           }, 2000);
         } else {
-          toast.error('Invalid credentials', {
+          toast.error("Invalid credentials", {
             duration: 2000,
-            position: 'top-center',
+            position: "top-center",
             style: {
-              background: 'red',
-              color: 'white',
+              background: "red",
+              color: "white",
             },
           });
         }
       } catch (error) {
-        toast.error('Invalid credentials', {
+        toast.error("Invalid credentials", {
           duration: 2000,
-          position: 'top-center',
+          position: "top-center",
           style: {
-            background: 'red',
-            color: 'white',
+            background: "red",
+            color: "white",
           },
         });
         console.error("Error logining user:", error);
       } finally {
         setLoading(false);
         toast.dismiss(loadingToast);
-
       }
     } else {
       try {
         setLoading(true);
-        const loadingToast = toast.loading('Creating account...');
+        const loadingToast = toast.loading("Creating account...");
         const response = await axiosInstance.post(
           `${import.meta.env.VITE_BASE_URL}/api/user/signup`,
           createAccountData
         );
         if (response.status === 200) {
           toast.dismiss(loadingToast);
-          toast.success('Account Created', {
+          toast.success("Account Created", {
             duration: 2000,
-            position: 'top-center',
+            position: "top-center",
             style: {
-              background: 'green',
-              color: 'white',
+              background: "green",
+              color: "white",
             },
           });
           setShowLogin(!showLogin);
           setShowCreateAccount(!showCreateAccount);
         } else if (response.status === 406) {
           toast.dismiss(loadingToast);
-          toast.error('User already exists', {
+          toast.error("User already exists", {
             duration: 2000,
-            position: 'top-center',
+            position: "top-center",
             style: {
-              background: 'red',
-              color: 'white',
+              background: "red",
+              color: "white",
             },
           });
         }
       } catch (error) {
         toast.dismiss(loadingToast);
-        toast.error('Error', {
+        toast.error("Error", {
           duration: 2000,
-          position: 'top-center',
+          position: "top-center",
           style: {
-            background: 'red',
-            color: 'white',
+            background: "red",
+            color: "white",
           },
         });
         console.error("Error registering user:", error);
@@ -250,8 +248,7 @@ const Login = () => {
     console.log(googleUser.authentication.idToken);
     const credential = googleUser.authentication.idToken;
     googleUserVerifyHandler({ credential });
-  }
-
+  };
 
   // Google Login //
   // useEffect(() => {
@@ -346,17 +343,17 @@ const Login = () => {
       //   },
       // });
       // setTimeout(() => {
-      navigate('/busbooking');
+      navigate("/busbooking");
       // }, 2000);
     } catch (error) {
       console.log(error);
-      navigate('/');
-      toast.error('Error', {
+      navigate("/");
+      toast.error("Error", {
         duration: 2000,
-        position: 'top-center',
+        position: "top-center",
         style: {
-          background: 'red',
-          color: 'white',
+          background: "red",
+          color: "white",
         },
       });
     } finally {
@@ -370,25 +367,25 @@ const Login = () => {
       const { data, token } = await facebookLoginAPI(fbResponse);
       localStorage.setItem("token", token);
       localStorage.setItem("loggedInUser", JSON.stringify(data));
-      toast.success('Login Successful', {
+      toast.success("Login Successful", {
         duration: 2000,
-        position: 'top-center',
+        position: "top-center",
         style: {
-          background: 'green',
-          color: 'white',
+          background: "green",
+          color: "white",
         },
       });
       setTimeout(() => {
-        navigate('/');
+        navigate("/");
       }, 2000);
     } catch (error) {
       console.log("Error login in using facebook: ", error);
-      toast.error('Error', {
+      toast.error("Error", {
         duration: 2000,
-        position: 'top-center',
+        position: "top-center",
         style: {
-          background: 'red',
-          color: 'white',
+          background: "red",
+          color: "white",
         },
       });
     }
@@ -410,7 +407,7 @@ const Login = () => {
               <>
                 <h1>Log In</h1>
 
-                {isMobileApp &&
+                {isMobileApp && (
                   <p>
                     Dont have an account?
                     <span
@@ -421,8 +418,7 @@ const Login = () => {
                       Create an account
                     </span>
                   </p>
-                }
-
+                )}
               </>
             ) : (
               <>
@@ -500,7 +496,11 @@ const Login = () => {
             <span> Privacy Policy</span>
           </p>
 
-          <Button text={"Continue"} onClicked={handleSubmit} disable={loading} />
+          <Button
+            text={"Continue"}
+            onClicked={handleSubmit}
+            disable={loading}
+          />
           <Toaster />
         </div>
       </div>
