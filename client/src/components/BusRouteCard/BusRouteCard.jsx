@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./BusRouteCard.scss";
 import { Spin } from "antd";
-import MicImage from "../../assets/busbooking/micImg.svg";
-import { SpeechRecognition } from "@capacitor-community/speech-recognition";
+// import MicImage from "../../assets/busbooking/micImg.svg";
+// import { SpeechRecognition } from "@capacitor-community/speech-recognition";
 import VoiceSearch from "./Components/VoiceSearch/VoiceSearch";
 import { useSelector } from "react-redux";
 import { selectIsMobileApp } from "../../stores/slices/designSlice";
@@ -20,35 +20,35 @@ const BusRouteCard = ({
 }) => {
   const isMobileApp = useSelector(selectIsMobileApp);
 
-  const [recording, setRecording] = useState(false);
+  // const [recording, setRecording] = useState(false);
 
-  useEffect(() => {
-    SpeechRecognition.requestPermissions();
-  }, []);
+  // useEffect(() => {
+  //   SpeechRecognition.requestPermissions();
+  // }, []);
 
-  async function startRecording(setSpeechLocation) {
-    const available = await SpeechRecognition.available();
-    if (available) {
-      setRecording(true);
-      SpeechRecognition.start({
-        language: "en-US",
-        // maxResults: 2,
-        prompt: "Say something",
-        partialResults: true,
-        popup: false,
-      });
+  // async function startRecording(setSpeechLocation) {
+  //   const available = await SpeechRecognition.available();
+  //   if (available) {
+  //     setRecording(true);
+  //     SpeechRecognition.start({
+  //       language: "en-US",
+  //       // maxResults: 2,
+  //       prompt: "Say something",
+  //       partialResults: true,
+  //       popup: false,
+  //     });
 
-      SpeechRecognition.addListener("partialResults", async (data) => {
-        if (data.matches && data.matches.length > 0) {
-          setInputValue(data.matches[0]);
-          setSpeechLocation(data.matches[0]);
-          setShowSuggestions(true);
-          setRecording(false);
-          await SpeechRecognition.stop();
-        }
-      });
-    }
-  }
+  //     SpeechRecognition.addListener("partialResults", async (data) => {
+  //       if (data.matches && data.matches.length > 0) {
+  //         setInputValue(data.matches[0]);
+  //         setSpeechLocation(data.matches[0]);
+  //         setShowSuggestions(true);
+  //         setRecording(false);
+  //         await SpeechRecognition.stop();
+  //       }
+  //     });
+  //   }
+  // }
 
   // async function stopRecording() {
   //   setRecording(false);
@@ -138,7 +138,12 @@ const BusRouteCard = ({
             onClick={() => startRecording(setLocationQuery)}
           /> */}
 
-          {isMobileApp && <VoiceSearch setLocationQuery={setLocationQuery} />}
+          {isMobileApp && (
+            <VoiceSearch
+              setLocationQuery={setLocationQuery}
+              setInputValue={setInputValue}
+            />
+          )}
         </div>
       )}
       {showSuggestions && (

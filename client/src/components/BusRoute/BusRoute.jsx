@@ -155,7 +155,7 @@ const BusRoute = ({
                     paddingRight: "10px",
                     maxWidth: "100%",
                   }}
-                // color={{ color: "#fd5901" }}
+                  // color={{ color: "#fd5901" }}
                 />
                 <div className="img_rotater">
                   <img
