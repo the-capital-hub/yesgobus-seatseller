@@ -147,6 +147,7 @@ const BusRouteCard = ({
             <VoiceSearch
               setLocationQuery={setLocationQuery}
               setInputValue={setInputValue}
+              setData={setData}
             />
           )}
         </div>

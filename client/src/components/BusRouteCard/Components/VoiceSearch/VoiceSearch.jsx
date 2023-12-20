@@ -4,7 +4,11 @@ import { SpeechRecognition } from "@capacitor-community/speech-recognition";
 import { Button, Drawer, Spin } from "antd";
 import "./VoiceSearch.scss";
 
-export default function VoiceSearch({ setLocationQuery, setInputValue }) {
+export default function VoiceSearch({
+  setLocationQuery,
+  setInputValue,
+  setData,
+}) {
   // const [recording, setRecording] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -57,6 +61,7 @@ export default function VoiceSearch({ setLocationQuery, setInputValue }) {
     if (searchValue) {
       setInputValue(searchValue);
       setLocationQuery(searchValue);
+      setData(searchValue);
     }
   }
 
