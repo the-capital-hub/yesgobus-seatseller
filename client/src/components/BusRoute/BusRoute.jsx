@@ -65,7 +65,6 @@ const BusRoute = ({
       debounceTimer = setTimeout(() => {
         if (locationOneQuery) {
           fetchLocationSuggestions(locationOneQuery, setLocationOneSuggestions);
-
         }
         if (locationTwoQuery) {
           fetchLocationSuggestions(locationTwoQuery, setLocationTwoSuggestions);
@@ -82,11 +81,11 @@ const BusRoute = ({
 
   const handleSearch = async () => {
     if (sourceCity && destinationCity && doj) {
-      onSearch(sourceCity, destinationCity, doj)
+      onSearch(sourceCity, destinationCity, doj);
     } else {
       alert("Please enter values for all fields");
     }
-  }
+  };
 
   return (
     <>
@@ -129,7 +128,6 @@ const BusRoute = ({
           setLocationQuery={setLocationTwoQuery}
           startRecording={() => startRecording(setDestinationCity)}
           setData={setDestinationCity}
-
         />
         <BusRouteCard
           title="Select Date"
@@ -137,12 +135,8 @@ const BusRoute = ({
           setLocation={(value) => onSearch(locationOne, locationTwo, value)}
           date={true}
           setData={setDoj}
-
         />
-        <Button
-          text={"Search"}
-          onClicked={() => handleSearch()}
-        />
+        <Button text={"Search"} onClicked={() => handleSearch()} />
       </div>
       <div className="MobileBusRoute" style={{ background: "black" }}>
         <h4 style={{ color: "white" }}>PROVIDING QUALITY SERVICES AT </h4>
