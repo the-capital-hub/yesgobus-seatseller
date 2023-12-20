@@ -101,9 +101,14 @@ const LandingPage = () => {
   };
 
   const handleSearchClick = () => {
-    navigate(
-      `/busbooking?from=${fromLocation}&to=${toLocation}&date=${selectedDate}`
-    );
+    if (fromLocation && toLocation && selectedDate) {
+      navigate(
+        `/busbooking?from=${fromLocation}&to=${toLocation}&date=${selectedDate}`
+      );
+    } else {
+      alert("Please enter values for all fields");
+    }
+
   };
 
   const fetchLocationSuggestions = async (query, setLocationSuggestions) => {
