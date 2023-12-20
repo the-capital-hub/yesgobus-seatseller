@@ -148,6 +148,7 @@ const BusRouteCard = ({
               setLocationQuery={setLocationQuery}
               setInputValue={setInputValue}
               setData={setData}
+              title={title}
             />
           )}
         </div>
