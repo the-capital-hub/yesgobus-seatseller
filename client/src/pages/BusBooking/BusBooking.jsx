@@ -41,8 +41,6 @@ const BusBooking = () => {
   const [srsBuses, setSrsBuses] = useState([]);
   const [srsBusesForFilter, setSrsBusesForFilter] = useState([]);
   const [allSrsBusOperators, setSrsBusOperators] = useState([]);
-  const [allSrsBusBoarding, setSrsBusBoarding] = useState([]);
-  const [allSrsBusDropping, setSrsBusDropping] = useState([]);
   const [vrlSourceCityId, setVrlSourceCityId] = useState("");
   const [vrlDestinationCityId, setVrlDestinationCityId] = useState("");
 
@@ -93,6 +91,7 @@ const BusBooking = () => {
       setToLocation(destinationCity);
       setSelectedDate(doj);
     }
+    handleSearch(fromLocation, toLocation, selectedDate);
   }, [location]);
 
   const handleSearch = async (
