@@ -11,6 +11,8 @@
 .drawer-body {
   //   border: 1px solid red;
   display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 
   .drawer-content {
     display: flex;
@@ -32,5 +34,13 @@
     .search-result {
       font-size: 1.25rem;
     }
+  }
+
+  .action-buttons {
+    align-self: center;
+
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 }

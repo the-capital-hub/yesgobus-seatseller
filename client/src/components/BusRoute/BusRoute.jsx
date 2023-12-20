@@ -17,6 +17,7 @@ const BusRoute = ({
   const [locationTwoSuggestions, setLocationTwoSuggestions] = useState([]);
   const [sourceCity, setSourceCity] = useState(locationOne);
   const [destinationCity, setDestinationCity] = useState(locationTwo);
+  const [doj, setDoj] = useState(departureDate);
   const [loading, setLoading] = useState(false);
   const [highlighted, setHighlighted] = useState(true);
 
@@ -27,7 +28,7 @@ const BusRoute = ({
     const formattedDate = `${nextDate.getFullYear()}-${String(
       nextDate.getMonth() + 1
     ).padStart(2, "0")}-${String(nextDate.getDate()).padStart(2, "0")}`;
-    onSearch(sourceCity, destinationCity, formattedDate);
+    // onSearch(sourceCity, destinationCity, formattedDate);
     setHighlighted(isToday);
   };
 
@@ -78,6 +79,14 @@ const BusRoute = ({
     };
   }, [locationOneQuery, locationTwoQuery]);
 
+  const handleSearch = async () => {
+    if (sourceCity && destinationCity && doj) {
+      onSearch(sourceCity, destinationCity, doj);
+    } else {
+      alert("Please enter values for all fields");
+    }
+  };
+
   return (
     <>
       <div className="BusRoute">
@@ -89,6 +98,7 @@ const BusRoute = ({
           loading={loading}
           setLocationQuery={setLocationOneQuery}
           startRecording={() => startRecording(setSourceCity)}
+          setData={setSourceCity}
         />
         <img
           src={twowayarrow}
@@ -117,17 +127,16 @@ const BusRoute = ({
           loading={loading}
           setLocationQuery={setLocationTwoQuery}
           startRecording={() => startRecording(setDestinationCity)}
+          setData={setDestinationCity}
         />
         <BusRouteCard
           title="Select Date"
           location={departureDate}
           setLocation={(value) => onSearch(locationOne, locationTwo, value)}
           date={true}
+          setData={setDoj}
         />
-        <Button
-          text={"Search"}
-          onClicked={() => onSearch(locationOne, locationTwo, departureDate)}
-        />
+        <Button text={"Search"} onClicked={() => handleSearch()} />
       </div>
       <div className="MobileBusRoute" style={{ background: "black" }}>
         <h4 style={{ color: "white" }}>PROVIDING QUALITY SERVICES AT </h4>
@@ -155,7 +164,8 @@ const BusRoute = ({
                     paddingRight: "10px",
                     maxWidth: "100%",
                   }}
-                // color={{ color: "#fd5901" }}
+                  // color={{ color: "#fd5901" }}
+                  setData={setSourceCity}
                 />
                 <div className="img_rotater">
                   <img
@@ -197,6 +207,7 @@ const BusRoute = ({
                     paddingRight: "10px",
                     maxWidth: "100%",
                   }}
+                  setData={setDestinationCity}
                 />
               </div>
               <BusRouteCard
@@ -215,6 +226,7 @@ const BusRoute = ({
                   paddingRight: "5px",
                   maxWidth: "100%",
                 }}
+                setData={setDoj}
               />
               <div className="days">
                 <button
@@ -239,7 +251,7 @@ const BusRoute = ({
         </div>
         <Button
           text={"Search"}
-          onClicked={() => onSearch(locationOne, locationTwo, departureDate)}
+          onClicked={() => handleSearch()}
           style={{ width: "100%", marginTop: "5px" }}
         />
       </div>

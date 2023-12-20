@@ -1,22 +1,41 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MicImage from "../../../../assets/busbooking/micImg.svg";
 import { SpeechRecognition } from "@capacitor-community/speech-recognition";
-import { Drawer, Modal, Spin } from "antd";
+import { Button, Drawer, Spin } from "antd";
 import "./VoiceSearch.scss";
 
-export default function VoiceSearch({ setLocationQuery }) {
-  const [recording, setRecording] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+export default function VoiceSearch({
+  setLocationQuery,
+  setInputValue,
+  setData,
+  title,
+}) {
+  // const [recording, setRecording] = useState(false);
+  const [open, setOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [placeholder, setPlaceholder] = useState("Try saying something....");
 
   useEffect(() => {
-    SpeechRecognition.requestPermissions();
+    async function getPermission() {
+      const available = await SpeechRecognition.available();
+      if (!available) {
+        SpeechRecognition.requestPermissions();
+      }
+    }
+
+    getPermission();
   }, []);
 
-  async function startRecording(setSpeechLocation) {
+  async function startRecording() {
+    const checkPermissions = await SpeechRecognition.checkPermissions();
+    if (checkPermissions.speechRecognition !== 'granted') {
+      await SpeechRecognition.requestPermissions()
+    } else {
+      setOpen(true);
+    }
     const available = await SpeechRecognition.available();
     if (available) {
-      setRecording(true);
+      // setRecording(true);
       SpeechRecognition.start({
         language: "en-US",
         // maxResults: 2,
@@ -25,47 +44,64 @@ export default function VoiceSearch({ setLocationQuery }) {
         popup: false,
       });
 
-      SpeechRecognition.addListener("partialResults", async (data) => {
+      SpeechRecognition.addListener("partialResults", (data) => {
         if (data.matches && data.matches.length > 0) {
-          //   setInputValue(data.matches[0]);
-          //   setSpeechLocation(data.matches[0]);
-          //   setShowSuggestions(true);
-          setRecording(false);
           setSearchValue(data.matches[0]);
-          await SpeechRecognition.stop();
         }
       });
     }
   }
 
+  function stopRecording(cancelled) {
+    SpeechRecognition.stop();
+    SpeechRecognition.removeAllListeners();
+    // console.log("Stopped");
+    setOpen(false);
+    setPlaceholder("Try saying something...");
+    setSearchValue("");
+
+    if (cancelled) {
+      return;
+    }
+
+    // Send value to input
+    if (searchValue) {
+      setInputValue(searchValue);
+      setLocationQuery(searchValue);
+      setData(searchValue);
+    }
+  }
+
   //   Handle mic click
   function handleMicClick() {
-    setShowModal(true);
-    startRecording(setLocationQuery);
+    startRecording();
   }
 
-  function onClose() {
-    clearStates();
-  }
-
-  function clearStates() {
-    setShowModal(false);
-    setRecording(false);
+  // Handle No Click
+  function handleNoClick() {
+    startRecording();
     setSearchValue("");
+    setPlaceholder("Try again...");
+  }
+
+  // ClearStates
+  function onClose() {
+    setOpen(false);
+    setSearchValue("");
+    stopRecording(true);
   }
 
   return (
     <div className="voice-search-wrapper">
-      <button type="button" className="modal-trigger">
-        <img src={MicImage} width="30" height="30" onClick={handleMicClick} />
+      <button type="button" className="modal-trigger" onClick={handleMicClick}>
+        <img src={MicImage} width="30" height="30" />
       </button>
-
       <Drawer
-        title="Voice Search"
+        title={`Search ${title === "From" ? "Departure" : "Destination"}`}
         placement={"bottom"}
-        closable={false}
+        closable={true}
         onClose={onClose}
-        open={showModal}
+        open={open}
         key={"bottom"}
         height={"200px"}
         classNames={{ body: "drawer-body" }}
@@ -74,16 +110,39 @@ export default function VoiceSearch({ setLocationQuery }) {
           <div className="modal-mic">
             <img src={MicImage} width="30" height="30" />
           </div>
-          {recording ? (
+          {!searchValue ? (
             <>
-              <p>Try saying something....</p>
+              <p>{placeholder}</p>
               <Spin size="small" />
             </>
           ) : (
             <p className={` ${searchValue ? "search-result" : ""}`}>
-              {searchValue}
+              Did you mean{" "}
+              <span className="" style={{ color: "#fd5901" }}>
+                {searchValue}
+              </span>
+              ?
             </p>
           )}
+        </div>
+        <div className="action-buttons">
+          <Button
+            type="primary"
+            onClick={() => stopRecording()}
+            size="large"
+            htmlType="button"
+          >
+            Yes
+          </Button>
+          <Button
+            type="primary"
+            danger
+            onClick={() => handleNoClick()}
+            size="large"
+            htmlType="button"
+          >
+            No
+          </Button>
         </div>
       </Drawer>
     </div>
