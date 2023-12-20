@@ -41,8 +41,8 @@ const BusBooking = () => {
   const [srsBuses, setSrsBuses] = useState([]);
   const [srsBusesForFilter, setSrsBusesForFilter] = useState([]);
   const [allSrsBusOperators, setSrsBusOperators] = useState([]);
-  const [vrlSourceCityId, setVrlSourceCityId] = useState("");
-  const [vrlDestinationCityId, setVrlDestinationCityId] = useState("");
+  // const [vrlSourceCityId, setVrlSourceCityId] = useState("");
+  // const [vrlDestinationCityId, setVrlDestinationCityId] = useState("");
 
   //dates
   const date = new Date();
@@ -152,8 +152,8 @@ const BusBooking = () => {
       const vrlResponse = await getVrlBuses(requestBody);
       setVrlBuses(vrlResponse.data);
       setNoVrlOfBuses(vrlResponse.data.length);
-      setVrlDestinationCityId(vrlResponse.destinationCity);
-      setVrlSourceCityId(vrlResponse.sourceCity);
+      // setVrlDestinationCityId(vrlResponse.destinationCity);
+      // setVrlSourceCityId(vrlResponse.sourceCity);
     } catch (error) {
       setVrlBuses([]);
       setNoVrlOfBuses(0);
@@ -163,7 +163,7 @@ const BusBooking = () => {
 
     //srs buses
     try {
-      if (filters && (filters.busPartners.length > 0 || filters.boardingPoints.length > 0 || filters.droppingPoints.length > 0)) {
+      if (filters && (filters.busPartners.length > 0 || filters.boardingPoints.length > 0 || filters.droppingPoints.length > 0 || (filters.minPrice && filters.maxPrice))) {
         let filteredBuses = srsBusesForFilter;
         if (filters.busPartners.length > 0) {
           filteredBuses = filteredBuses.filter(bus =>
@@ -181,6 +181,14 @@ const BusBooking = () => {
           filteredBuses = filteredBuses.filter(bus =>
             filters.droppingPoints.some(point => bus.dropoff_stages.includes(point))
           );
+        }
+        if (filters.minPrice && filters.maxPrice) {
+          setVrlBuses([]);
+          setNoVrlOfBuses(0);
+          filteredBuses = filteredBuses.filter(bus => {
+            const prices = bus.show_fare_screen.split("/").map(price => parseFloat(price));
+            return prices.some(price => price >= filters.minPrice && price <= filters.maxPrice);
+          });
         }
         setSrsBuses(filteredBuses);
         setNoSrsOfBuses(filteredBuses.length);
