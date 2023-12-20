@@ -17,6 +17,7 @@ const BusRouteCard = ({
   setLocationQuery,
   style,
   color,
+  setData,
 }) => {
   const isMobileApp = useSelector(selectIsMobileApp);
 
@@ -68,6 +69,7 @@ const BusRouteCard = ({
   const handleInputChange = (e) => {
     const newInputValue = e.target.value;
     setInputValue(newInputValue);
+    setData(newInputValue);
     setLocationQuery(newInputValue);
     setShowSuggestions(true);
   };
@@ -76,13 +78,16 @@ const BusRouteCard = ({
     const inputDate = e.target.value;
     if (inputDate < currentDate) {
       setInputValue(currentDate);
+      setData(currentDate);
     } else {
       setInputValue(inputDate);
+      setData(inputDate);
     }
   };
 
   const handleSuggestionClick = (suggestion) => {
     setInputValue(suggestion);
+    setData(suggestion);
     setShowSuggestions(false);
   };
 
@@ -92,15 +97,15 @@ const BusRouteCard = ({
     }
   };
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setLocation(inputValue);
-    }, delay);
+  // useEffect(() => {
+  //   const timeoutId = setTimeout(() => {
+  //     setLocation(inputValue);
+  //   }, delay);
 
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [inputValue]);
+  //   return () => {
+  //     clearTimeout(timeoutId);
+  //   };
+  // }, [inputValue]);
 
   useEffect(() => {
     document.addEventListener("click", handleClickOutside);
