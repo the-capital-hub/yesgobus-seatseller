@@ -26,6 +26,12 @@ export default function VoiceSearch({
   }, []);
 
   async function startRecording() {
+    const checkPermissions = await SpeechRecognition.checkPermissions();
+    if (checkPermissions.speechRecognition !== 'granted') {
+      await SpeechRecognition.requestPermissions()
+    } else {
+      setOpen(true);
+    }
     const available = await SpeechRecognition.available();
     if (available) {
       // setRecording(true);
@@ -67,7 +73,6 @@ export default function VoiceSearch({
 
   //   Handle mic click
   function handleMicClick() {
-    setOpen(true);
     startRecording();
   }
 
