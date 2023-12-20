@@ -10,7 +10,7 @@ export default function VoiceSearch({
   setData,
 }) {
   // const [recording, setRecording] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [open, setOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [placeholder, setPlaceholder] = useState("Try saying something....");
 
@@ -49,9 +49,9 @@ export default function VoiceSearch({
     SpeechRecognition.stop();
     SpeechRecognition.removeAllListeners();
     // console.log("Stopped");
-    setShowModal(false);
+    setOpen(false);
     setPlaceholder("Try saying something...");
-    clearStates();
+    setSearchValue("");
 
     if (cancelled) {
       return;
@@ -67,27 +67,22 @@ export default function VoiceSearch({
 
   //   Handle mic click
   function handleMicClick() {
-    setShowModal(true);
+    setOpen(true);
     startRecording();
   }
 
   // Handle No Click
   function handleNoClick() {
     startRecording();
-    clearStates();
+    setSearchValue("");
     setPlaceholder("Try again...");
   }
 
   // ClearStates
   function onClose() {
-    setShowModal(false);
-    clearStates();
-    stopRecording(true);
-  }
-
-  function clearStates() {
-    // setRecording(false);
+    setOpen(false);
     setSearchValue("");
+    stopRecording(true);
   }
 
   return (
@@ -100,7 +95,7 @@ export default function VoiceSearch({
         placement={"bottom"}
         closable={true}
         onClose={onClose}
-        open={showModal}
+        open={open}
         key={"bottom"}
         height={"200px"}
         classNames={{ body: "drawer-body" }}
