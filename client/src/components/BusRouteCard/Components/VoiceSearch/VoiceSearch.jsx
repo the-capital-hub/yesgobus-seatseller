@@ -8,6 +8,7 @@ export default function VoiceSearch({
   setLocationQuery,
   setInputValue,
   setData,
+  title,
 }) {
   // const [recording, setRecording] = useState(false);
   const [open, setOpen] = useState(false);
@@ -96,7 +97,7 @@ export default function VoiceSearch({
         <img src={MicImage} width="30" height="30" />
       </button>
       <Drawer
-        title="Voice Search"
+        title={`Search ${title === "From" ? "Departure" : "Destination"}`}
         placement={"bottom"}
         closable={true}
         onClose={onClose}
