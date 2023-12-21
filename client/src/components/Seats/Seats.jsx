@@ -370,9 +370,9 @@ const Seats = ({
                           seatSelectionHandler(
                             seat.seatName,
                             seatDetails.available[seat.seatName],
-                            seatDetails.available_gst[seat.seatName],
+                            seatDetails.available_gst[seat.seatName] || 0,
                             0,
-                            parseInt(seatDetails.available[seat.seatName]) + parseInt(seatDetails.available_gst[seat.seatName]),
+                            parseInt(seatDetails.available[seat.seatName]) + parseInt(seatDetails.available_gst[seat.seatName] || 0),
                             seatDetails.ladies_seats?.includes(seat.seatName),
                             // seat.ac,
                             // seat.sleeper
@@ -397,9 +397,9 @@ const Seats = ({
                             seatSelectionHandler(
                               seat.seatName,
                               seatDetails.available[seat.seatName],
-                              seatDetails.available_gst[seat.seatName],
+                              seatDetails.available_gst[seat.seatName] || 0,
                               0,
-                              parseInt(seatDetails.available[seat.seatName]) + parseInt(seatDetails.available_gst[seat.seatName]),
+                              parseInt(seatDetails.available[seat.seatName]) + parseInt(seatDetails.available_gst[seat.seatName] || 0),
                               seatDetails.ladies_seats?.includes(seat.seatName),
                               // seat.ac,
                               // seat.sleeper
@@ -423,9 +423,9 @@ const Seats = ({
                             seatSelectionHandler(
                               seat.seatName,
                               seatDetails.available[seat.seatName],
-                              seatDetails.available_gst[seat.seatName],
+                              seatDetails.available_gst[seat.seatName] || 0,
                               0,
-                              parseInt(seatDetails.available[seat.seatName]) + parseInt(seatDetails.available_gst[seat.seatName]),
+                              parseInt(seatDetails.available[seat.seatName]) + parseInt(seatDetails.available_gst[seat.seatName] || 0),
                               seatDetails.ladies_seats?.includes(seat.seatName),
                               // seat.ac,
                               // seat.sleeper
@@ -796,7 +796,7 @@ const Seats = ({
                   >
                     ₹{price}
                   </p>
-                  
+
                 ))}
               </div>
             )

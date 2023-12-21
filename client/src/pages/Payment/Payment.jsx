@@ -985,20 +985,25 @@ const Payment = () => {
               </div>
               <hr />
               {bookingDetails?.serviceTax !== 0 &&
-                <div className="price">
-                  <p>Service Tax</p>
-                  <p>{bookingDetails?.serviceTax}</p>
-                </div>
+                <>
+                  <div className="price">
+                    <p>Service Tax</p>
+                    <p>{bookingDetails?.serviceTax}</p>
+                  </div>
+                  <hr />
+                </>
               }
 
               {bookingDetails?.operatorTax !== 0 &&
-                <div className="price">
-                  <p>Operator Tax</p>
-                  <p>{bookingDetails?.operatorTax}</p>
-                </div>
+                <>
+                  <div className="price">
+                    <p>Operator Tax</p>
+                    <p>{bookingDetails?.operatorTax}</p>
+                  </div>
+                  <hr />
+                </>
               }
 
-              <hr />
               <div className="price">
                 <p>Total</p>
                 <p>{bookingDetails?.totalFare}</p>
