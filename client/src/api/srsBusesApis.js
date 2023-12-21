@@ -56,6 +56,11 @@ export const srsBlockSeat = async (schedule_id, args) => {
   }
 };
 
+function formatDate(dateString) {
+  const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+  return new Date(dateString).toLocaleDateString(undefined, options);
+}
+
 //pass pnr number receviced from block seat response
 export const srsConfirmBooking = async (ticket_number) => {
   try {
@@ -70,7 +75,7 @@ export const srsConfirmBooking = async (ticket_number) => {
 
 export const getSrsCanCancelDetails = async (ticket_number, seat_names) => {
   try {
-    const response = await axiosInstance.post(
+    const response = await axiosInstance.get(
       `${import.meta.env.VITE_BASE_URL}/api/busBooking/getSrsCanCancelDetails/${ticket_number}/${seat_names}`
     );
     return response.data;
@@ -79,9 +84,9 @@ export const getSrsCanCancelDetails = async (ticket_number, seat_names) => {
   }
 };
 
-export const srsCancelBooking = async (ticket_number, seat_names, refundData) => {
+export const srsCancelBooking = async (bookingId, ticket_number, seat_names, refundData) => {
   try {
-    let cancelTicketResponse = await axiosInstance.post(
+    let cancelTicketResponse = await axiosInstance.get(
       `${import.meta.env.VITE_BASE_URL}/api/busBooking/srsCancelBooking/${ticket_number}/${seat_names}`
     );
     if (!cancelTicketResponse.data.result) {

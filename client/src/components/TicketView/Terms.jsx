@@ -1,7 +1,7 @@
 import "./Terms.scss";
 import { useState, useEffect } from "react";
 
-export default function Terms({ cancellationPolicy, isVrl }) {
+export default function Terms({ cancellationPolicy, isVrl, isSrs }) {
   const [remarks, setRemarks] = useState(null);
 
   useEffect(() => {
@@ -81,13 +81,16 @@ export default function Terms({ cancellationPolicy, isVrl }) {
             Cancellation charges are applicable on the original fare but not available on discount.
           </p>
         </li>
-        <li>
-          <h3>{"Cancellation Policy:"}</h3>
-          <ul>
-            {decodeCancellationPolicy()}
-            <li>{remarks}</li>
-          </ul>
-        </li>
+        {!isSrs &&
+          <li>
+            <h3>{"Cancellation Policy:"}</h3>
+            <ul>
+              {decodeCancellationPolicy()}
+              <li>{remarks}</li>
+            </ul>
+          </li>
+        }
+
       </ul>
     </div>
   );

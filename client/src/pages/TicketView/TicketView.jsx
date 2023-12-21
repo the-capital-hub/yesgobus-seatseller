@@ -163,7 +163,7 @@ export default function TicketView() {
             </p>
             <div>
               {/* <p className="location">{isVrl ? bookingDetails?.bboardingPoint : ticketDetails?.pickUpLocation}</p> */}
-              <p className="sub-location">{bookingDetails?.isVrl || bookingDetails?.isSrs  ? bookingDetails?.boardingPoint : ticketDetails?.pickUpLocationAddress}</p>
+              <p className="sub-location">{bookingDetails?.isVrl || bookingDetails?.isSrs ? bookingDetails?.boardingPoint : ticketDetails?.pickUpLocationAddress}</p>
             </div>
           </div>
 
@@ -238,8 +238,8 @@ export default function TicketView() {
                   className="font-24"
                   style={{ width: "50%", minWidth: "40ch" }}
                 >
-                  <p>Yesgobus Booking ID {bookingDetails?.isVrl || bookingDetails?.isSrs ? bookingDetails._id : bookingDetails?.tin}</p>
-                  <p>Operator PNR :{bookingDetails?.isVrl ? bookingDetails.opPNR : ticketDetails?.pnr}</p>
+                  {/* <p>Yesgobus Booking ID {bookingDetails?.isVrl || bookingDetails?.isSrs ? bookingDetails._id : bookingDetails?.tin}</p> */}
+                  <p>Operator PNR :{bookingDetails?.isVrl || bookingDetails?.isSrs ? bookingDetails.opPNR : ticketDetails?.pnr}</p>
                   <div className="price">
                     <p>₹ {bookingDetails?.totalAmount}</p>
                   </div>
@@ -258,7 +258,7 @@ export default function TicketView() {
 
         <CustomerSupport contactNumber={contactNumber} />
 
-        <Terms cancellationPolicy={bookingDetails?.isVrl ? vrlCancellationPolicy : ticketDetails?.cancellationPolicy} isVrl={bookingDetails?.isVrl} />
+        <Terms cancellationPolicy={bookingDetails?.isVrl ? vrlCancellationPolicy : ticketDetails?.cancellationPolicy} isVrl={bookingDetails?.isVrl}  isSrs={bookingDetails?.isSrs} />
       </section>
 
       <div className="action__buttons">

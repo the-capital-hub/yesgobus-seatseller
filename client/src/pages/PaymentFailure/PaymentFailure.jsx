@@ -15,6 +15,7 @@ const PaymentFailure = () => {
           <img src={failed} alt="" />
           <h1>Payment Failure</h1>
           <hr />
+          <p>Payment failed. If debited, refund will be processed within 24 hours. Thank you for your patience.</p>
           <div className="buttons">
             {/* <Button text={"Try Again"} /> */}
             <Button text={"Go Home"} onClicked={handleGoHome} />
