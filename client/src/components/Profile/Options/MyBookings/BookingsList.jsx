@@ -20,33 +20,49 @@ export default function BookingsList({ bookingData, selectedTab, setCancelled, c
 
   const handleCancelTicket = async (bookingData, tid, isVrl, pnr, isSrs) => {
     if (isVrl) {
-      let { data: vrlCancelDetailsResponse } = await vrlCancelDetails({
-        pnrNo: parseInt(pnr)
-      });
-      console.log(vrlCancelDetailsResponse);
-      vrlCancelDetailsResponse = vrlCancelDetailsResponse[0];
-      if (vrlCancelDetailsResponse.Status === 2) {
+      try {
+        setLoading(true);
+        let { data: vrlCancelDetailsResponse } = await vrlCancelDetails({
+          pnrNo: parseInt(pnr)
+        });
+        console.log(vrlCancelDetailsResponse);
+        vrlCancelDetailsResponse = vrlCancelDetailsResponse[0];
+        if (vrlCancelDetailsResponse.Status === 2) {
+          alert("Unable to Cancel Ticket Because Minimum Cancelation Minute is reached.");
+          return;
+        }
+        setVrlTickerCancelData(vrlCancelDetailsResponse);
+        setTicketToCancel(bookingData);
+        setIsCancelModalVisible(true);
+      } catch (error) {
+        setLoading(false);
         alert("Unable to Cancel Ticket Because Minimum Cancelation Minute is reached.");
-        return;
+      } finally {
+        setLoading(false);
       }
-      setVrlTickerCancelData(vrlCancelDetailsResponse);
-      setTicketToCancel(bookingData);
-      setIsCancelModalVisible(true);
     } else if (isSrs) {
-      const srsCancelDetailsResponse = await getSrsCanCancelDetails(bookingData.blockKey, bookingData.selectedSeats);
-      if (srsCancelDetailsResponse.result.is_ticket_cancellable.is_cancellable === false) {
+      try {
+        setLoading(true);
+        const srsCancelDetailsResponse = await getSrsCanCancelDetails(bookingData.blockKey, bookingData.selectedSeats);
+        if (srsCancelDetailsResponse.result.is_ticket_cancellable.is_cancellable === false) {
+          alert("Unable to Cancel Ticket Because Minimum Cancelation Minute is reached.");
+          return;
+        }
+
+        setSrsTickerCancelData(srsCancelDetailsResponse.result.is_ticket_cancellable);
+        setTicketToCancel(bookingData);
+        setIsCancelModalVisible(true);
+      } catch (error) {
+        setLoading(false);
         alert("Unable to Cancel Ticket Because Minimum Cancelation Minute is reached.");
-        return;
+      } finally {
+        setLoading(false);
       }
-
-      setSrsTickerCancelData(srsCancelDetailsResponse.result.is_ticket_cancellable);
-      setTicketToCancel(bookingData);
-      setIsCancelModalVisible(true);
-
     } else if (!isVrl && !isSrs) {
       setTicketToCancel(bookingData);
       setIsCancelModalVisible(true);
     }
+    setLoading(false);
   };
 
   const confirmCancelTicket = async () => {
@@ -68,7 +84,7 @@ export default function BookingsList({ bookingData, selectedTab, setCancelled, c
         const refundData = {
           merchantTransactionId: ticketToCancel.merchantTransactionId,
         };
-        const srsCancelBookingResponse = await srsCancelBooking(ticketToCancel.blockKey, ticketToCancel.selectedSeats, refundData);
+        const srsCancelBookingResponse = await srsCancelBooking(ticketToCancel._id, ticketToCancel.blockKey, ticketToCancel.selectedSeats, refundData);
         if (srsCancelBookingResponse) {
           alert("Booking Cancelled. Refund will be processed soon");
           setCancelled(!cancelled);
@@ -138,7 +154,7 @@ export default function BookingsList({ bookingData, selectedTab, setCancelled, c
       </div>
       <div className="booking-details-container">
         {bookingData?.[selectedTab]?.map((booking, index) => (
-          <div key={index} style={{border: "1px solid"}}>
+          <div key={index} style={{ border: "1px solid" }}>
             {/* Journey details */}
             <div className="journey__details">
               <h1>
@@ -161,9 +177,9 @@ export default function BookingsList({ bookingData, selectedTab, setCancelled, c
             >
               <TicketOptions selectedTab={selectedTab} bookingData={booking} tid={booking.tid} isVrl={booking.isVrl} isSrs={booking.isSrs} pnr={booking.opPNR} />
             </div>
-          
+
           </div>
-          
+
         ))}
       </div>
       {loading ? (
