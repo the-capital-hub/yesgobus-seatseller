@@ -80,6 +80,7 @@ const Seats = ({
       bpName: "",
       address: "",
       time: "",
+      number: "",
     },
     droppingPoint: {
       bpId: "",
