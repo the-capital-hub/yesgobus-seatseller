@@ -479,8 +479,8 @@ const BusBookingCard = ({
       let dropoff_stages = seatsResponse.result.bus_layout.dropoff_stages;
 
       const boardingPointlocationsAndTimes = boarding_stages?.split("~").map(entry => {
-        const [bpId, time, address, land_mark, contact, bpName] = entry.split("|");
-        return { bpId, bpName, time };
+        const [bpId, time, address, land_mark, number, bpName] = entry.split("|");
+        return { bpId, bpName, time, number };
       });
       const droppingPointlocationsAndTimes = dropoff_stages?.split("~").map(entry => {
         const [bpId, time, address, land_mark, contact, bpName] = entry.split("|");
@@ -557,8 +557,8 @@ const BusBookingCard = ({
     if (isVrl) {
       getVrlSeatsPrices();
       const boardingPointlocationsAndTimes = pickUpLocationOne.split("#").map(entry => {
-        const [bpId, bpName, time] = entry.split("|");
-        return { bpId, bpName, time };
+        const [bpId, bpName, time, number] = entry.split("|");
+        return { bpId, bpName, time, number };
       });
       const droppingPointlocationsAndTimes = dropLocationOne.split("#").map(entry => {
         const [bpId, bpName, time] = entry.split("|");

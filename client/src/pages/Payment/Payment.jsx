@@ -157,6 +157,7 @@ const Payment = () => {
                     opPNR: updatePaymentDetails?.data.opPNR,
                     doj: formatDate(updatePaymentDetails?.data.doj) + " " + updatePaymentDetails?.data.pickUpTime,
                     to: updatePaymentDetails?.data.customerEmail,
+                    contact: updatePaymentDetails?.data?.driverNumber,
                   }
                   const sendMail = await axiosInstance.post(
                     `${import.meta.env.VITE_BASE_URL
@@ -175,6 +176,7 @@ const Payment = () => {
                     opPNR: updatePaymentDetails?.data.opPNR,
                     doj: formatDate(updatePaymentDetails?.data.doj) + " " + updatePaymentDetails?.data.pickUpTime,
                     to: updatePaymentDetails?.data.customerPhone,
+                    contact: updatePaymentDetails?.data?.driverNumber,
                   }
                   const sendMessage = await axiosInstance.post(
                     `${import.meta.env.VITE_BASE_URL
@@ -214,6 +216,7 @@ const Payment = () => {
                     opPNR: updatePaymentDetails?.data.opPNR,
                     doj: formatDate(updatePaymentDetails?.data.doj) + " " + updatePaymentDetails?.data.pickUpTime,
                     to: updatePaymentDetails?.data.customerEmail,
+                    contact: updatePaymentDetails?.data?.driverNumber,
                   }
                   const sendMail = await axiosInstance.post(
                     `${import.meta.env.VITE_BASE_URL
@@ -232,6 +235,8 @@ const Payment = () => {
                     opPNR: updatePaymentDetails?.data.opPNR,
                     doj: formatDate(updatePaymentDetails?.data.doj) + " " + updatePaymentDetails?.data.pickUpTime,
                     to: updatePaymentDetails?.data.customerPhone,
+                    contact: updatePaymentDetails?.data?.driverNumber,
+
                   }
                   const sendMessage = await axiosInstance.post(
                     `${import.meta.env.VITE_BASE_URL
@@ -436,7 +441,8 @@ const Payment = () => {
               customerAddress: userData.address,
               isVrl: isVrl,
               boardingPoint: bookingDetails?.boardingPoint?.bpName,
-              droppingPoint: bookingDetails?.droppingPoint?.bpName
+              droppingPoint: bookingDetails?.droppingPoint?.bpName,
+              driverNumber: bookingDetails?.boardingPoint?.number,
             }
           );
 
@@ -555,7 +561,8 @@ const Payment = () => {
               customerAddress: userData.address,
               isSrs: isSrs,
               boardingPoint: bookingDetails?.boardingPoint?.bpName,
-              droppingPoint: bookingDetails?.droppingPoint?.bpName
+              droppingPoint: bookingDetails?.droppingPoint?.bpName,
+              driverNumber: bookingDetails?.boardingPoint?.number,
             }
           );
 
