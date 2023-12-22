@@ -41,7 +41,7 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs, a
         });
       }
     }
-  }, [isSrs, filters])
+  }, [isSrs, filters, allSrsBusOperators])
 
   useEffect(() => {
     const getFilters = async () => {

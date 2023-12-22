@@ -127,116 +127,127 @@ const BusBooking = () => {
     setNoVrlOfBuses(0);
     setNoSrsOfBuses(0);
 
-    let boardingPoints = [];
-    let droppingPoints = [];
+
+    let sourceCities = [];
+    let destinationCities = [];
     if (sourceCity.trim().toLowerCase() in cityMapping) {
       const mapping = cityMapping[sourceCity.trim().toLowerCase()];
-      sourceCity = mapping.sourceCity;
-      boardingPoints = mapping.boardingPoints;
+      sourceCities = mapping.sourceCity;
+    } else {
+      sourceCities.push(sourceCity)
     }
     if (destinationCity.trim().toLowerCase() in cityMapping) {
       const mapping = cityMapping[destinationCity.trim().toLowerCase()];
-      destinationCity = mapping.sourceCity;
-      droppingPoints = mapping.boardingPoints;
+      destinationCities = mapping.sourceCity;
+    } else {
+      destinationCities.push(destinationCity)
     }
 
     //vrl buses
-    try {
-      setLoading(true);
-      const requestBody = {
-        sourceCity: sourceCity.trim(),
-        destinationCity: destinationCity.trim(),
-        doj: doj,
-        ...filters,
-      };
-      const vrlResponse = await getVrlBuses(requestBody);
-      setVrlBuses(vrlResponse.data);
-      setNoVrlOfBuses(vrlResponse.data.length);
-      // setVrlDestinationCityId(vrlResponse.destinationCity);
-      // setVrlSourceCityId(vrlResponse.sourceCity);
-    } catch (error) {
-      setVrlBuses([]);
-      setNoVrlOfBuses(0);
-      console.log(error);
-    }
+    for (const sourceCity of sourceCities) {
+      for (const destinationCity of destinationCities) {
+        try {
+          setLoading(true);
+          const requestBody = {
+            sourceCity: sourceCity.trim(),
+            destinationCity: destinationCity.trim(),
+            doj: doj,
+            ...filters,
+          };
+          const vrlResponse = await getVrlBuses(requestBody);
+          if (Array.isArray(vrlResponse.data)) {
+            setVrlBuses(prevBuses => [...prevBuses, ...vrlResponse.data]);
+            setNoVrlOfBuses(prevCount => prevCount + vrlResponse.data.length);
+          } else {
+            console.error('Invalid vrlResponse.data:', vrlResponse.data);
+          }
+          // setVrlDestinationCityId(vrlResponse.destinationCity);
+          // setVrlSourceCityId(vrlResponse.sourceCity);
+        } catch (error) {
+          // setVrlBuses([]);
+          // setNoVrlOfBuses(0);
+          console.log(error);
+        }
 
 
-    //srs buses
-    try {
-      if (filters && (filters.busPartners.length > 0 || filters.boardingPoints.length > 0 || filters.droppingPoints.length > 0 || (filters.minPrice && filters.maxPrice))) {
-        let filteredBuses = srsBusesForFilter;
-        if (filters.busPartners.length > 0) {
-          filteredBuses = filteredBuses.filter(bus =>
-            filters?.busPartners
-              .map(partner => partner.toLowerCase())
-              .includes(bus?.operator_service_name.toLowerCase())
-          );
+        //srs buses
+        try {
+          if (filters && (filters.busPartners.length > 0 || filters.boardingPoints.length > 0 || filters.droppingPoints.length > 0 || (filters.minPrice && filters.maxPrice))) {
+            let filteredBuses = srsBusesForFilter;
+            if (filters.busPartners.length > 0) {
+              filteredBuses = filteredBuses.filter(bus =>
+                filters?.busPartners
+                  .map(partner => partner.toLowerCase())
+                  .includes(bus?.operator_service_name.toLowerCase())
+              );
+            }
+            if (filters.boardingPoints.length > 0) {
+              filteredBuses = filteredBuses.filter(bus =>
+                filters.boardingPoints.some(point => bus.boarding_stages.includes(point))
+              );
+            }
+            if (filters.droppingPoints.length > 0) {
+              filteredBuses = filteredBuses.filter(bus =>
+                filters.droppingPoints.some(point => bus.dropoff_stages.includes(point))
+              );
+            }
+            if (filters.minPrice && filters.maxPrice) {
+              setVrlBuses([]);
+              setNoVrlOfBuses(0);
+              filteredBuses = filteredBuses.filter(bus => {
+                const prices = bus.show_fare_screen.split("/").map(price => parseFloat(price));
+                return prices.some(price => price >= filters.minPrice && price <= filters.maxPrice);
+              });
+            }
+            setSrsBuses(filteredBuses);
+            setNoSrsOfBuses(filteredBuses?.length);
+          } else {
+            const srsResponse = await getSrsBuses(sourceCity.trim(), destinationCity.trim(), doj);
+            const filteredBuses = srsResponse.filter(bus => bus?.status === "New" || bus.status === "Update");
+            setSrsBuses(prevBuses => [...prevBuses, ...filteredBuses]);
+            setSrsBusesForFilter(prevFilteredBuses => [...prevFilteredBuses, ...filteredBuses]);
+            setNoSrsOfBuses(prevCount => prevCount + filteredBuses?.length);
+            const operators = [...new Set(filteredBuses.map(bus => bus.operator_service_name))];
+            setSrsBusOperators(operators);
+          }
+        } catch (error) {
+          //   setSrsBuses([]);
+          // setSrsBusesForFilter([]);
+          // setNoSrsOfBuses(0);
+          console.log(error);
         }
-        if (filters.boardingPoints.length > 0) {
-          filteredBuses = filteredBuses.filter(bus =>
-            filters.boardingPoints.some(point => bus.boarding_stages.includes(point))
-          );
+
+        //seat seller buses
+        try {
+          //   const response = await axiosInstance.post(
+          //     `${import.meta.env.VITE_BASE_URL}/api/busBooking/getBusDetails`,
+          //     {
+          //       sourceCity: sourceCity.trim(),
+          //       destinationCity: destinationCity.trim(),
+          //       doj: doj,
+          //       // boardingPoints,
+          //       // droppingPoints,
+          //       ...filters,
+          //     }
+          //   );
+          //   if (response.data.data[0] !== null) {
+          //     setBusDetails(response.data.data);
+          //     setNoOfBuses(response.data.data.length);
+          //   } else {
+          //     setBusDetails([]);
+          //     setNoOfBuses(0);
+          //   }
+          //   setSourceCityId(response.data.sourceCity);
+          //   setDestinationCityId(response.data.destinationCity);
+          //   setLoading(false);
+        } catch (error) {
+          setBusDetails([]);
+          setNoOfBuses(0);
+          setLoading(false);
+        } finally {
+          setLoading(false);
         }
-        if (filters.droppingPoints.length > 0) {
-          filteredBuses = filteredBuses.filter(bus =>
-            filters.droppingPoints.some(point => bus.dropoff_stages.includes(point))
-          );
-        }
-        if (filters.minPrice && filters.maxPrice) {
-          setVrlBuses([]);
-          setNoVrlOfBuses(0);
-          filteredBuses = filteredBuses.filter(bus => {
-            const prices = bus.show_fare_screen.split("/").map(price => parseFloat(price));
-            return prices.some(price => price >= filters.minPrice && price <= filters.maxPrice);
-          });
-        }
-        setSrsBuses(filteredBuses);
-        setNoSrsOfBuses(filteredBuses.length);
-      } else {
-        const srsResponse = await getSrsBuses(sourceCity.trim(), destinationCity.trim(), doj);
-        const filteredBuses = srsResponse.filter(bus => bus?.status === "New" || bus.status === "Update");
-        setSrsBuses(filteredBuses);
-        setSrsBusesForFilter(filteredBuses);
-        setNoSrsOfBuses(filteredBuses.length);
-        const operators = [...new Set(filteredBuses.map(bus => bus.operator_service_name))];
-        setSrsBusOperators(operators);
       }
-    } catch (error) {
-      setSrsBuses([]);
-      setSrsBusesForFilter([]);
-      setNoSrsOfBuses(0);
-      console.log(error);
-    }
-
-    //seat seller buses
-    try {
-      //   const response = await axiosInstance.post(
-      //     `${import.meta.env.VITE_BASE_URL}/api/busBooking/getBusDetails`,
-      //     {
-      //       sourceCity: sourceCity.trim(),
-      //       destinationCity: destinationCity.trim(),
-      //       doj: doj,
-      //       // boardingPoints,
-      //       // droppingPoints,
-      //       ...filters,
-      //     }
-      //   );
-      //   if (response.data.data[0] !== null) {
-      //     setBusDetails(response.data.data);
-      //     setNoOfBuses(response.data.data.length);
-      //   } else {
-      //     setBusDetails([]);
-      //     setNoOfBuses(0);
-      //   }
-      //   setSourceCityId(response.data.sourceCity);
-      //   setDestinationCityId(response.data.destinationCity);
-      //   setLoading(false);
-    } catch (error) {
-      setBusDetails([]);
-      setNoOfBuses(0);
-      setLoading(false);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -457,9 +468,9 @@ const BusBooking = () => {
                     ReferenceNumber={bus?.ReferenceNumber}
                     // inventoryType={bus.inventoryType}
                     sourceCity={fromLocation}
-                    sourceCityId={bus.FromCityId}
+                    sourceCityId={bus?.FromCityId}
                     destinationCity={toLocation}
-                    destinationCityId={bus.ToCityId}
+                    destinationCityId={bus?.ToCityId}
                     doj={selectedDate}
                     title={"VRL Travels"}
                     busName={"VRL Travels"}
@@ -498,9 +509,9 @@ const BusBooking = () => {
                     scheduleId={bus?.id}
                     // inventoryType={bus.inventoryType}
                     sourceCity={fromLocation}
-                    sourceCityId={bus.origin_id}
+                    sourceCityId={bus?.origin_id}
                     destinationCity={toLocation}
-                    destinationCityId={bus.destination_id}
+                    destinationCityId={bus?.destination_id}
                     doj={selectedDate}
                     title={bus?.operator_service_name}
                     busName={bus?.operator_service_name}
