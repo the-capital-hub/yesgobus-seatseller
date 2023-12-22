@@ -25,7 +25,7 @@ const sendReminderMessages = async () => {
       if (reminderTime <= oneHourFromNow) {
         const opPNR = booking.opPNR;
         const doj = combinedTime.toISOString().split('T')[0];
-        const message = `Dear ${booking.customerName} Your PNR: ${opPNR} Date: ${doj} Journey: ${booking.sourceCity} to ${booking.destinationCity} Seat: ${booking.selectedSeats} Pickup: ${booking.boardingPoint.location} ${booking.boardingPoint.time} Drop: ${booking.droppingPoint.location} ${booking.droppingPoint.time} Operator: ${booking.driverNumber} Happy comfortable and safe journey. Thank You, Shine Gobus`;
+        const message = `Dear ${booking.customerName} Your PNR: ${opPNR} Date: ${doj} Journey: ${booking.sourceCity} to ${booking.destinationCity} Seat: ${booking.selectedSeats} Pickup: ${booking.boardingPoint} ${booking.pickUpTime} Drop: ${booking.droppingPoint} ${booking.reachTime} Operator: ${booking.driverNumber} Happy comfortable and safe journey. Thank You, Shine Gobus`;
         await sendMessage(message, booking.customerPhone, templateId);
         await BusBooking.findByIdAndUpdate(booking._id, {
           sentBookingRemainer: "true",
