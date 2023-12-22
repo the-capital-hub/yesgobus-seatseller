@@ -159,6 +159,9 @@ const busBookingSchema = new Schema({
     type: Boolean,
     default: false
   },
+  driverNumber: {
+    type: String,
+  },
   srsBlockSeatDetails: srsBlockSeatDetails,
 },
   {

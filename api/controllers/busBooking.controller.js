@@ -362,13 +362,13 @@ export const getAllBookingsController = async (req, res) => {
 
 export const sendBookingConfirmationMessage = async (req, res) => {
   try {
-    const { fullName, opPNR, doj, sourceCity, destinationCity, seats, amount, pickUpLocation, to } = req.body;
+    const { fullName, opPNR, doj, sourceCity, destinationCity, seats, amount, pickUpLocation, to, contact } = req.body;
     const truncatedPickupLocation =
       pickUpLocation.length > 15
         ? pickUpLocation.substring(0, 15) + '...'
         : pickUpLocation;
     const message =
-      `Dear ${fullName} Your PNR: ${opPNR} Journey: ${sourceCity} to  ${destinationCity} Seat: ${seats} Amount Rs.${amount} Date: ${doj} Contact: +91${to} Pickup: ${truncatedPickupLocation} Is Booked. Thank You, Shine Gobus`;
+      `Dear ${fullName} Your PNR: ${opPNR} Journey: ${sourceCity} to  ${destinationCity} Seat: ${seats} Amount Rs.${amount} Date: ${doj} Contact: ${contact} Pickup: ${truncatedPickupLocation} Is Booked. Thank You, Shine Gobus`;
     const templateId = process.env.BOOKING_CONFIRMATION_TEMPLATE_ID;
     const response = await sendMessage(message, to, templateId);
     res.status(200).send(response);
@@ -383,10 +383,11 @@ export const sendBookingConfirmationMessage = async (req, res) => {
 
 export const sendBookingConfirmationEmail = async (req, res) => {
   try {
-    const { fullName, opPNR, doj, sourceCity, destinationCity, seats, amount, pickUpLocation, to } = req.body;
+    const { fullName, opPNR, doj, sourceCity, destinationCity, seats, amount, pickUpLocation, to, contact } = req.body;
     const message = `Dear ${fullName},
       Your PNR: ${opPNR}
       Journey: ${sourceCity} to  ${destinationCity}
+      Contact: ${contact}
       Seat: ${seats}
       Amount Rs.${amount}
       Date: ${doj}
@@ -400,6 +401,7 @@ export const sendBookingConfirmationEmail = async (req, res) => {
     const adminMailMessage = `New Bus Booking:
       Name: ${fullName},
       PNR: ${opPNR}
+      Contact: ${contact}
       Journey: ${sourceCity} to  ${destinationCity}
       Seat: ${seats}
       Amount Rs.${amount}
