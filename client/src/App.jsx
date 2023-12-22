@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { App as CapacitorApp } from "@capacitor/app";
 import CabRoutes from "./routes/CabRoutes";
 import "./App.scss";
+import CabDriverRoutes from "./routes/CabDriverRoutes";
 
 function App() {
   const dispatch = useDispatch();
@@ -81,6 +82,9 @@ function App() {
         <Route path="/mobile_navbar" element={<MobileNavbar />} />
 
         <Route path="/cabs/*" element={<CabRoutes />} />
+
+        <Route path="/cab_driver/*" element={<CabDriverRoutes />} />
+
       </Routes>
     </BrowserRouter>
   );
