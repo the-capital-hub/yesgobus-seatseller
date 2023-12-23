@@ -1,0 +1,33 @@
+.cab_driver_navbar{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #0000002d;
+    background-color: white
+    ;
+    .user_greeting{
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+h5{
+    font-size: 18px;
+    font-weight: 600;
+}
+h6{
+    font-size: 15px;
+    font-weight: 500;
+    color: #FD5901;
+    margin: 0px;
+}
+    }
+    img{
+        width: 50px;
+        height: 50px;
+        border-radius: 100%;
+    }
+}
