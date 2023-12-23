@@ -12,6 +12,7 @@ import busBookingRoutes from "./routes/busBooking.routes.js";
 import paymentRoutes from "./routes/payment.routes.js";
 import driverRoutes from "./routes/driver.routes.js";
 import kycRoutes from "./routes/verifykyc.routes.js";
+import agentRoutes from "./routes/agents.routes.js";
 
 //schedular
 import { sendReminderJob, checkPaymentJob } from "./utils/scheduler.js";
@@ -51,6 +52,7 @@ app.use("/api/payment/", paymentRoutes);
 
 app.use("/api/driver", driverRoutes);
 app.use("/api/kyc", kycRoutes);
+app.use("/api/agent", agentRoutes);
 
 app.listen(PORT, () => {
   connect();

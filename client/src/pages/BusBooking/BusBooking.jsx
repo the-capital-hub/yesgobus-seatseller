@@ -13,7 +13,7 @@ import {
 // import {
 //   fromto
 // } from "../../assets/homepage";
-import { offer1 } from "../../assets/homepage";
+// import { offer1 } from "../../assets/homepage";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../utils/service";
 
@@ -41,8 +41,6 @@ const BusBooking = () => {
   const [srsBuses, setSrsBuses] = useState([]);
   const [srsBusesForFilter, setSrsBusesForFilter] = useState([]);
   const [allSrsBusOperators, setSrsBusOperators] = useState([]);
-  // const [vrlSourceCityId, setVrlSourceCityId] = useState("");
-  // const [vrlDestinationCityId, setVrlDestinationCityId] = useState("");
 
   //dates
   const date = new Date();
@@ -118,6 +116,12 @@ const BusBooking = () => {
     ) {
       destinationCity = "Bangalore";
     }
+
+    if (sourceCity.trim().toLowerCase() === destinationCity.trim().toLowerCase()) {
+      alert('Source and destination cities cannot be the same.');
+      return;
+    }
+
     localStorage.setItem("sourceCity", sourceCity);
     localStorage.setItem("destinationCity", destinationCity);
     setFromLocation(sourceCity);
@@ -299,16 +303,15 @@ const BusBooking = () => {
       return prices[0];
     } else {
       const minPrice = Math.min(...prices).toFixed(2);
-      const maxPrice = Math.max(...prices).toFixed(2);
-      return `${minPrice} - ${maxPrice}`;
+      return minPrice;
     }
   }
 
   const formatTravelTime = (durationInMins) => {
     const hours = Math.floor(durationInMins / 60);
     const minutes = durationInMins % 60;
-    const formattedHours = hours > 0 ? `${hours}hr` : "";
-    const formattedMinutes = minutes > 0 ? ` ${minutes}min` : "";
+    const formattedHours = hours > 0 ? `${hours} :` : "";
+    const formattedMinutes = minutes > 0 ? ` ${minutes}` : "";
     return `${formattedHours}${formattedMinutes}`;
   };
 
@@ -358,6 +361,7 @@ const BusBooking = () => {
     const travelTimeInMinutes = timeDifference / (1000 * 60);
     return formatTravelTime(parseInt(travelTimeInMinutes));
   }
+
 
 
   return (
