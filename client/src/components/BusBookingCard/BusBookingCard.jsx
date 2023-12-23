@@ -57,8 +57,8 @@ const BusBookingCard = ({
       return prices[0].toFixed(2);
     } else {
       const minPrice = Math.min(...prices).toFixed(2);
-      const maxPrice = Math.max(...prices).toFixed(2);
-      return `${minPrice} - ${maxPrice}`;
+      // const maxPrice = Math.max(...prices).toFixed(2);
+      return minPrice;
     }
   };
 
@@ -361,12 +361,6 @@ const BusBookingCard = ({
     },
   };
 
-  // const seatCategoryTypes = {
-  //   1: "Seat",
-  //   2: "Sleeper",
-  //   3: "Seat cum Sleeper",
-  //   4: "Any",
-  // }
 
   // Function to parse the coach_details string
   function parseCoachDetails(coachDetails) {

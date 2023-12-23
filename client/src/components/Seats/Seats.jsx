@@ -293,7 +293,7 @@ const Seats = ({
               if (seat.ladiesSeat === "N") {
                 seatRow.push(
                   <td key={seat.SeatNo}>
-                    <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
+                    <div className={`seat_____container`}>
 
                       <img
                         title={`ID: ${seat.SeatNo}\nFare: ₹${seat.BaseFare}`}
@@ -307,7 +307,7 @@ const Seats = ({
               } else {
                 seatRow.push(
                   <td key={seat.SeatNo}>
-                    <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
+                    <div className={`seat_____container `}>
 
 
                       <img
