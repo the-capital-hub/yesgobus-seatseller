@@ -10,7 +10,7 @@ import { getVrlBusFilters } from "../../api/vrlBusesApis";
 import { getSrsBuseFilters } from "../../api/srsBusesApis";
 
 const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs, allSrsBusOperators }) => {
-  const [range, setRange] = useState([100, 3000]);
+  const [range, setRange] = useState([100, 4000]);
   const [filters, setFilters] = useState([]);
   const [boardingPointsFilter, setBoardingPointsFilter] = useState([]);
   const [droppingPointsFilter, setDroppingPointsFilter] = useState([]);
@@ -48,76 +48,100 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs, a
       let response = {};
       let vrlResponse = {};
       let srsResponse = {};
+      let combinedBoardingPoints = [];
+      let combinedDroppingPoints = [];
+      let combiledBusPartners = [];
 
-      try {
-        // response = await axiosInstance.get(
-        //   `${import.meta.env.VITE_BASE_URL}/api/busBooking/getFilters`,
-        //   {
-        //     params: {
-        //       sourceCity: sourceCity,
-        //       destinationCity: destinationCity,
-        //       doj: doj,
-        //     },
-        //   }
-        // );
-      } catch (error) {
-        console.error("Error fetching filters:", error);
+      let sourceCities = [];
+      let destinationCities = [];
+      if (sourceCity.trim().toLowerCase() in cityMapping) {
+        const mapping = cityMapping[sourceCity.trim().toLowerCase()];
+        sourceCities = mapping.sourceCity;
+      } else {
+        sourceCities.push(sourceCity)
+      }
+      if (destinationCity.trim().toLowerCase() in cityMapping) {
+        const mapping = cityMapping[destinationCity.trim().toLowerCase()];
+        destinationCities = mapping.sourceCity;
+      } else {
+        destinationCities.push(destinationCity)
       }
 
-      try {
-        srsResponse = await getSrsBuseFilters(
-          sourceCity,
-          destinationCity,
-          doj
-        );
-      } catch (error) {
-        console.error("Error fetching filters:", error);
+      for (const sourceCity of sourceCities) {
+        for (const destinationCity of destinationCities) {
+          try {
+            // response = await axiosInstance.get(
+            //   `${import.meta.env.VITE_BASE_URL}/api/busBooking/getFilters`,
+            //   {
+            //     params: {
+            //       sourceCity: sourceCity,
+            //       destinationCity: destinationCity,
+            //       doj: doj,
+            //     },
+            //   }
+            // );
+          } catch (error) {
+            console.error("Error fetching filters:", error);
+          }
+
+          try {
+            srsResponse = await getSrsBuseFilters(
+              sourceCity,
+              destinationCity,
+              doj
+            );
+          } catch (error) {
+            console.error("Error fetching filters:", error);
+          }
+
+          try {
+            vrlResponse = await getVrlBusFilters({
+              sourceCity: sourceCity,
+              destinationCity: destinationCity,
+              doj: doj,
+            });
+          } catch (error) {
+            console.error("Error fetching filters:", error);
+          }
+
+          // Ensure that the values are arrays before spreading
+          combinedBoardingPoints = combinedBoardingPoints.concat(
+            vrlResponse?.data?.boardingPoints || [],
+            srsResponse?.boardingPoints || [],
+            response?.data?.data?.boardingPoints || []
+          );
+
+          combinedDroppingPoints = combinedDroppingPoints.concat(
+            vrlResponse?.data?.droppingPoints || [],
+            response?.data?.data?.droppingPoints || [],
+            srsResponse?.droppingPoints || []
+          );
+
+          combiledBusPartners = combiledBusPartners.concat(
+            response?.data?.data?.busPartners || []
+          );
+
+          if (vrlResponse?.data) {
+            combiledBusPartners.push("VRL Travels");
+          }
+        }
       }
-
-      try {
-        vrlResponse = await getVrlBusFilters({
-          sourceCity: sourceCity,
-          destinationCity: destinationCity,
-          doj: doj,
-        });
-      } catch (error) {
-        console.error("Error fetching filters:", error);
-      }
-
-      // Ensure that the values are arrays before spreading
-      const combinedBoardingPoints = [
-        ...(vrlResponse?.data?.boardingPoints || []),
-        ...(srsResponse?.boardingPoints || []),
-        ...(response?.data?.data?.boardingPoints || []),
-      ].filter(point => point !== null);
-
-      const combinedDroppingPoints = [
-        ...(vrlResponse?.data?.droppingPoints || []),
-        ...(response?.data?.data?.droppingPoints || []),
-        ...(srsResponse?.droppingPoints || []),
-      ].filter(point => point !== null);
-
-      const combiledBusPartners = [
-        ...(response?.data?.data?.busPartners || []),
-      ].filter(point => point !== null);
-
-      if (vrlResponse?.data) {
-        combiledBusPartners.push("VRL Travels");
-      }
-
       // Create Set objects to remove duplicates
-      const uniqueBoardingPointsSet = new Set(combinedBoardingPoints);
-      const uniqueDroppingPointsSet = new Set(combinedDroppingPoints);
+      const uniqueBoardingPointsSet = new Set(combinedBoardingPoints.map(point => point.toLowerCase()));
+      const uniqueDroppingPointsSet = new Set(combinedDroppingPoints.map(point => point.toLowerCase()));
+      const uniqueBusPartnersSet = new Set(combiledBusPartners.map(partner => partner.toLowerCase()));
 
       // Convert Set objects to arrays
       const uniqueBoardingPoints = [...uniqueBoardingPointsSet];
       const uniqueDroppingPoints = [...uniqueDroppingPointsSet];
+      const uniqueBusPartners = [...uniqueBusPartnersSet];
       setFilters({
         ...response?.data?.data || [],
         boardingPoints: uniqueBoardingPoints,
         droppingPoints: uniqueDroppingPoints,
-        busPartners: combiledBusPartners,
+        busPartners: uniqueBusPartners,
       });
+
     };
 
     getFilters();
@@ -190,7 +214,7 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs, a
             onChangeCommitted={handleSliderChangeCommitted}
             valueLabelDisplay="auto"
             min={0}
-            max={3000}
+            max={4000}
             step={1}
           />
           <div className="range-labels">

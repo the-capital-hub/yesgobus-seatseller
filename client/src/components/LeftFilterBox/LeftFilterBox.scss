@@ -1,35 +1,50 @@
 .LeftFilterBox {
   padding: 15px;
   border: 0.5px solid #dadada;
-  // border-bottom: none;
+
   .leftFilterContainer {
     display: flex;
     flex-direction: column;
+
     .title {
       display: flex;
       justify-content: space-between;
       align-items: center;
+
       p {
         &:hover {
           cursor: pointer;
         }
       }
     }
+
     ul {
       padding-left: 0px;
       max-height: 60vh;
       overflow-y: auto;
+
       .filterTypes {
         display: flex;
         color: #918e8e;
         justify-content: space-between;
+
         .types {
           display: flex;
           gap: 10px;
         }
       }
     }
+
+    input[type="text"] {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
   }
+
   &:hover {
     cursor: pointer;
   }

@@ -1,0 +1,22 @@
+.OnTheWay{
+    position: relative;
+    .back_btn {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      color: black;
+      background: #ffffff;
+      padding: 10px;
+      border-radius: 100%;
+      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+      display: flex;
+      justify-content: center;
+    }
+    .ride_data{
+        position: absolute;
+        bottom: 2px;
+        left: 0px;
+        right: 0px;
+    }
+
+}

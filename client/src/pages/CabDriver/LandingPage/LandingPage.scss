@@ -9,7 +9,7 @@
 align-items: center;
 text-align: center;
 gap: 3px;
-padding-top: 40%;
+padding-top: 20%;
     }
     .buttons{
         display: flex;
@@ -19,8 +19,6 @@ text-align: center;
 justify-content: flex-end;
 gap: 3px;
         .on{
-            background: #fd5901;
-            color: white;
             border: none;
             outline: none;
             padding-left: 15px;
@@ -29,6 +27,13 @@ gap: 3px;
             padding-bottom: 8px;
             border-radius: 5px;
             width: 100%;
+            background: #fd5901;
+
+            a{
+text-decoration: none;
+color: white;
+
+            }
         }
         .cancel{
             background: transparent;

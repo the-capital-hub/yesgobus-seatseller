@@ -5,6 +5,7 @@ import "./LeftFilterBox.scss";
 const LeftFilterBox = ({ title, points, count, name, onFilterChange, filters, sourceCity, destinationCity }) => {
   const [showPoints, setShowPoints] = useState(false);
   const [selectedPoints, setSelectedPoints] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     setSelectedPoints(filters || []);
@@ -28,6 +29,14 @@ const LeftFilterBox = ({ title, points, count, name, onFilterChange, filters, so
     onFilterChange(name, updatedFilters);
   };
 
+  const filterPoints = (point) => {
+    return point.toLowerCase().includes(searchTerm.toLowerCase());
+  };
+
+  function capitalizeFirstLetter(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   return (
     <div className="LeftFilterBox">
       <div className="leftFilterContainer">
@@ -36,25 +45,35 @@ const LeftFilterBox = ({ title, points, count, name, onFilterChange, filters, so
           <img src={downarrow} alt="" />
         </div>
         {showPoints && (
-          <ul>
-            {points?.map((point, index) => (
-              <>
-                <div className="filterTypes" key={index}>
-                  <div className="types">
-                    <input
-                      type="checkbox"
-                      onChange={() => handleCheckboxChange(point)}
-                      checked={selectedPoints.includes(point)}
-                    />
-                    <p>{displayLocation(point)}</p>
-                  </div>
-                  {/* <p>({count[index]})</p> */}
-
-                </div>
-                <hr />
-              </>
-            ))}
-          </ul>
+          <div>
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ marginTop: "15px" }}
+            />
+            <ul>
+              {points
+                ?.filter(filterPoints)
+                .map((point, index) => (
+                  <>
+                    <div className="filterTypes" key={index}>
+                      <div className="types">
+                        <input
+                          type="checkbox"
+                          onChange={() => handleCheckboxChange(point)}
+                          checked={selectedPoints.includes(point)}
+                        />
+                        <p>{capitalizeFirstLetter(displayLocation(point))}</p>
+                      </div>
+                      {/* <p>({count[index]})</p> */}
+                    </div>
+                    <hr />
+                  </>
+                ))}
+            </ul>
+          </div>
         )}
       </div>
     </div>

@@ -1,6 +1,7 @@
 import React from 'react'
 import './LandingPage.scss'
 import placeholder from '../../../assets/CabDriver/placeholder/index'
+import { Link } from 'react-router-dom'
 
 function LandingPage() {
   return (
@@ -11,7 +12,11 @@ function LandingPage() {
 <p>To Continues,  let your device turn on location using Google’s location services</p>
         </div>
         <div className='buttons '>
-<button className='on'>Yes , Turn It On</button>
+<button className='on'><Link
+              to="/cab_driver/create_account"
+            >
+              Yes , Turn It On
+            </Link></button>
 <button className='cancel'>Cancel</button>
         </div>
 
