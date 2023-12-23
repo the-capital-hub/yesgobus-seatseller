@@ -170,16 +170,16 @@ export const cityMapping = {
       "epurupalem"
     ]
   },
-  "ervadi (ramanathapuram)": {
+  "ervadi ": {
     sourceCity: [
       "ervadi (ramnad)",
-      "ervadi (ramanathapuram)"
+      "ervadi "
     ]
   },
   "ervadi (ramnad)": {
     sourceCity: [
       "ervadi (ramnad)",
-      "ervadi (ramanathapuram)"
+      "ervadi "
     ]
   },
   "nizamabad": {
@@ -194,16 +194,16 @@ export const cityMapping = {
       "nizamabad"
     ]
   },
-  "neemuch (madhya pradesh)": {
+  "neemuch": {
     sourceCity: [
       "neemuch",
-      "neemuch (madhya pradesh)"
+      "neemuch"
     ]
   },
   "neemuch": {
     sourceCity: [
       "neemuch",
-      "neemuch (madhya pradesh)"
+      "neemuch"
     ]
   },
   "amarnagar": {
@@ -242,16 +242,16 @@ export const cityMapping = {
       "thiruthuraipoondi"
     ]
   },
-  "deoli (rajasthan)": {
+  "deoli ": {
     sourceCity: [
       "devli",
-      "deoli (rajasthan)"
+      "deoli "
     ]
   },
   "devli": {
     sourceCity: [
       "devli",
-      "deoli (rajasthan)"
+      "deoli "
     ]
   },
   "rabkavi": {
@@ -314,16 +314,16 @@ export const cityMapping = {
       "bhavani"
     ]
   },
-  "aurangabad (maharashtra)": {
+  "aurangabad ": {
     sourceCity: [
-      "chatrapati sambhajinagar (all locations)",
-      "aurangabad (maharashtra)"
+      "chatrapati",
+      "aurangabad "
     ]
   },
-  "chatrapati sambhajinagar (all locations)": {
+  "chatrapati": {
     sourceCity: [
-      "chatrapati sambhajinagar (all locations)",
-      "aurangabad (maharashtra)"
+      "chatrapati",
+      "aurangabad "
     ]
   },
   "kozhikode": {
@@ -362,30 +362,30 @@ export const cityMapping = {
       "vitta"
     ]
   },
-  "desalpar (gujarat)": {
+  "desalpar ": {
     sourceCity: [
       "desalpar",
-      "desalpar (gujarat)"
+      "desalpar "
     ]
   },
   "desalpar": {
     sourceCity: [
       "desalpar",
-      "desalpar (gujarat)"
+      "desalpar "
     ]
   },
-  "chittor (rajasthan)": {
+  "chittor ": {
     sourceCity: [
-      "chittorgarh(rajasthan)",
-      "chittorgarh(rajasthan)",
-      "chittor (rajasthan)"
+      "chittorgarh",
+      "chittorgarh",
+      "chittor "
     ]
   },
-  "chittorgarh(rajasthan)": {
+  "chittorgarh": {
     sourceCity: [
-      "chittorgarh(rajasthan)",
-      "chittorgarh(rajasthan)",
-      "chittor (rajasthan)"
+      "chittorgarh",
+      "chittorgarh",
+      "chittor "
     ]
   },
   "parvatipuram": {
@@ -538,16 +538,16 @@ export const cityMapping = {
       "faizabad"
     ]
   },
-  "bramhapuri (chandrapur)": {
+  "bramhapuri ": {
     sourceCity: [
       "brahmapuri",
-      "bramhapuri (chandrapur)"
+      "bramhapuri "
     ]
   },
   "brahmapuri": {
     sourceCity: [
       "brahmapuri",
-      "bramhapuri (chandrapur)"
+      "bramhapuri "
     ]
   },
   "saibrakatte": {
@@ -657,13 +657,13 @@ export const cityMapping = {
   },
   "balapur (akola)": {
     sourceCity: [
-      "balapur(maharashtra)",
+      "balapur",
       "balapur (akola)"
     ]
   },
-  "balapur(maharashtra)": {
+  "balapur": {
     sourceCity: [
-      "balapur(maharashtra)",
+      "balapur",
       "balapur (akola)"
     ]
   },
@@ -724,16 +724,16 @@ export const cityMapping = {
       "tumakuru"
     ]
   },
-  "manjeri (kerala)": {
+  "manjeri ": {
     sourceCity: [
       "manjeri",
-      "manjeri (kerala)"
+      "manjeri "
     ]
   },
   "manjeri": {
     sourceCity: [
       "manjeri",
-      "manjeri (kerala)"
+      "manjeri "
     ]
   },
   "chennai": {
@@ -840,16 +840,16 @@ export const cityMapping = {
       "tirupathi, ap"
     ]
   },
-  "mughal sarai (uttar pradesh)": {
+  "mughal sarai ": {
     sourceCity: [
       "pt.deendayal upadhayay nagar",
-      "mughal sarai (uttar pradesh)"
+      "mughal sarai "
     ]
   },
   "pt.deendayal upadhayay nagar": {
     sourceCity: [
       "pt.deendayal upadhayay nagar",
-      "mughal sarai (uttar pradesh)"
+      "mughal sarai "
     ]
   },
   "athirampattinam": {
@@ -926,13 +926,13 @@ export const cityMapping = {
   },
   "paratwada": {
     sourceCity: [
-      "paratwada (achalpur)",
+      "paratwada ",
       "paratwada"
     ]
   },
-  "paratwada (achalpur)": {
+  "paratwada ": {
     sourceCity: [
-      "paratwada (achalpur)",
+      "paratwada ",
       "paratwada"
     ]
   },
@@ -972,18 +972,18 @@ export const cityMapping = {
       "mankuwa"
     ]
   },
-  "pratapgadh (rajasthan)": {
+  "pratapgadh ": {
     sourceCity: [
-      "prathapgarh (rajasthan)",
-      "prathapgarh (rajasthan)",
-      "pratapgadh (rajasthan)"
+      "prathapgarh ",
+      "prathapgarh ",
+      "pratapgadh "
     ]
   },
-  "prathapgarh (rajasthan)": {
+  "prathapgarh ": {
     sourceCity: [
-      "prathapgarh (rajasthan)",
-      "prathapgarh (rajasthan)",
-      "pratapgadh (rajasthan)"
+      "prathapgarh ",
+      "prathapgarh ",
+      "pratapgadh "
     ]
   },
   "unagatla": {
@@ -998,16 +998,16 @@ export const cityMapping = {
       "unagatla"
     ]
   },
-  "deshalpur (kanthi)": {
+  "deshalpur ": {
     sourceCity: [
-      "deshalpar (kanthi)",
-      "deshalpur (kanthi)"
+      "deshalpar ",
+      "deshalpur "
     ]
   },
-  "deshalpar (kanthi)": {
+  "deshalpar ": {
     sourceCity: [
-      "deshalpar (kanthi)",
-      "deshalpur (kanthi)"
+      "deshalpar ",
+      "deshalpur "
     ]
   },
   "elayankudi": {
@@ -1072,13 +1072,13 @@ export const cityMapping = {
   },
   "vikramasingapuram": {
     sourceCity: [
-      "vk puram (tirunelveli)",
+      "vk puram ",
       "vikramasingapuram"
     ]
   },
-  "vk puram (tirunelveli)": {
+  "vk puram ": {
     sourceCity: [
-      "vk puram (tirunelveli)",
+      "vk puram ",
       "vikramasingapuram"
     ]
   },
@@ -1174,16 +1174,16 @@ export const cityMapping = {
       "mundargi"
     ]
   },
-  "vijainagar (rajasthan)": {
+  "vijainagar ": {
     sourceCity: [
-      "bijainagar(rajasthan)",
-      "vijainagar (rajasthan)"
+      "bijainagar",
+      "vijainagar "
     ]
   },
-  "bijainagar(rajasthan)": {
+  "bijainagar": {
     sourceCity: [
-      "bijainagar(rajasthan)",
-      "vijainagar (rajasthan)"
+      "bijainagar",
+      "vijainagar "
     ]
   },
   "thalassery": {
@@ -1274,15 +1274,13 @@ export const cityMapping = {
   },
   "koyambedu": {
     sourceCity: [
-      "cmbt, chennai, chennai",
-      "cmbt, chennai, chennai",
+      "chennai",
       "koyambedu"
     ]
   },
-  "cmbt, chennai, chennai": {
+  "chennai": {
     sourceCity: [
-      "cmbt, chennai, chennai",
-      "cmbt, chennai, chennai",
+      "chennai",
       "koyambedu"
     ]
   },
@@ -1309,16 +1307,16 @@ export const cityMapping = {
       "bandarduwa"
     ]
   },
-  "maliya(gujarat)": {
+  "maliya": {
     sourceCity: [
       "maliya",
-      "maliya(gujarat)"
+      "maliya"
     ]
   },
   "maliya": {
     sourceCity: [
       "maliya",
-      "maliya(gujarat)"
+      "maliya"
     ]
   },
   "narsinghpur": {
@@ -1495,16 +1493,16 @@ export const cityMapping = {
       "yalamanchilli"
     ]
   },
-  "una (himachal pradesh)": {
+  "una": {
     sourceCity: [
       "una",
-      "una (himachal pradesh)"
+      "una"
     ]
   },
   "una": {
     sourceCity: [
       "una",
-      "una (himachal pradesh)"
+      "una"
     ]
   },
   "jamkandorana": {
@@ -1533,13 +1531,13 @@ export const cityMapping = {
   },
   "tirunelveli": {
     sourceCity: [
-      "tirunelveli (nellai)",
+      "tirunelveli ",
       "tirunelveli"
     ]
   },
-  "tirunelveli (nellai)": {
+  "tirunelveli ": {
     sourceCity: [
-      "tirunelveli (nellai)",
+      "tirunelveli ",
       "tirunelveli"
     ]
   },
@@ -1567,28 +1565,28 @@ export const cityMapping = {
       "puttaparthi"
     ]
   },
-  "nagoor (andhra pradesh)": {
+  "nagoor ": {
     sourceCity: [
-      "naguru(andhra pradesh)",
-      "nagoor (andhra pradesh)"
+      "naguru",
+      "nagoor "
     ]
   },
-  "naguru(andhra pradesh)": {
+  "naguru": {
     sourceCity: [
-      "naguru(andhra pradesh)",
-      "nagoor (andhra pradesh)"
+      "naguru",
+      "nagoor "
     ]
   },
-  "aheri (maharashtra)": {
+  "aheri ": {
     sourceCity: [
-      "aheri(maharashtra)",
-      "aheri (maharashtra)"
+      "aheri",
+      "aheri "
     ]
   },
-  "aheri(maharashtra)": {
+  "aheri": {
     sourceCity: [
-      "aheri(maharashtra)",
-      "aheri (maharashtra)"
+      "aheri",
+      "aheri "
     ]
   },
   "azhagiyamandapam": {
@@ -1707,16 +1705,16 @@ export const cityMapping = {
       "sattenapalle"
     ]
   },
-  "pamuru (prakasham district)": {
+  "pamuru ": {
     sourceCity: [
-      "pamuru(prakasham district) ",
-      "pamuru (prakasham district)"
+      "pamuru ",
+      "pamuru "
     ]
   },
-  "pamuru(prakasham district) ": {
+  "pamuru ": {
     sourceCity: [
-      "pamuru(prakasham district) ",
-      "pamuru (prakasham district)"
+      "pamuru ",
+      "pamuru "
     ]
   },
   "vyttila": {
@@ -1854,16 +1852,16 @@ export const cityMapping = {
       "taveda"
     ]
   },
-  "ballarpur (chandrapur)": {
+  "ballarpur ": {
     sourceCity: [
-      "balharshah(maharashtra)",
-      "ballarpur (chandrapur)"
+      "balharshah",
+      "ballarpur "
     ]
   },
-  "balharshah(maharashtra)": {
+  "balharshah": {
     sourceCity: [
-      "balharshah(maharashtra)",
-      "ballarpur (chandrapur)"
+      "balharshah",
+      "ballarpur "
     ]
   },
   "saoner": {
@@ -1878,16 +1876,16 @@ export const cityMapping = {
       "saoner"
     ]
   },
-  "nagoor(karnataka)": {
+  "nagoor": {
     sourceCity: [
-      "naguru(karanataka)",
-      "nagoor(karnataka)"
+      "naguru",
+      "nagoor"
     ]
   },
-  "naguru(karanataka)": {
+  "naguru": {
     sourceCity: [
-      "naguru(karanataka)",
-      "nagoor(karnataka)"
+      "naguru",
+      "nagoor"
     ]
   },
   "yawal": {
@@ -1938,10 +1936,10 @@ export const cityMapping = {
       "thanjavur"
     ]
   },
-  "ranpur (gujarat)": {
+  "ranpur ": {
     sourceCity: [
-      "ranpur (gujarat)",
-      "ranpur (gujarat)"
+      "ranpur ",
+      "ranpur "
     ]
   },
   "t.kallupatti": {
@@ -1988,22 +1986,22 @@ export const cityMapping = {
   },
   "vallabh vidyanagar": {
     sourceCity: [
-      "vidhyanagar (anand)",
-      "vidhyanagar (vallabh vidyanagar)",
+      "vidhyanagar ",
+      "vidhyanagar",
       "vallabh vidyanagar"
     ]
   },
-  "vidhyanagar (anand)": {
+  "vidhyanagar ": {
     sourceCity: [
-      "vidhyanagar (anand)",
-      "vidhyanagar (vallabh vidyanagar)",
+      "vidhyanagar ",
+      "vidhyanagar",
       "vallabh vidyanagar"
     ]
   },
-  "vidhyanagar (vallabh vidyanagar)": {
+  "vidhyanagar": {
     sourceCity: [
-      "vidhyanagar (anand)",
-      "vidhyanagar (vallabh vidyanagar)",
+      "vidhyanagar ",
+      "vidhyanagar",
       "vallabh vidyanagar"
     ]
   },
@@ -2019,10 +2017,10 @@ export const cityMapping = {
       "mayiladuthurai"
     ]
   },
-  "kovur (nellore)": {
+  "kovur": {
     sourceCity: [
-      "kovur (nellore)",
-      "kovur (nellore)"
+      "kovur",
+      "kovur"
     ]
   },
   "tiruchirapalli": {
@@ -2049,28 +2047,28 @@ export const cityMapping = {
       "yerra guntla"
     ]
   },
-  "pamarru (krishna district)": {
+  "pamarru ": {
     sourceCity: [
-      "pamaru(krishna district) ",
-      "pamarru (krishna district)"
+      "pamaru ",
+      "pamarru "
     ]
   },
-  "pamaru(krishna district) ": {
+  "pamaru ": {
     sourceCity: [
-      "pamaru(krishna district) ",
-      "pamarru (krishna district)"
+      "pamaru ",
+      "pamarru "
     ]
   },
-  "rajpara (tansa)": {
+  "rajpara ": {
     sourceCity: [
-      "rajpara(tansa)",
-      "rajpara (tansa)"
+      "rajpara",
+      "rajpara "
     ]
   },
-  "rajpara(tansa)": {
+  "rajpara": {
     sourceCity: [
-      "rajpara(tansa)",
-      "rajpara (tansa)"
+      "rajpara",
+      "rajpara "
     ]
   },
   "delhi": {
