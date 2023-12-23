@@ -102,13 +102,17 @@ const LandingPage = () => {
 
   const handleSearchClick = () => {
     if (fromLocation && toLocation && selectedDate) {
+      if (fromLocation.trim().toLowerCase() === toLocation.trim().toLowerCase()) {
+        alert("Source and destination cities cannot be the same.");
+        return;
+      }
+
       navigate(
         `/busbooking?from=${fromLocation}&to=${toLocation}&date=${selectedDate}`
       );
     } else {
       alert("Please enter values for all fields");
     }
-
   };
 
   const fetchLocationSuggestions = async (query, setLocationSuggestions) => {
