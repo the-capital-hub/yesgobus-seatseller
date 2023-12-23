@@ -25,6 +25,7 @@ import "./App.scss";
 import CabDriverRoutes from "./routes/CabDriverRoutes";
 import AdminRoutes from "./routes/AdminRoutes";
 import { AdminCreateAccount, AdminLogin } from "./pages/Admin";
+import AdminAccountDetails from "./pages/Admin/AdminAccountDetails/AdminAccountDetails";
 
 function App() {
   const dispatch = useDispatch();
@@ -89,7 +90,10 @@ function App() {
 
         {/* Admin */}
         <Route path="/admin/create-account" element={<AdminCreateAccount />} />
-        <Route path="/admin/user-details" element={<p>Details</p>} />
+        <Route
+          path="/admin/account-details"
+          element={<AdminAccountDetails />}
+        />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/*" element={<AdminRoutes />} />
       </Routes>
