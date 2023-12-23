@@ -1,0 +1,80 @@
+.cab_driver_home {
+    .assign_vehicle {
+      padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    height: 160px;
+    h4 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    p {
+      font-size: 12px;
+      font-weight: 400;
+    }
+    .VehicleAssigned{
+        border: 1px solid rgba(0, 0, 0, 0.164);
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        border-radius: 10px;
+    }
+    button{
+        border: none;
+        outline: none;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        border-radius: 5px;
+        width: 95%;
+        background: #fd5901;
+        color: white;
+    margin-top: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    }
+  }
+  .map_with_selector{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+      .vehicle_selector {
+      
+        background: white;
+        position: absolute;
+        top: -90px;
+      }
+button{
+    border: none;
+    outline: none;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-radius: 5px;
+    width: 95%;
+    background: #fd5901;
+    color: white;
+    position: absolute;
+    bottom: 40px;
+
+}
+.stop_btn{
+    border: none;
+    outline: none;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-radius: 5px;
+    width: 95%;
+    background: #FF0000;
+    color: white;
+    position: absolute;
+    bottom: 40px;
+}
+  }
+}

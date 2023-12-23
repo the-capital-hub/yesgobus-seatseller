@@ -1,0 +1,43 @@
+.cabe_driver_ride_section{
+    position: relative;
+    .back_btn {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      color: black;
+      background: #ffffff;
+      padding: 10px;
+      border-radius: 100%;
+      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+      display: flex;
+      justify-content: center;
+    }
+    .ride_section{
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+
+        button{
+            border: none;
+            outline: none;
+            padding-left: 15px;
+            padding-right: 15px;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            border-radius: 5px;
+            width: 95%;
+            background: #fd5901;
+            color: white;
+            margin-left: auto;
+            margin-right: auto;
+        
+        }
+        a{
+           color: white;
+           text-decoration: none;
+        }
+    }
+}

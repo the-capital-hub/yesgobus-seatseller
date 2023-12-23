@@ -1,0 +1,20 @@
+.Vehicle_selector{
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.26);
+    border-radius: 10px;
+    // height: 160px;
+    width: 340px;
+    .selectors{
+display: flex;
+flex-direction: column;
+gap: 5px;
+select{
+    height: 54px;
+    background: #fd590127    ;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid rgba(0, 0, 0, 0.26);
+
+}
+    }
+}

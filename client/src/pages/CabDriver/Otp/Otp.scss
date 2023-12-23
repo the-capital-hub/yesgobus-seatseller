@@ -1,0 +1,98 @@
+.Otp{
+    position: relative;
+    .back_btn {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      color: black;
+      background: #ffffff;
+      padding: 10px;
+      border-radius: 100%;
+      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+      display: flex;
+      justify-content: center;
+    }
+    .otp_data{
+        position: absolute;
+        bottom: 2px;
+        left: 0px;
+        right: 0px;
+        // height: 120px;
+        border-top-right-radius: 20px;
+        border-top-left-radius: 20px;
+        border-top: 1px solid rgba(0, 0, 0, 0.219);
+        // padding: 10px;
+        padding-top: 30px;
+        padding-right: 10px;
+        padding-left: 10px;
+        padding-bottom: 10px;
+
+        background: #ffffff;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        p{
+            text-align: center;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .otp_input_card{
+            background: #0000002c;
+            height: 50px;
+            padding: 8px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+justify-content: center;           
+ input{
+                height: 62px;
+                
+                background: transparent;
+                border: none;
+            outline: none;
+            color: white;
+
+            }
+        }
+    }
+    .buttons{
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        button{
+           
+            background:#fd5901 ;
+            border: none;
+            outline: none;
+            padding-left: 15px;
+            padding-right: 15px;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            color: white;
+            width: 95%;
+            border-radius: 5px;
+
+        }
+        a{
+            display: flex;
+            justify-content: center;
+            text-decoration: none;
+            width: 95%;
+            background: #fd5901;
+            color: white;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+
+
+        }
+        .call_btn{
+            background: #008000;
+        }
+    }
+
+}
