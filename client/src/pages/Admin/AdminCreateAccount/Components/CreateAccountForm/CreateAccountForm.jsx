@@ -1,14 +1,18 @@
 import { Button } from "antd";
 import { useState } from "react";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function CreateAccountForm() {
+  const navigate = useNavigate();
+
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
   async function handleCreateAccountSubmit(e) {
     e.preventDefault();
+
+    navigate("/admin/account-details");
   }
 
   return (
@@ -73,7 +77,7 @@ export default function CreateAccountForm() {
         >
           Login to Account
         </Link>
-        <Button htmlType="button" type="primary" shape="round" size="large">
+        <Button htmlType="submit" type="primary" shape="round" size="large">
           Create Account
         </Button>
       </div>
