@@ -1,5 +1,42 @@
+// Validation Regex
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_REGEX = /^\d{10}$/;
+
+// form initial state
+export const INITIAL_REGISTER_FORMDATA = [
+  {
+    name: ["firstName"],
+    value: "",
+  },
+  {
+    name: ["lastName"],
+    value: "",
+  },
+  {
+    name: ["phNum"],
+    value: "",
+  },
+  {
+    name: ["email"],
+    value: "",
+  },
+  {
+    name: ["pincode"],
+    value: "",
+  },
+  {
+    name: ["accHolderName"],
+    value: "",
+  },
+  {
+    name: ["bankAccNum"],
+    value: "",
+  },
+  {
+    name: ["ifsc"],
+    value: "",
+  },
+];
 
 export function validateCreateAccountData(formData) {
   let error = {

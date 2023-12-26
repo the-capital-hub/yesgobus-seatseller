@@ -6,53 +6,18 @@ import PersonalDetails from "./Components/PersonalDetails/PersonalDetails";
 import BankingDetails from "./Components/BankingDetails/BankingDetails";
 import { useEffect, useState } from "react";
 import { agentRegisterAPI } from "../../../api/admin";
-
-const INITIAL_FORMDATA = [
-  {
-    name: ["firstName"],
-    value: "",
-  },
-  {
-    name: ["lastName"],
-    value: "",
-  },
-  {
-    name: ["phNum"],
-    value: "",
-  },
-  {
-    name: ["email"],
-    value: "",
-  },
-  {
-    name: ["pincode"],
-    value: "",
-  },
-  {
-    name: ["accHolderName"],
-    value: "",
-  },
-  {
-    name: ["bankAccNum"],
-    value: "",
-  },
-  {
-    name: ["ifsc"],
-    value: "",
-  },
-];
+import { INITIAL_REGISTER_FORMDATA } from "../../../utils/Admin/CreateAccountHelpers";
 
 export default function AdminAccountDetails() {
   const navigate = useNavigate();
   const location = useLocation();
   const incomingData = location.state;
 
-  const [fields, setFields] = useState(INITIAL_FORMDATA);
+  const [fields, setFields] = useState(INITIAL_REGISTER_FORMDATA);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
 
   useEffect(() => {
-    console.log("incomingData", incomingData);
     const { firstName, lastName, phNum, email } = incomingData;
     form.setFieldsValue({
       firstName: firstName,
@@ -63,13 +28,14 @@ export default function AdminAccountDetails() {
   }, [incomingData, form]);
 
   async function handleDetailsSubmit(values) {
-    console.log("currentValues", values);
     let formData = { ...values, password: incomingData.password };
+    console.log("formData", formData);
 
     try {
       setLoading(true);
       const response = await agentRegisterAPI(formData);
       console.log("register response", response);
+      navigate("/admin/login");
     } catch (error) {
       console.error("Error Registering User:", error);
     } finally {
