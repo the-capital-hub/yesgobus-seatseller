@@ -41,7 +41,7 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs, a
         });
       }
     }
-  }, [isSrs, filters, allSrsBusOperators])
+  }, [isSrs, allSrsBusOperators])
 
   useEffect(() => {
     const getFilters = async () => {
@@ -81,39 +81,39 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs, a
             //   }
             // );
           } catch (error) {
-            console.error("Error fetching filters:", error);
+            // console.error("Error fetching filters:", error);
           }
 
           try {
             srsResponse = await getSrsBuseFilters(
-              sourceCity,
-              destinationCity,
+              sourceCity.trim(),
+              destinationCity.trim(),
               doj
             );
           } catch (error) {
-            console.error("Error fetching filters:", error);
+            // console.error("Error fetching filters:", error);
           }
 
           try {
             vrlResponse = await getVrlBusFilters({
-              sourceCity: sourceCity,
-              destinationCity: destinationCity,
+              sourceCity: sourceCity.trim(),
+              destinationCity: destinationCity.trim(),
               doj: doj,
             });
           } catch (error) {
-            console.error("Error fetching filters:", error);
+            // console.error("Error fetching filters:", error);
           }
 
-          // Ensure that the values are arrays before spreading
+
           combinedBoardingPoints = combinedBoardingPoints.concat(
             vrlResponse?.data?.boardingPoints || [],
             srsResponse?.boardingPoints || [],
-            response?.data?.data?.boardingPoints || []
+            // response?.data?.data?.boardingPoints || []
           );
 
           combinedDroppingPoints = combinedDroppingPoints.concat(
             vrlResponse?.data?.droppingPoints || [],
-            response?.data?.data?.droppingPoints || [],
+            // response?.data?.data?.droppingPoints || [],
             srsResponse?.droppingPoints || []
           );
 
@@ -127,14 +127,15 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs, a
         }
       }
       // Create Set objects to remove duplicates
-      const uniqueBoardingPointsSet = new Set(combinedBoardingPoints.map(point => point.toLowerCase()));
-      const uniqueDroppingPointsSet = new Set(combinedDroppingPoints.map(point => point.toLowerCase()));
-      const uniqueBusPartnersSet = new Set(combiledBusPartners.map(partner => partner.toLowerCase()));
+      const uniqueBoardingPointsSet = new Set(combinedBoardingPoints.map(point => point));
+      const uniqueDroppingPointsSet = new Set(combinedDroppingPoints.map(point => point));
+      const uniqueBusPartnersSet = new Set(combiledBusPartners.map(partner => partner?.toLowerCase()));
 
       // Convert Set objects to arrays
       const uniqueBoardingPoints = [...uniqueBoardingPointsSet];
       const uniqueDroppingPoints = [...uniqueDroppingPointsSet];
       const uniqueBusPartners = [...uniqueBusPartnersSet];
+
       setFilters({
         ...response?.data?.data || [],
         boardingPoints: uniqueBoardingPoints,

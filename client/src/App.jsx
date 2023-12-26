@@ -26,6 +26,7 @@ import CabDriverRoutes from "./routes/CabDriverRoutes";
 import AdminRoutes from "./routes/AdminRoutes";
 import { AdminCreateAccount, AdminLogin } from "./pages/Admin";
 import AdminAccountDetails from "./pages/Admin/AdminAccountDetails/AdminAccountDetails";
+import NotFoundPage from "./pages/Error/NotFoundPage/NotFoundPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -96,6 +97,11 @@ function App() {
         />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/*" element={<AdminRoutes />} />
+
+
+        {/* 404 Not Found */}
+        <Route path="*" element={<NotFoundPage />} />
+
       </Routes>
     </BrowserRouter>
   );

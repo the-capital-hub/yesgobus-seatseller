@@ -130,13 +130,35 @@ const LandingPage = () => {
     }
   };
 
+  // useEffect(() => {
+  //   if (fromLocation) {
+  //     fetchLocationSuggestions(fromLocation, setLocationOneSuggestions);
+  //   }
+  //   if (toLocation) {
+  //     fetchLocationSuggestions(toLocation, setLocationTwoSuggestions);
+  //   }
+  // }, [fromLocation, toLocation]);
+
   useEffect(() => {
-    if (fromLocation) {
-      fetchLocationSuggestions(fromLocation, setLocationOneSuggestions);
-    }
-    if (toLocation) {
-      fetchLocationSuggestions(toLocation, setLocationTwoSuggestions);
-    }
+    let debounceTimer;
+
+    const handleQueryChange = () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        if (fromLocation) {
+          fetchLocationSuggestions(fromLocation, setLocationOneSuggestions);
+        }
+        if (toLocation) {
+          fetchLocationSuggestions(toLocation, setLocationTwoSuggestions);
+        }
+      }, 500);
+    };
+
+    handleQueryChange();
+
+    return () => {
+      clearTimeout(debounceTimer);
+    };
   }, [fromLocation, toLocation]);
 
   return (
