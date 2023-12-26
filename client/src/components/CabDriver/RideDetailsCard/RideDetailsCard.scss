@@ -1,0 +1,102 @@
+.cab_driver_ride_details{
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.219);
+    padding: 10px;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    p{
+        font-size: 12px;
+    }
+    .type_with_time{
+        display: flex;
+        justify-content: space-between;
+        
+        h4{
+            font-size: 18px;
+            font-weight: 600;
+        }
+       
+    }
+    .user_ride_data_card{
+        background: #0000002c;
+        padding: 8px;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        h4{
+            color: #FD5901;
+            font-size: 18px;
+            font-weight: 600;
+        }
+       
+
+    }
+    .pickup_data, .drop_data{
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        
+    }
+    .pickup_data{
+        padding-bottom: 5px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.178);
+    }
+    .buttons{
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        button{
+           
+            // background:#fd5901 ;
+            border: none;
+            outline: none;
+            padding-left: 15px;
+            padding-right: 15px;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            color: white;
+        }
+        a{
+            display: flex;
+            justify-content: center;
+            text-decoration: none;
+            width: 95%;
+            // background: #fd5901;
+            color: white;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+
+
+        }
+    }
+    .CODTYPE{
+        span{
+            color: #FD5901;
+        }
+        button{
+            margin-top: 10px;
+   background: #008000;
+                border: none;
+                outline: none;
+                padding-left: 15px;
+                padding-right: 15px;
+                padding-top: 8px;
+                padding-bottom: 8px;
+                text-align: center;
+                margin-left: auto;
+                margin-right: auto;
+                color: white;
+                width: 95%;
+                border-radius: 5px;
+        }
+    }
+}
