@@ -40,7 +40,7 @@ const PaymentSuccess = () => {
 
   return (
     <div className="PaymentSuccess">
-      <div className="container">
+      <div className="success-container">
         <img src={successful} alt="" />
         <h1>Payment Successful</h1>
         {/* <p>YSB Ticket Number: {bookingDetails?._id}</p> */}

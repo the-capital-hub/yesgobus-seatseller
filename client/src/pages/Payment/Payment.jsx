@@ -24,7 +24,6 @@ import { vrlBlockSeat, vrlBookSeat } from "../../api/vrlBusesApis";
 import { srsBlockSeat, srsConfirmBooking } from "../../api/srsBusesApis";
 
 const Payment = () => {
-
   const [loading, setLoading] = useState(false);
   const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
   if (!loggedInUser) {
@@ -61,7 +60,7 @@ const Payment = () => {
     }
   }, [startCountdown, countdown]);
 
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -103,9 +102,11 @@ const Payment = () => {
     const mins = minutes % 60;
     const journeyDay = Math.floor(hours / 24);
     const hour = hours % 24;
-    const ampm = hour < 12 ? 'am' : 'pm';
+    const ampm = hour < 12 ? "am" : "pm";
     const displayHour = hour > 12 ? hour - 12 : hour;
-    const formattedTime = `${displayHour.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')} ${ampm}`;
+    const formattedTime = `${displayHour.toString().padStart(2, "0")}:${mins
+      .toString()
+      .padStart(2, "0")} ${ampm}`;
     return formattedTime;
   }
 
@@ -116,14 +117,18 @@ const Payment = () => {
         setLoading(true);
         // get bookings
         const getBookingDetails = await axiosInstance.get(
-          `${import.meta.env.VITE_BASE_URL}/api/busBooking/getBookingById/${bookingId}`
+          `${
+            import.meta.env.VITE_BASE_URL
+          }/api/busBooking/getBookingById/${bookingId}`
         );
         if (getBookingDetails.status === 200) {
-          const merchantTransactionId = getBookingDetails?.data?.data.merchantTransactionId;
+          const merchantTransactionId =
+            getBookingDetails?.data?.data.merchantTransactionId;
 
           // check payment status
           const checkPaymentStatus = await axiosInstance.get(
-            `${import.meta.env.VITE_BASE_URL
+            `${
+              import.meta.env.VITE_BASE_URL
             }/api/payment/checkPaymentStatus/${merchantTransactionId}`
           );
 
@@ -132,20 +137,24 @@ const Payment = () => {
 
             if (getBookingDetails?.data?.data.isVrl) {
               const requestbody = {
-                ...getBookingDetails?.data?.data.reservationSchema[0]
-              }
-              let { data: vrlBookSeatResponse } = await vrlBookSeat(requestbody);
-              vrlBookSeatResponse = vrlBookSeatResponse[0]
+                ...getBookingDetails?.data?.data.reservationSchema[0],
+              };
+              let { data: vrlBookSeatResponse } = await vrlBookSeat(
+                requestbody
+              );
+              vrlBookSeatResponse = vrlBookSeatResponse[0];
               if (vrlBookSeatResponse.Status === 1) {
-                const { data: updatePaymentDetails } = await axiosInstance.patch(
-                  `${import.meta.env.VITE_BASE_URL
-                  }/api/busBooking/updateBooking/${bookingId}`,
-                  {
-                    bookingStatus: "paid",
-                    opPNR: vrlBookSeatResponse?.PNRNO,
-                    buspnr: vrlBookSeatResponse?.PNRNO,
-                  }
-                );
+                const { data: updatePaymentDetails } =
+                  await axiosInstance.patch(
+                    `${
+                      import.meta.env.VITE_BASE_URL
+                    }/api/busBooking/updateBooking/${bookingId}`,
+                    {
+                      bookingStatus: "paid",
+                      opPNR: vrlBookSeatResponse?.PNRNO,
+                      buspnr: vrlBookSeatResponse?.PNRNO,
+                    }
+                  );
                 if (updatePaymentDetails) {
                   const mailBody = {
                     fullName: updatePaymentDetails?.data.customerName,
@@ -155,12 +164,16 @@ const Payment = () => {
                     amount: updatePaymentDetails?.data.totalAmount,
                     pickUpLocation: updatePaymentDetails?.data.boardingPoint,
                     opPNR: updatePaymentDetails?.data.opPNR,
-                    doj: formatDate(updatePaymentDetails?.data.doj) + " " + updatePaymentDetails?.data.pickUpTime,
+                    doj:
+                      formatDate(updatePaymentDetails?.data.doj) +
+                      " " +
+                      updatePaymentDetails?.data.pickUpTime,
                     to: updatePaymentDetails?.data.customerEmail,
                     contact: updatePaymentDetails?.data?.driverNumber,
-                  }
+                  };
                   const sendMail = await axiosInstance.post(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationEmail`,
                     mailBody
                   );
@@ -174,14 +187,18 @@ const Payment = () => {
                     amount: updatePaymentDetails?.data.totalAmount,
                     pickUpLocation: updatePaymentDetails?.data.boardingPoint,
                     opPNR: updatePaymentDetails?.data.opPNR,
-                    doj: formatDate(updatePaymentDetails?.data.doj) + " " + updatePaymentDetails?.data.pickUpTime,
+                    doj:
+                      formatDate(updatePaymentDetails?.data.doj) +
+                      " " +
+                      updatePaymentDetails?.data.pickUpTime,
                     to: updatePaymentDetails?.data.customerPhone,
                     contact: updatePaymentDetails?.data?.driverNumber,
-                  }
+                  };
                   const sendMessage = await axiosInstance.post(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationMessage`,
-                    messageBody,
+                    messageBody
                   );
                 }
                 setLoading(false);
@@ -190,21 +207,27 @@ const Payment = () => {
                 setLoading(false);
                 navigate("/busbooking/payment/failure");
               }
-
             } else if (getBookingDetails?.data?.data.isSrs) {
               let srsBookSeatResponse = await srsConfirmBooking(blockTicketId);
 
               if (srsBookSeatResponse.result) {
-                const { data: updatePaymentDetails } = await axiosInstance.patch(
-                  `${import.meta.env.VITE_BASE_URL
-                  }/api/busBooking/updateBooking/${bookingId}`,
-                  {
-                    bookingStatus: "paid",
-                    opPNR: srsBookSeatResponse?.result.ticket_details.operator_pnr,
-                    buspnr: srsBookSeatResponse?.result.ticket_details.travel_operator_pnr,
-                    cancellationPolicy: srsBookSeatResponse?.result.ticket_details.ts_cancellation_policies,
-                  }
-                );
+                const { data: updatePaymentDetails } =
+                  await axiosInstance.patch(
+                    `${
+                      import.meta.env.VITE_BASE_URL
+                    }/api/busBooking/updateBooking/${bookingId}`,
+                    {
+                      bookingStatus: "paid",
+                      opPNR:
+                        srsBookSeatResponse?.result.ticket_details.operator_pnr,
+                      buspnr:
+                        srsBookSeatResponse?.result.ticket_details
+                          .travel_operator_pnr,
+                      cancellationPolicy:
+                        srsBookSeatResponse?.result.ticket_details
+                          .ts_cancellation_policies,
+                    }
+                  );
                 if (updatePaymentDetails) {
                   const mailBody = {
                     fullName: updatePaymentDetails?.data.customerName,
@@ -214,12 +237,16 @@ const Payment = () => {
                     amount: updatePaymentDetails?.data.totalAmount,
                     pickUpLocation: updatePaymentDetails?.data.boardingPoint,
                     opPNR: updatePaymentDetails?.data.opPNR,
-                    doj: formatDate(updatePaymentDetails?.data.doj) + " " + updatePaymentDetails?.data.pickUpTime,
+                    doj:
+                      formatDate(updatePaymentDetails?.data.doj) +
+                      " " +
+                      updatePaymentDetails?.data.pickUpTime,
                     to: updatePaymentDetails?.data.customerEmail,
                     contact: updatePaymentDetails?.data?.driverNumber,
-                  }
+                  };
                   const sendMail = await axiosInstance.post(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationEmail`,
                     mailBody
                   );
@@ -233,15 +260,18 @@ const Payment = () => {
                     amount: updatePaymentDetails?.data.totalAmount,
                     pickUpLocation: updatePaymentDetails?.data.boardingPoint,
                     opPNR: updatePaymentDetails?.data.opPNR,
-                    doj: formatDate(updatePaymentDetails?.data.doj) + " " + updatePaymentDetails?.data.pickUpTime,
+                    doj:
+                      formatDate(updatePaymentDetails?.data.doj) +
+                      " " +
+                      updatePaymentDetails?.data.pickUpTime,
                     to: updatePaymentDetails?.data.customerPhone,
                     contact: updatePaymentDetails?.data?.driverNumber,
-
-                  }
+                  };
                   const sendMessage = await axiosInstance.post(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationMessage`,
-                    messageBody,
+                    messageBody
                   );
                 }
                 setLoading(false);
@@ -250,16 +280,17 @@ const Payment = () => {
                 setLoading(false);
                 navigate("/busbooking/payment/failure");
               }
-            } else if (!getBookingDetails?.data?.data.isVrl && !getBookingDetails?.data?.data.isSrs) {
+            } else if (
+              !getBookingDetails?.data?.data.isVrl &&
+              !getBookingDetails?.data?.data.isSrs
+            ) {
               // // book seat
               // const bookSeat = await axiosInstance.post(
               //   `${import.meta.env.VITE_BASE_URL
               //   }/api/busBooking/bookSeat/${blockTicketId}`
               // );
-
               // // if booking is successfull
               // if (bookSeat.data.status === "success") {
-
               //   // update booking in the db
               //   const { data: updatePaymentDetails } = await axiosInstance.patch(
               //     `${import.meta.env.VITE_BASE_URL
@@ -274,7 +305,6 @@ const Payment = () => {
               //   const { data: ticketDetails } = await axiosInstance.get(
               //     `${import.meta.env.VITE_BASE_URL}/api/busBooking/getBookingById/${bookingId}`
               //   )
-
               //   if (ticketDetails) {
               //     // send mail
               //     const mailBody = {
@@ -293,7 +323,6 @@ const Payment = () => {
               //       }/api/busBooking/sendBookingConfirmationEmail`,
               //       mailBody
               //     );
-
               //     //send sms
               //     const messageBody = {
               //       fullName: updatePaymentDetails?.data.customerName,
@@ -340,13 +369,12 @@ const Payment = () => {
   const date = new Date();
 
   function formatDate(dateString) {
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    const options = { year: "numeric", month: "2-digit", day: "2-digit" };
     return new Date(dateString).toLocaleDateString(undefined, options);
   }
 
   //handle payment
   const handlePayment = async () => {
-
     //validate input
     const errors = validateUserData();
     if (errors.femaleReserved === true) {
@@ -365,9 +393,16 @@ const Payment = () => {
       try {
         const totalPassenger = bookingDetails?.selectedSeats?.length;
 
-        const seatAndGenderArray = bookingDetails?.selectedSeats?.map((seat, index) => `${seat},${userData[`gender_${index}`]}`);
+        const seatAndGenderArray = bookingDetails?.selectedSeats?.map(
+          (seat, index) => `${seat},${userData[`gender_${index}`]}`
+        );
         const resultSeatString = seatAndGenderArray.join("|");
-        const seatDetailsWithName = bookingDetails?.selectedSeats?.map((seat, index) => `${seat},${userData[`firstName_${index}`]},${userData.mobile},${userData[`age_${index}`]}`);
+        const seatDetailsWithName = bookingDetails?.selectedSeats?.map(
+          (seat, index) =>
+            `${seat},${userData[`firstName_${index}`]},${userData.mobile},${
+              userData[`age_${index}`]
+            }`
+        );
         const resultseatDetailsWithNameString = seatDetailsWithName.join("|");
 
         const blockSeatRequestBody = {
@@ -379,25 +414,32 @@ const Payment = () => {
           pickupID: parseInt(bookingDetails?.boardingPoint?.bpId),
           payableAmount: bookingDetails?.totalFare,
           totalPassengers: totalPassenger,
-        }
+        };
 
-        let { data: vrlBlockSeatResponse } = await vrlBlockSeat(blockSeatRequestBody);
+        let { data: vrlBlockSeatResponse } = await vrlBlockSeat(
+          blockSeatRequestBody
+        );
         vrlBlockSeatResponse = vrlBlockSeatResponse[0];
 
-        const seatObjects = bookingDetails?.selectedSeats?.map((seatId, index) => {
-          const title = userData[`gender_${index}`] === 'M' ? "M" : "F";
-          return {
-            seatName: seatId + "," + title,
-            paxName: userData[`firstName_${index}`] + " " + userData[`lastName_${index}`],
-            mobileNo: userData.mobile,
-            paxAge: userData[`age_${index}`],
-            baseFare: bookingDetails?.seatFares[index],
-            gstFare: bookingDetails?.seatTaxes[index],
-            totalFare: bookingDetails?.seatTotalFares[index],
-            idProofId: 0,
-            idProofDetails: ""
+        const seatObjects = bookingDetails?.selectedSeats?.map(
+          (seatId, index) => {
+            const title = userData[`gender_${index}`] === "M" ? "M" : "F";
+            return {
+              seatName: seatId + "," + title,
+              paxName:
+                userData[`firstName_${index}`] +
+                " " +
+                userData[`lastName_${index}`],
+              mobileNo: userData.mobile,
+              paxAge: userData[`age_${index}`],
+              baseFare: bookingDetails?.seatFares[index],
+              gstFare: bookingDetails?.seatTaxes[index],
+              totalFare: bookingDetails?.seatTotalFares[index],
+              idProofId: 0,
+              idProofDetails: "",
+            };
           }
-        });
+        );
         const bookingReservationDetails = {
           referenceNumber: ReferenceNumber,
           passengerName: userData[`firstName_0`],
@@ -415,7 +457,7 @@ const Payment = () => {
           gstCompanyName: "",
           gstRegNo: "",
           apipnrNo: vrlBlockSeatResponse.BlockID,
-        }
+        };
 
         if (vrlBlockSeatResponse.Status === 1) {
           const { data: bookResponse } = await axiosInstance.post(
@@ -457,8 +499,9 @@ const Payment = () => {
           if (response.status === 200) {
             // update merchantTransactionId
             const updatePaymentDetails = await axiosInstance.patch(
-              `${import.meta.env.VITE_BASE_URL
-              }/api/busBooking/updateBooking/${bookResponse.data._id}`,
+              `${import.meta.env.VITE_BASE_URL}/api/busBooking/updateBooking/${
+                bookResponse.data._id
+              }`,
               {
                 merchantTransactionId: response.data.data.merchantTransactionId,
               }
@@ -490,25 +533,30 @@ const Payment = () => {
         console.log(error);
         console.error("Something went wrong:", error);
       }
-
-    } if (isSrs) {
+    }
+    if (isSrs) {
       try {
-        const seatObjects = bookingDetails?.selectedSeats?.map((seatId, index) => {
-          const isPrimary = index === 0;
-          const title = userData[`gender_${index}`] === 'M' ? "Mr" : "Ms";
-          return {
-            seat_number: seatId,
-            fare: bookingDetails?.seatFares[index],
-            title: title,
-            name: userData[`firstName_${index}`] + " " + userData[`lastName_${index}`],
-            age: userData[`age_${index}`],
-            sex: userData[`gender_${index}`],
-            is_primary: isPrimary,
-            id_card_type: "1",
-            id_card_number: "111111111",
-            id_card_issued_by: "oneone"
+        const seatObjects = bookingDetails?.selectedSeats?.map(
+          (seatId, index) => {
+            const isPrimary = index === 0;
+            const title = userData[`gender_${index}`] === "M" ? "Mr" : "Ms";
+            return {
+              seat_number: seatId,
+              fare: bookingDetails?.seatFares[index],
+              title: title,
+              name:
+                userData[`firstName_${index}`] +
+                " " +
+                userData[`lastName_${index}`],
+              age: userData[`age_${index}`],
+              sex: userData[`gender_${index}`],
+              is_primary: isPrimary,
+              id_card_type: "1",
+              id_card_number: "111111111",
+              id_card_issued_by: "oneone",
+            };
           }
-        });
+        );
 
         const srsBlockSeatBody = {
           book_ticket: {
@@ -519,7 +567,7 @@ const Payment = () => {
               mobile_number: userData.mobile,
               emergency_name: userData[`firstName_0`],
               email: userData.email,
-            }
+            },
           },
           origin_id: sourceCityId,
           destination_id: destinationCityId,
@@ -531,12 +579,15 @@ const Payment = () => {
             name: "Yesgobus",
             gst_id: "T123DT",
             address: "Test",
-          }
+          },
         };
 
-        let srsBlockSeatResponse = await srsBlockSeat(scheduleId, srsBlockSeatBody);
+        let srsBlockSeatResponse = await srsBlockSeat(
+          scheduleId,
+          srsBlockSeatBody
+        );
         if (srsBlockSeatResponse.result) {
-          const srsResponse = srsBlockSeatResponse.result.ticket_details
+          const srsResponse = srsBlockSeatResponse.result.ticket_details;
 
           const { data: bookResponse } = await axiosInstance.post(
             `${import.meta.env.VITE_BASE_URL}/api/busBooking/bookBus`,
@@ -577,8 +628,9 @@ const Payment = () => {
           if (response.status === 200) {
             // update merchantTransactionId
             const updatePaymentDetails = await axiosInstance.patch(
-              `${import.meta.env.VITE_BASE_URL
-              }/api/busBooking/updateBooking/${bookResponse.data._id}`,
+              `${import.meta.env.VITE_BASE_URL}/api/busBooking/updateBooking/${
+                bookResponse.data._id
+              }`,
               {
                 merchantTransactionId: response.data.data.merchantTransactionId,
               }
@@ -599,14 +651,12 @@ const Payment = () => {
             setCountdown(10);
             setErrorMessage("Please try with other seat or bus.");
           }
-
         } else {
           setLoadingModalVisible(false);
           setStartCountdown(false);
           setCountdown(10);
           setErrorMessage(srsBlockSeatResponse.response.message);
         }
-
       } catch (error) {
         setLoadingModalVisible(false);
         console.log(error);
@@ -632,7 +682,6 @@ const Payment = () => {
       //       primary: isPrimary,
       //       title: title,
       //     }
-
       //   };
       // });
       // try {
@@ -650,7 +699,6 @@ const Payment = () => {
       //     `${import.meta.env.VITE_BASE_URL}/api/busBooking/blockSeat`,
       //     blockSeatRequestBody
       //   );
-
       //   // change this when you get API key
       //   if (blockSeat?.data?.blockKey) {
       //     // setLoading(false);
@@ -679,7 +727,6 @@ const Payment = () => {
       //         customerAddress: userData.address,
       //       }
       //     );
-
       //     //initiate payment
       //     const response = await axiosInstance.post(
       //       `${import.meta.env.VITE_BASE_URL}/api/payment/initiatePayment`,
@@ -688,7 +735,6 @@ const Payment = () => {
       //         redirectUrl: `https://yesgobus.com/busbooking/payment?blockTicketId=${blockSeat.data.blockKey}&bookingId=${bookResponse.data._id}&paymentVerify=1`,
       //       }
       //     );
-
       //     if (response.status === 200) {
       //       // update merchantTransactionId
       //       const updatePaymentDetails = await axiosInstance.patch(
@@ -736,7 +782,6 @@ const Payment = () => {
     });
   };
 
-
   //validation
   const validateUserData = () => {
     const numberOfTravelers = bookingDetails?.selectedSeats?.length;
@@ -748,7 +793,9 @@ const Payment = () => {
       const genderKey = `gender_${index}`;
 
       if (!userData[firstNameKey]?.trim()) {
-        errors[firstNameKey] = `First name for Traveler ${index + 1} is required`;
+        errors[firstNameKey] = `First name for Traveler ${
+          index + 1
+        } is required`;
       }
       if (!userData[lastNameKey]?.trim()) {
         errors[lastNameKey] = `Last name for Traveler ${index + 1} is required`;
@@ -759,7 +806,10 @@ const Payment = () => {
       if (!userData[genderKey]?.trim()) {
         errors[genderKey] = `Gender for Traveler ${index + 1} is required`;
       }
-      if (bookingDetails.ladiesSeat[index] === true && userData[genderKey] === "M") {
+      if (
+        bookingDetails.ladiesSeat[index] === true &&
+        userData[genderKey] === "M"
+      ) {
         errors.femaleReserved = true;
       }
     }
@@ -787,7 +837,7 @@ const Payment = () => {
         returnDate={"- - -"}
       /> */}
       <hr />
-      <div className="container">
+      <div className="payment-container">
         <div className="containerleft">
           <h5>Review your booking</h5>
           <RoutesTitle
@@ -827,13 +877,25 @@ const Payment = () => {
           <div className="destinations">
             <SimpleCard
               text={"Boarding Pass Details"}
-              date={isVrl ? bookingDetails?.boardingPoint?.time : isSrs ? bookingDetails?.boardingPoint?.time : convertMinutesToTime(bookingDetails?.boardingPoint?.time)}
+              date={
+                isVrl
+                  ? bookingDetails?.boardingPoint?.time
+                  : isSrs
+                  ? bookingDetails?.boardingPoint?.time
+                  : convertMinutesToTime(bookingDetails?.boardingPoint?.time)
+              }
               // locationOne={bookingDetails.boardingPoint.location}
               locationTwo={bookingDetails?.boardingPoint?.bpName}
             />
             <SimpleCard
               text={"Drop Point Details"}
-              date={isVrl ? bookingDetails?.droppingPoint?.time : isSrs ? bookingDetails?.droppingPoint?.time : convertMinutesToTime(bookingDetails?.droppingPoint?.time)}
+              date={
+                isVrl
+                  ? bookingDetails?.droppingPoint?.time
+                  : isSrs
+                  ? bookingDetails?.droppingPoint?.time
+                  : convertMinutesToTime(bookingDetails?.droppingPoint?.time)
+              }
               // locationOne={bookingDetails.droppingPoint.location}
               locationTwo={bookingDetails?.droppingPoint?.bpName}
             />
@@ -844,16 +906,20 @@ const Payment = () => {
             <h4>Enter Traveller Details:</h4>
             {bookingDetails?.selectedSeats?.map((seat, index) => (
               <div key={index} className="travelerDetails">
-                <h3 style={{ textAlign: "center" }}>Traveler {index + 1} | Seat {seat}</h3><br />
+                <h3 style={{ textAlign: "center" }}>
+                  Traveler {index + 1} | Seat {seat}
+                </h3>
+                <br />
                 <div className="detailsContainer">
-
                   <Input
                     title={"First Name"}
                     type={"text"}
                     placeholder={"First name"}
-                    onChanged={(e) => handleInputChange(e, `firstName_${index}`)}
+                    onChanged={(e) =>
+                      handleInputChange(e, `firstName_${index}`)
+                    }
                     givenName={`firstName_${index}`}
-                    value={userData[`firstName_${index}`] || ''}
+                    value={userData[`firstName_${index}`] || ""}
                   />
                   <Input
                     title={"Last Name"}
@@ -861,7 +927,7 @@ const Payment = () => {
                     placeholder={"Last name"}
                     onChanged={(e) => handleInputChange(e, `lastName_${index}`)}
                     givenName={`lastName_${index}`}
-                    value={userData[`lastName_${index}`] || ''}
+                    value={userData[`lastName_${index}`] || ""}
                   />
                   <Input
                     title={"Age"}
@@ -869,14 +935,14 @@ const Payment = () => {
                     placeholder={"Enter Age"}
                     onChanged={(e) => handleInputChange(e, `age_${index}`)}
                     givenName={`age_${index}`}
-                    value={userData[`age_${index}`] || ''}
+                    value={userData[`age_${index}`] || ""}
                   />
                   <div className="genderContainer">
                     <label htmlFor={`gender_${index}`}>Gender</label>
                     <select
                       name={`gender_${index}`}
                       id={`gender_${index}`}
-                      value={userData[`gender_${index}`] || ''}
+                      value={userData[`gender_${index}`] || ""}
                       onChange={(e) => handleInputChange(e, `gender_${index}`)}
                     >
                       <option value="">Select Gender</option>
@@ -888,7 +954,6 @@ const Payment = () => {
                 </div>
               </div>
             ))}
-
           </div>
 
           {/* Contact Details */}
@@ -991,7 +1056,7 @@ const Payment = () => {
                 <p>{"₹" + bookingDetails?.fare}</p>
               </div>
               <hr />
-              {bookingDetails?.serviceTax !== 0 &&
+              {bookingDetails?.serviceTax !== 0 && (
                 <>
                   <div className="price">
                     <p>Service Tax</p>
@@ -999,9 +1064,9 @@ const Payment = () => {
                   </div>
                   <hr />
                 </>
-              }
+              )}
 
-              {bookingDetails?.operatorTax !== 0 &&
+              {bookingDetails?.operatorTax !== 0 && (
                 <>
                   <div className="price">
                     <p>Operator Tax</p>
@@ -1009,7 +1074,7 @@ const Payment = () => {
                   </div>
                   <hr />
                 </>
-              }
+              )}
 
               <div className="price">
                 <p>Total</p>
@@ -1074,17 +1139,20 @@ const Payment = () => {
         maskClosable={false}
         className="loading-modal"
       >
-        <p className="loading-message">Loading... Taking you to the payment page in {countdown} seconds.</p>
+        <p className="loading-message">
+          Loading... Taking you to the payment page in {countdown} seconds.
+        </p>
       </Modal>
       {errorMessage && (
-        <div className="modal" onClick={() => setErrorMessage('')}>
+        <div className="modal" onClick={() => setErrorMessage("")}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <span className="close" onClick={() => setErrorMessage('')}>Close</span>
+            <span className="close" onClick={() => setErrorMessage("")}>
+              Close
+            </span>
             <p className="error-message">{errorMessage}</p>
           </div>
         </div>
       )}
-
     </div>
   );
 };

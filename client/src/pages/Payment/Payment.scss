@@ -3,8 +3,7 @@
     border: none;
     border-top: 2px dashed #a5a9ae;
   }
-  
-  
+
   .loading-spinner {
     position: fixed;
     top: 0;
@@ -39,7 +38,7 @@
     }
   }
 
-  .container {
+  .payment-container {
     display: flex;
     padding: 30px;
     justify-content: space-between;
@@ -153,7 +152,6 @@
               font-size: 22px;
               font-weight: 500;
               font-weight: bold !important;
-
             }
 
             select {
@@ -166,12 +164,11 @@
               font-size: 14px;
 
               &:focus {
-                border-color: #007BFF;
+                border-color: #007bff;
                 box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
               }
             }
           }
-
         }
       }
 
