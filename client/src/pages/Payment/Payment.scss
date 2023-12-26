@@ -299,7 +299,7 @@
 }
 
 @media (max-width: 768px) {
-  .container {
+  .payment-container {
     padding: 10px;
 
     .containerleft {
@@ -328,7 +328,7 @@
 
 @media (max-width: 752px) {
   .Payment {
-    .container {
+    .payment-container {
       flex-direction: column;
       justify-content: center;
 

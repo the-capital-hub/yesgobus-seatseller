@@ -143,9 +143,8 @@
 
 @media (max-width: 1024px) {
   .busBooking {
-    .container {
+    .busBooking-container {
       padding: 10px;
-
       .left {
         display: none;
       }
@@ -185,7 +184,7 @@
 
 @media (max-width: 426px) {
   .busBooking {
-    .container {
+    .busBooking-container {
       background-color: rgb(241, 241, 241);
       margin-bottom: 40px;
       .right {
