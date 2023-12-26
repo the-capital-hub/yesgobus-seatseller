@@ -1,16 +1,67 @@
 import { Button, Card, Col, Form, Input, InputNumber, Radio, Row } from "antd";
 import "./AdminAccountDetails.scss";
 import { LuChevronLeft } from "react-icons/lu";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import PersonalDetails from "./Components/PersonalDetails/PersonalDetails";
 import BankingDetails from "./Components/BankingDetails/BankingDetails";
+import { useEffect, useState } from "react";
+
+const INITIAL_FORMDATA = [
+  {
+    name: ["firstName"],
+    value: "",
+  },
+  {
+    name: ["lastName"],
+    value: "",
+  },
+  {
+    name: ["phNum"],
+    value: "",
+  },
+  {
+    name: ["email"],
+    value: "",
+  },
+  {
+    name: ["pincode"],
+    value: "",
+  },
+  {
+    name: ["accHolderName"],
+    value: "",
+  },
+  {
+    name: ["bankAccNum"],
+    value: "",
+  },
+  {
+    name: ["ifsc"],
+    value: "",
+  },
+];
 
 export default function AdminAccountDetails() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const incomingData = location.state;
 
-  async function handleDetailsSubmit(e) {
-    e.preventDefault();
-    console.log("Submitted");
+  const [fields, setFields] = useState(INITIAL_FORMDATA);
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    console.log("incomingData", incomingData);
+    const { firstName, lastName, phNum, email, password } = incomingData;
+    form.setFieldsValue({
+      firstName: firstName,
+      lastName: lastName,
+      phNum: phNum,
+      email: email,
+    });
+  }, [incomingData, form]);
+
+  async function handleDetailsSubmit(values) {
+    console.log("Submitted", values);
   }
 
   return (
@@ -33,6 +84,11 @@ export default function AdminAccountDetails() {
           layout="vertical"
           size="large"
           requiredMark="optional"
+          form={form}
+          fields={fields}
+          onFieldsChange={(_, allFields) => {
+            setFields(allFields);
+          }}
         >
           {/* Personal Details */}
           <PersonalDetails />

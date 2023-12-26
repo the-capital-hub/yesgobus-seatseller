@@ -10,7 +10,7 @@ export default function BankingDetails() {
         </header>
 
         {/* Account Type */}
-        <div className="account-type flex flex-col md:flex-row items-center gap-5 px-5 pt-7">
+        {/* <div className="account-type flex flex-col md:flex-row items-center gap-5 px-5 pt-7">
           <p className="text-xl font-medium m-0">Account Type</p>
 
           <Radio.Group
@@ -32,13 +32,13 @@ export default function BankingDetails() {
               Current
             </Radio.Button>
           </Radio.Group>
-        </div>
+        </div> */}
 
         <div className="flex items-center flex-wrap gap-x-10 gap-y-2 px-5 py-5">
           {/* Account Holder Name */}
           <Form.Item
             label={"Account Holder Name"}
-            name="accountHolderName"
+            name="accHolderName"
             className="custom-form-item"
             rules={[
               {
@@ -51,7 +51,7 @@ export default function BankingDetails() {
           {/* Account Number */}
           <Form.Item
             label={"Account Number"}
-            name="accountNumber"
+            name="bankAccNum"
             className="custom-form-item"
             rules={[
               {
@@ -77,7 +77,7 @@ export default function BankingDetails() {
           {/* IFSC code */}
           <Form.Item
             label={"IFSC Code"}
-            name="ifscCode"
+            name="ifsc"
             className="custom-form-item"
             rules={[
               {

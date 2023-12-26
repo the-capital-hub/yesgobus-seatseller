@@ -38,6 +38,7 @@ export default function CreateAccountForm() {
       setError(error);
       return;
     } else {
+      let [firstName, lastName] = fullName.value.split(" ");
       let phNum;
       let email;
       if (email_phone.value) {
@@ -49,13 +50,12 @@ export default function CreateAccountForm() {
       }
 
       let formData = {
-        fullName: fullName.value,
+        firstName: firstName,
+        lastName: lastName,
         phNum: phNum,
         email: email,
         password: password.value,
       };
-
-      console.log("formData", formData);
 
       navigate("/admin/account-details", { state: formData });
     }

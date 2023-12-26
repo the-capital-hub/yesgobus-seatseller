@@ -39,7 +39,7 @@ export default function PersonalDetails() {
           {/* Mobile */}
           <Form.Item
             label={"Mobile"}
-            name="mobile"
+            name="phNum"
             className="custom-form-item"
             rules={[
               {
@@ -75,7 +75,7 @@ export default function PersonalDetails() {
               },
             ]}
           >
-            <InputNumber style={{ width: "100%" }} min={0} />
+            <InputNumber style={{ width: "100%" }} />
           </Form.Item>
         </div>
       </div>
