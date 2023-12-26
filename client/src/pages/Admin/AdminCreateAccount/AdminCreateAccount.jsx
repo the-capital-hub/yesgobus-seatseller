@@ -1,7 +1,8 @@
-import { Button, Divider, Row, Col } from "antd";
+import { Button, Divider, Row, Col, Image } from "antd";
 import "./AdminCreateAccount.scss";
-import { google, facebook } from "../../../assets/login";
-import Title from "antd/es/typography/Title";
+// import { google, facebook } from "../../../assets/login";
+import { Link } from "react-router-dom";
+import { WatermarkIcon } from "../../../assets/contact";
 
 export default function AdminCreateAccount() {
   return (
@@ -9,25 +10,34 @@ export default function AdminCreateAccount() {
       <div className="page-grid">
         {/* Create Account */}
         <div className="left-content">
+          <Image
+            src={WatermarkIcon}
+            alt="YesGoBus Tour and Travel"
+            width={250}
+            preview={false}
+          />
           <div className="headings">
-            <Title level={1} style={{ margin: "0" }}>
-              Create an Account
-            </Title>
-            <p className="">Create account using social networks</p>
+            <h1
+              className="text-3xl md:text-5xl"
+              style={{ margin: "0", color: "#1B1D58" }}
+            >
+              Create Admin Account
+            </h1>
+            {/* <p className="">Create account using social networks</p> */}
 
-            <div className="socials">
+            {/* <div className="socials">
               <div className="social-link">
                 <img src={google} alt="Google" width={44} height={44} />
               </div>
               <div className="social-link">
                 <img src={facebook} alt="Facebook" width={44} height={44} />
               </div>
-            </div>
+            </div> */}
           </div>
 
-          <div className="divider">
+          {/* <div className="divider">
             <Divider style={{ borderColor: "#000" }}>Or</Divider>
-          </div>
+          </div> */}
 
           <form className="create-account-form">
             <input
@@ -58,36 +68,24 @@ export default function AdminCreateAccount() {
               className="create-input"
               placeholder="Confirm Password"
             />
-            <Button
-              htmlType="button"
-              type="primary"
-              shape="round"
-              style={{
-                alignSelf: "center",
-              }}
-              size="large"
-            >
-              Create Account
-            </Button>
-          </form>
-        </div>
 
-        {/* Login */}
-        <div className="right-content">
-          <div className="welcome">
-            <Title level={1} style={{ margin: "0" }}>
-              Welcome Back!
-            </Title>
-            <p>Login Here</p>
-            <Button
-              htmlType="button"
-              type="primary"
-              shape="round"
-              style={{ backgroundColor: "#fd5901" }}
-            >
-              Login
-            </Button>
-          </div>
+            <div className="flex flex-col items-center gap-7 my-7">
+              <Link
+                to={"/admin/login"}
+                className="text-primary text-xl no-underline "
+              >
+                Login to Account
+              </Link>
+              <Button
+                htmlType="button"
+                type="primary"
+                shape="round"
+                size="large"
+              >
+                Create Account
+              </Button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
