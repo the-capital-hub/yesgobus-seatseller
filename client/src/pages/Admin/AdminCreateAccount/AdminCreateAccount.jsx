@@ -63,9 +63,7 @@ export default function AdminCreateAccount() {
               type="primary"
               shape="round"
               style={{
-                width: "fit-content",
                 alignSelf: "center",
-                backgroundColor: "#fd5901",
               }}
               size="large"
             >
