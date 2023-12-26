@@ -46,19 +46,29 @@ const BusBooking = () => {
   const date = new Date();
   const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const months = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
   ];
   const dates = [];
 
   for (let i = 0; i <= 6; i++) {
     const nextDate = new Date(date);
     nextDate.setDate(date.getDate() + i);
-    const formattedDate = `${daysOfWeek[nextDate.getDay()]},${months[nextDate.getMonth()]}-${nextDate.getDate()}`;
+    const formattedDate = `${daysOfWeek[nextDate.getDay()]},${
+      months[nextDate.getMonth()]
+    }-${nextDate.getDate()}`;
     dates.push(formattedDate);
   }
-
-
 
   let currentDate = new Date();
   const year = currentDate.getFullYear();
@@ -67,8 +77,10 @@ const BusBooking = () => {
   currentDate = `${year}-${month}-${day}`;
 
   const queryParams = new URLSearchParams(location.search);
-  const sourceCity = queryParams.get("from") || localStorage.getItem("sourceCity");
-  const destinationCity = queryParams.get("to") || localStorage.getItem("destinationCity");
+  const sourceCity =
+    queryParams.get("from") || localStorage.getItem("sourceCity");
+  const destinationCity =
+    queryParams.get("to") || localStorage.getItem("destinationCity");
   currentDate = queryParams.get("date") || currentDate;
 
   const [fromLocation, setFromLocation] = useState(sourceCity);
@@ -102,14 +114,16 @@ const BusBooking = () => {
     setBusDetails([]);
     setVrlBuses([]);
     setSrsBuses([]);
-    if (sourceCity === null ||
+    if (
+      sourceCity === null ||
       sourceCity === undefined ||
       sourceCity === "" ||
       sourceCity === "null"
     ) {
       sourceCity = "Mysore";
     }
-    if (destinationCity === null ||
+    if (
+      destinationCity === null ||
       destinationCity === undefined ||
       destinationCity === "" ||
       destinationCity === "null"
@@ -117,8 +131,10 @@ const BusBooking = () => {
       destinationCity = "Bangalore";
     }
 
-    if (sourceCity.trim().toLowerCase() === destinationCity.trim().toLowerCase()) {
-      alert('Source and destination cities cannot be the same.');
+    if (
+      sourceCity.trim().toLowerCase() === destinationCity.trim().toLowerCase()
+    ) {
+      alert("Source and destination cities cannot be the same.");
       return;
     }
 
@@ -131,20 +147,19 @@ const BusBooking = () => {
     setNoVrlOfBuses(0);
     setNoSrsOfBuses(0);
 
-
     let sourceCities = [];
     let destinationCities = [];
     if (sourceCity.trim().toLowerCase() in cityMapping) {
       const mapping = cityMapping[sourceCity.trim().toLowerCase()];
       sourceCities = mapping.sourceCity;
     } else {
-      sourceCities.push(sourceCity)
+      sourceCities.push(sourceCity);
     }
     if (destinationCity.trim().toLowerCase() in cityMapping) {
       const mapping = cityMapping[destinationCity.trim().toLowerCase()];
       destinationCities = mapping.sourceCity;
     } else {
-      destinationCities.push(destinationCity)
+      destinationCities.push(destinationCity);
     }
     let isFilter = false;
 
@@ -209,7 +224,7 @@ const BusBooking = () => {
             setVrlBuses(prevBuses => [...prevBuses, ...uniqueBusesArray]);
             setNoVrlOfBuses(prevCount => prevCount + uniqueBusesArray.length);
           } else {
-            console.error('Invalid vrlResponse.data:', vrlResponse.data);
+            console.error("Invalid vrlResponse.data:", vrlResponse.data);
           }
           // setVrlDestinationCityId(vrlResponse.destinationCity);
           // setVrlSourceCityId(vrlResponse.sourceCity);
@@ -218,7 +233,6 @@ const BusBooking = () => {
           // setNoVrlOfBuses(0);
           // console.log(error);
         }
-
 
         //srs buses
         try {
@@ -313,7 +327,6 @@ const BusBooking = () => {
     }
   };
 
-
   const priceToDisplaySrs = (fare) => {
     const prices = fare.split("/");
     if (prices.length === 1) {
@@ -322,7 +335,7 @@ const BusBooking = () => {
       const minPrice = Math.min(...prices).toFixed(2);
       return minPrice;
     }
-  }
+  };
 
   const formatTravelTime = (durationInMins) => {
     const hours = Math.floor(durationInMins / 60);
@@ -347,9 +360,11 @@ const BusBooking = () => {
     const mins = minutes % 60;
     const journeyDay = Math.floor(hours / 24);
     const hour = hours % 24;
-    const ampm = hour < 12 ? 'am' : 'pm';
+    const ampm = hour < 12 ? "am" : "pm";
     const displayHour = hour > 12 ? hour - 12 : hour;
-    const formattedTime = `${displayHour.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')} ${ampm}`;
+    const formattedTime = `${displayHour.toString().padStart(2, "0")}:${mins
+      .toString()
+      .padStart(2, "0")} ${ampm}`;
     return formattedTime;
   }
 
@@ -367,19 +382,22 @@ const BusBooking = () => {
   function calculateVrlTravelTime(pickupTime, arrivalTime) {
     const currentDate = new Date();
 
-    const [hours, minutes, seconds] = pickupTime.split(':');
+    const [hours, minutes, seconds] = pickupTime.split(":");
     currentDate.setHours(hours);
     currentDate.setMinutes(minutes);
     currentDate.setSeconds(seconds || 0);
 
-    const arrivalDateTime = new Date(arrivalTime.replace(/(\d+)-(\d+)-(\d+) (\d+):(\d+) ([APMapm]{2})/, '$2/$1/$3 $4:$5 $6'));
+    const arrivalDateTime = new Date(
+      arrivalTime.replace(
+        /(\d+)-(\d+)-(\d+) (\d+):(\d+) ([APMapm]{2})/,
+        "$2/$1/$3 $4:$5 $6"
+      )
+    );
     const timeDifference = arrivalDateTime - currentDate;
 
     const travelTimeInMinutes = timeDifference / (1000 * 60);
     return formatTravelTime(parseInt(travelTimeInMinutes));
   }
-
-
 
   return (
     <div className="busBooking">
@@ -391,7 +409,7 @@ const BusBooking = () => {
         returnDate={"- - -"}
         onSearch={handleSearch}
       />
-      <div className="container">
+      <div className="busBooking-container">
         <div className="left">
           <LeftFilter
             sourceCity={fromLocation}
@@ -478,7 +496,9 @@ const BusBooking = () => {
                 date={selectedDate}
                 onDateChange={handleDate}
               />
-              <ColumnNames noOfBuses={noOfBuses + noOfVrlBuses + noOfSrsBuses} />
+              <ColumnNames
+                noOfBuses={noOfBuses + noOfVrlBuses + noOfSrsBuses}
+              />
 
               {/* vrl buses */}
 
@@ -502,9 +522,11 @@ const BusBooking = () => {
                     pickUpTime={bus?.CityTime}
                     reachLocation={bus?.ToCityName}
                     reachTime={bus?.ArrivalTime}
-
                     // calucalte total time
-                    travelTime={calculateVrlTravelTime(bus?.CityTime24, bus?.ApproxArrival)}
+                    travelTime={calculateVrlTravelTime(
+                      bus?.CityTime24,
+                      bus?.ApproxArrival
+                    )}
                     seatsLeft={bus?.EmptySeats}
                     // avlWindowSeats={bus?.avlWindowSeats}
                     price={"0"}
@@ -543,7 +565,6 @@ const BusBooking = () => {
                     pickUpTime={bus?.dep_time}
                     reachLocation={toLocation}
                     reachTime={bus?.arr_time}
-
                     // calucalte total time
                     travelTime={bus?.duration}
                     seatsLeft={bus?.available_seats}
@@ -563,8 +584,6 @@ const BusBooking = () => {
                 </div>
               ))}
 
-
-
               {/* seat seller buses */}
               {busDetails?.map((bus) => (
                 <div className="bus-card-container" key={bus?.id}>
@@ -582,11 +601,16 @@ const BusBooking = () => {
                     busType={bus?.busType}
                     rating={(Math.random() * 1 + 4).toFixed(1)}
                     noOfReviews={Math.floor(Math.random() * 101) + 37}
-                    pickUpLocation={bus?.boardingTimes[0]?.bpName || bus.boardingTimes?.bpName}
+                    pickUpLocation={
+                      bus?.boardingTimes[0]?.bpName || bus.boardingTimes?.bpName
+                    }
                     pickUpTime={convertMinutesToTime(bus.departureTime)}
                     reachLocation={bus?.droppingTimes[0]?.bpName}
                     reachTime={convertMinutesToTime(bus?.arrivalTime)}
-                    travelTime={calculateTravelTime(bus?.departureTime, bus?.arrivalTime)}
+                    travelTime={calculateTravelTime(
+                      bus?.departureTime,
+                      bus?.arrivalTime
+                    )}
                     seatsLeft={bus?.availableSeats}
                     avlWindowSeats={bus?.avlWindowSeats}
                     price={priceToDisplay(bus?.fares)}
