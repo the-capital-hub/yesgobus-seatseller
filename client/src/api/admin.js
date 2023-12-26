@@ -13,5 +13,6 @@ export const agentRegisterAPI = async (formData) => {
     return response.data;
   } catch (error) {
     console.error("Error registering agent", error);
+    throw error;
   }
 };
