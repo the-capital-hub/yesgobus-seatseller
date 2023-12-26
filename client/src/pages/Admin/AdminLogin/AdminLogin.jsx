@@ -1,15 +1,18 @@
 import { Button, Image } from "antd";
 import "./AdminLogin.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { WatermarkIcon } from "../../../assets/contact";
 import { useState } from "react";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 
 export default function AdminLogin() {
+  const navigate = useNavigate();
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   async function handleLoginSubmit(e) {
     e.preventDefault();
+
+    navigate("/admin/dashboard");
   }
 
   return (
@@ -77,7 +80,7 @@ export default function AdminLogin() {
               Create an Account
             </Link>
             <Button
-              htmlType="button"
+              htmlType="submit"
               type="primary"
               shape="round"
               size="large"
