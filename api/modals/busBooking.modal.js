@@ -150,6 +150,10 @@ const busBookingSchema = new Schema({
     type: String,
     default: false,
   },
+  getJourneyFeedback: {
+    type: String,
+    default: false,
+  },
   blockKey: String,
   isVrl: {
     type: Boolean,

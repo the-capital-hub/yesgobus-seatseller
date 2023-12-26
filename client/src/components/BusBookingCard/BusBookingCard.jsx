@@ -364,13 +364,13 @@ const BusBookingCard = ({
 
   // Function to parse the coach_details string
   function parseCoachDetails(coachDetails) {
-    const rows = coachDetails.split(',');
+    const rows = coachDetails?.split(',');
     const seatLayout = [];
 
     rows.forEach((row, rowIndex) => {
-      const columns = row.split('-');
+      const columns = row?.split('-');
       columns.forEach((column, columnIndex) => {
-        const seats = column.split('|');
+        const seats = column?.split('|');
         const isValid = seats[0].match(/[A-Z0-9.]+/g);
 
         if (isValid) {
@@ -393,8 +393,8 @@ const BusBookingCard = ({
   // Function to parse the available string
   function parseAvailable(available) {
     const seatObject = {};
-    available.split(',').forEach(seatInfo => {
-      const [seatName, fare] = seatInfo.split('|');
+    available?.split(',').forEach(seatInfo => {
+      const [seatName, fare] = seatInfo?.split('|');
       seatObject[seatName.trim()] = parseFloat(fare);
     });
 
@@ -473,11 +473,11 @@ const BusBookingCard = ({
       let dropoff_stages = seatsResponse.result.bus_layout.dropoff_stages;
 
       const boardingPointlocationsAndTimes = boarding_stages?.split("~").map(entry => {
-        const [bpId, time, address, land_mark, number, bpName] = entry.split("|");
+        const [bpId, time, address, land_mark, number, bpName] = entry?.split("|");
         return { bpId, bpName, time, number };
       });
       const droppingPointlocationsAndTimes = dropoff_stages?.split("~").map(entry => {
-        const [bpId, time, address, land_mark, contact, bpName] = entry.split("|");
+        const [bpId, time, address, land_mark, contact, bpName] = entry?.split("|");
         return { bpId, bpName, time };
       });
 
@@ -550,12 +550,12 @@ const BusBookingCard = ({
   useEffect(() => {
     if (isVrl) {
       getVrlSeatsPrices();
-      const boardingPointlocationsAndTimes = pickUpLocationOne.split("#").map(entry => {
-        const [bpId, bpName, time, number] = entry.split("|");
+      const boardingPointlocationsAndTimes = pickUpLocationOne?.split("#").map(entry => {
+        const [bpId, bpName, time, number] = entry?.split("|");
         return { bpId, bpName, time, number };
       });
-      const droppingPointlocationsAndTimes = dropLocationOne.split("#").map(entry => {
-        const [bpId, bpName, time] = entry.split("|");
+      const droppingPointlocationsAndTimes = dropLocationOne?.split("#").map(entry => {
+        const [bpId, bpName, time] = entry?.split("|");
         return { bpId, bpName, time };
       });
       setVrlPickupLocations(boardingPointlocationsAndTimes);
@@ -584,7 +584,7 @@ const BusBookingCard = ({
     if (!fare) {
       return [];
     }
-    const fareComponents = fare.split('/');
+    const fareComponents = fare?.split('/');
     const uniqueFares = fareComponents.reduce((acc, fare) => {
       if (fare && !acc.includes(fare)) {
         acc.push(fare);
