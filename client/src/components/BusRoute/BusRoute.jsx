@@ -28,14 +28,15 @@ const BusRoute = ({
     const formattedDate = `${nextDate.getFullYear()}-${String(
       nextDate.getMonth() + 1
     ).padStart(2, "0")}-${String(nextDate.getDate()).padStart(2, "0")}`;
-    // onSearch(sourceCity, destinationCity, formattedDate);
+    setDoj(formattedDate);
     setHighlighted(isToday);
   };
 
   useEffect(() => {
     setSourceCity(locationOne);
     setDestinationCity(locationTwo);
-  }, [locationOne, locationTwo]);
+    setDoj(departureDate);
+  }, [locationOne, locationTwo, departureDate]);
 
   const fetchLocationSuggestions = async (query, setLocationSuggestions) => {
     try {
@@ -212,7 +213,7 @@ const BusRoute = ({
               </div>
               <BusRouteCard
                 title="Select Date"
-                location={departureDate}
+                location={doj}
                 setLocation={(value) =>
                   onSearch(locationOne, locationTwo, value)
                 }

@@ -682,10 +682,10 @@ export const srsCancelBooking = async (ticket_number, seat_numbers) => {
 export const getSrsFilters = async (args) => {
   try {
     let searchResponse = await getSrsSchedules(args.sourceCity, args.destinationCity, args.doj);
-
+    console.log("filter", searchResponse.length);
     const boardingPoints = searchResponse.flatMap(bus => bus.boarding_stages);
     const droppingPoints = searchResponse.flatMap(bus => bus.dropoff_stages);
-
+    console.log(boardingPoints);
     return {
       boardingPoints,
       droppingPoints,
