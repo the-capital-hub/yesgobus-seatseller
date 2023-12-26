@@ -1,0 +1,33 @@
+.login-wrapper {
+  .login-container {
+    max-width: 600px;
+    margin-inline: auto;
+
+    .admin-login-form {
+      .create-input {
+        border: 0;
+        outline: 0;
+        background-color: #f0f0f0;
+
+        font-size: 1rem;
+        padding: 1.5rem 2rem;
+        border-radius: 10rem;
+
+        &::placeholder {
+          color: #8b8b8b;
+        }
+
+        input {
+          border: 0;
+          outline: 0;
+          background-color: #f0f0f0;
+          font-size: 1rem;
+
+          &::placeholder {
+            color: #8b8b8b;
+          }
+        }
+      }
+    }
+  }
+}

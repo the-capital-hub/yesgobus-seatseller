@@ -13,7 +13,7 @@ const LeftFilterBox = ({ title, points, count, name, onFilterChange, filters, so
 
   const displayLocation = (location) => {
     const maxLength = 30;
-    if (location.length > maxLength) {
+    if (location?.length > maxLength) {
       return location.substring(0, maxLength) + "...";
     } else {
       return location;
@@ -30,11 +30,11 @@ const LeftFilterBox = ({ title, points, count, name, onFilterChange, filters, so
   };
 
   const filterPoints = (point) => {
-    return point.toLowerCase().includes(searchTerm.toLowerCase());
+    return point?.toLowerCase().includes(searchTerm.toLowerCase());
   };
 
   function capitalizeFirstLetter(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
+    return str?.charAt(0).toUpperCase() + str.slice(1);
   }
 
   return (
