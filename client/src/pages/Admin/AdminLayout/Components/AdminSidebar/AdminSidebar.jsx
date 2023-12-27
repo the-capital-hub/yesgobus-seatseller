@@ -82,7 +82,8 @@ export default function AdminSidebar() {
                 onClick={handleLinkClick}
               >
                 <span className="sidebar-link p-5">
-                  {icon} <p className="m-0 lg:hidden xl:block">{label}</p>
+                  <span style={{ flex: "0 0 20px" }}>{icon}</span>{" "}
+                  <p className="m-0 lg:hidden xl:block">{label}</p>
                 </span>
               </NavLink>
             );
