@@ -19,7 +19,12 @@ export default function PersonalDetails() {
               {
                 required: true,
               },
+              {
+                whitespace: true,
+              },
+              { min: 3 },
             ]}
+            hasFeedback
           >
             <Input />
           </Form.Item>
@@ -32,7 +37,12 @@ export default function PersonalDetails() {
               {
                 required: true,
               },
+              {
+                whitespace: true,
+              },
+              { min: 3 },
             ]}
+            hasFeedback
           >
             <Input />
           </Form.Item>
@@ -45,7 +55,12 @@ export default function PersonalDetails() {
               {
                 required: true,
               },
+              {
+                pattern: /^\d{10}$/,
+                message: "Please enter a valid Phone Number",
+              },
             ]}
+            hasFeedback
           >
             <Input type="tel" />
           </Form.Item>
@@ -58,13 +73,17 @@ export default function PersonalDetails() {
               {
                 required: true,
               },
+              {
+                type: "email",
+                message: "Please enter a valid Email Address",
+              },
             ]}
+            hasFeedback
           >
             <Input type="email" />
           </Form.Item>
           {/* Pincode */}
           <Form.Item
-            hasFeedback
             validateFirst
             label={"Pincode"}
             name="pincode"
@@ -74,6 +93,7 @@ export default function PersonalDetails() {
                 required: true,
               },
             ]}
+            hasFeedback
           >
             <InputNumber style={{ width: "100%" }} />
           </Form.Item>

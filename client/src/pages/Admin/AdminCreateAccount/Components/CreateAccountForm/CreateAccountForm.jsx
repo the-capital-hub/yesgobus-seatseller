@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import { validateCreateAccountData } from "../../../../../utils/Admin/CreateAccountHelpers";
@@ -20,7 +20,9 @@ export default function CreateAccountForm() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [error, setError] = useState(INITIAL_ERROR);
-  const [showError, setShowError] = useState(false);
+  // const [showError, setShowError] = useState(false);
+  const passwordRef = useRef();
+  const confirmPasswordRef = useRef();
 
   async function handleCreateAccountSubmit(e) {
     e.preventDefault();
@@ -83,6 +85,8 @@ export default function CreateAccountForm() {
           placeholder="Full Name"
           required
           onChange={handleChange}
+          autoComplete="one-time-code"
+          autoFocus
         />
         {error.fullName && (
           <em className="text-error text-xs ps-4">{error.fullName}</em>
@@ -98,13 +102,17 @@ export default function CreateAccountForm() {
           placeholder="Email / Phone Number"
           required
           onChange={handleChange}
+          autoComplete="one-time-code"
         />
         {error.email_phone && (
           <em className="text-error text-xs ps-4">{error.email_phone}</em>
         )}
       </div>
 
-      <div className="flex flex-col gap-1">
+      <div
+        className="flex flex-col gap-1 cursor-text"
+        onClick={() => passwordRef.current.focus()}
+      >
         <div className="create-input flex items-center gap-3">
           <input
             type={passwordVisible ? "text" : "password"}
@@ -114,6 +122,8 @@ export default function CreateAccountForm() {
             placeholder="Password"
             required
             onChange={handleChange}
+            autoComplete="one-time-code"
+            ref={passwordRef}
           />
           <span
             className="cursor-pointer"
@@ -131,7 +141,10 @@ export default function CreateAccountForm() {
         )}
       </div>
 
-      <div className="flex flex-col gap-1">
+      <div
+        className="flex flex-col gap-1 cursor-text"
+        onClick={() => confirmPasswordRef.current.focus()}
+      >
         <div className="create-input flex items-center gap-3">
           <input
             type={confirmPasswordVisible ? "text" : "password"}
@@ -141,6 +154,8 @@ export default function CreateAccountForm() {
             placeholder="Confirm Password"
             required
             onChange={handleChange}
+            autoComplete="one-time-code"
+            ref={confirmPasswordRef}
           />
           <span
             className="cursor-pointer"

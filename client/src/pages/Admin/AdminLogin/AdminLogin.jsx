@@ -2,12 +2,13 @@ import { Button, Image } from "antd";
 import "./AdminLogin.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { WatermarkIcon } from "../../../assets/contact";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 
 export default function AdminLogin() {
   const navigate = useNavigate();
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const passwordRef = useRef();
 
   async function handleLoginSubmit(e) {
     e.preventDefault();
@@ -50,15 +51,22 @@ export default function AdminLogin() {
             id="admin-email_phone"
             className="create-input"
             placeholder="Email / Phone Number"
+            autoComplete="one-time-code"
+            autoFocus
           />
 
-          <div className="create-input flex items-center gap-3">
+          <div
+            className="create-input flex items-center gap-3 cursor-text"
+            onClick={() => passwordRef.current.focus()}
+          >
             <input
               type={passwordVisible ? "text" : "password"}
               name="password"
               id="admin-password"
               className="flex-grow h-full"
               placeholder="Password"
+              autoComplete="one-time-code"
+              ref={passwordRef}
             />
             <span
               className="cursor-pointer"
