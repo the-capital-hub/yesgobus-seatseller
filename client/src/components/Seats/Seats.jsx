@@ -355,7 +355,6 @@ const Seats = ({
           const seat = filteredSeats.find((s) => parseInt(s.column, 10) === row && parseInt(s.row, 10) === col);
           if (seat) {
             seatCount++;
-            console.log(highlightedPrice)
             const isHighlighted = parseFloat(seatDetails.available[seat.seatName]) === parseFloat(highlightedPrice);
 
 

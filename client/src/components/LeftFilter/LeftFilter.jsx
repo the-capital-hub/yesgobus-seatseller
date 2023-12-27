@@ -30,27 +30,13 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs, a
   };
 
   useEffect(() => {
-    if (isSrs) {
-      const allFilters = filters;
-      const allBusPartner = filters.busPartners || [];
-      if (!allBusPartner.includes(...allSrsBusOperators)) {
-        allBusPartner.push(...allSrsBusOperators);
-        setFilters({
-          ...allFilters,
-          busPartners: allBusPartner,
-        });
-      }
-    }
-  }, [isSrs, allSrsBusOperators])
-
-  useEffect(() => {
     const getFilters = async () => {
       let response = {};
       let vrlResponse = {};
       let srsResponse = {};
       let combinedBoardingPoints = [];
       let combinedDroppingPoints = [];
-      let combiledBusPartners = [];
+      let combinedBusPartners = [];
 
       let sourceCities = [];
       let destinationCities = [];
@@ -117,19 +103,21 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs, a
             srsResponse?.droppingPoints || []
           );
 
-          combiledBusPartners = combiledBusPartners.concat(
-            response?.data?.data?.busPartners || []
+          combinedBusPartners = combinedBusPartners.concat(
+            response?.data?.data?.busPartners || [],
+            srsResponse?.busPartners || [],
           );
+          console.log(srsResponse);
 
           if (vrlResponse?.data) {
-            combiledBusPartners.push("VRL Travels");
+            combinedBusPartners.push("VRL Travels");
           }
         }
       }
       // Create Set objects to remove duplicates
       const uniqueBoardingPointsSet = new Set(combinedBoardingPoints.map(point => point));
       const uniqueDroppingPointsSet = new Set(combinedDroppingPoints.map(point => point));
-      const uniqueBusPartnersSet = new Set(combiledBusPartners.map(partner => partner?.toLowerCase()));
+      const uniqueBusPartnersSet = new Set(combinedBusPartners.map(partner => partner));
 
       // Convert Set objects to arrays
       const uniqueBoardingPoints = [...uniqueBoardingPointsSet];
@@ -183,6 +171,8 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs, a
           name={"boardingPoints"}
           onFilterChange={handleFilterChange}
           filters={selectedBoardingPoints}
+          sourceCity={sourceCity}
+          destinationCity={destinationCity}
         />
         <LeftFilterBox
           title={"Drop Points"}
@@ -200,6 +190,8 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs, a
           count={[12, 16, 78]}
           name={"busPartners"}
           onFilterChange={handleFilterChange}
+          sourceCity={sourceCity}
+          destinationCity={destinationCity}
         />
         {/* <LeftFilterBox
           title={"Bus Type"}

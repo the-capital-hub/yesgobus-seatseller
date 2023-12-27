@@ -67,6 +67,7 @@ const checkPaymentAndRefund = async () => {
 
 const sendMessageAfterJourney = async () => {
   try {
+    const feedbackFormUrl = "https://forms.gle/jVtxJei9GA6Gk6Ds5";
     const oneHourFromNow = new Date();
     oneHourFromNow.setHours(oneHourFromNow.getHours() + 1);
     const allBookings = await BusBooking.find({
@@ -85,7 +86,7 @@ const sendMessageAfterJourney = async () => {
       combinedTime.setHours(hours, minutes);
       // const reminderTime = new Date(combinedTime.getTime() - 60 * 60 * 1000);
       if (oneHourFromNow > combinedTime) {
-        const message = `Thank you for choosing YesGoBus We hope you enjoyed safe Journey Please fill the feedback form so that we can serve you better in the future: https://forms.gle/jVtxJei9GA6Gk6Ds5 Thank you once again, Shine GoBus Pvt Ltd`;
+        const message = `Thank you for choosing YesGoBus We hope you enjoyed safe Journey Please fill the feedback form so that we can serve you better in the future: ${feedbackFormUrl} Thank you once again, Shine GoBus Pvt Ltd`;
         await sendMessage(message, booking.customerPhone, templateId);
         await BusBooking.findByIdAndUpdate(booking._id, {
           getJourneyFeedback: "true",
@@ -106,8 +107,13 @@ const checkPaymentJob = schedule.scheduleJob('*/10 * * * *', function () {
   checkPaymentAndRefund();
 });
 
-const sendMessageAfterJourneyJob = schedule.scheduleJob('0 12 * * *', function () {
-  // sendMessageAfterJourney();
+// const sendMessageAfterJourneyJob = schedule.scheduleJob('0 12 * * *', function () {
+//   sendMessageAfterJourney();
+// });
+
+const sendMessageAfterJourneyJob = schedule.scheduleJob('* * * * *', function () {
+  sendMessageAfterJourney();
 });
 
-export { sendReminderJob, checkPaymentJob };
+
+export { sendReminderJob, checkPaymentJob, sendMessageAfterJourneyJob };
