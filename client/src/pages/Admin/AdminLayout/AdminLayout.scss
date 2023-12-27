@@ -1,0 +1,38 @@
+.admin-layout-wrapper {
+  // Variables
+  --layout-bg: rgba(245, 247, 255, 1);
+
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 5rem calc(100% - 5rem);
+  min-height: 100dvh;
+  background-color: var(--layout-bg);
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 8rem calc(100% - 8rem);
+    grid-template-rows: auto;
+  }
+
+  @media (min-width: 1280px) {
+    grid-template-columns: 14rem calc(100% - 14rem);
+  }
+
+  #sidebar {
+    // border: 1px solid red;
+    height: 5rem;
+    @media (min-width: 1024px) {
+      height: 100%;
+    }
+  }
+
+  #main {
+    // border: 1px solid blue;
+    .main-content {
+      //   border: 1px solid gold;
+      height: 100%;
+      @media (min-width: 1400px) {
+        margin-inline: 5rem;
+      }
+    }
+  }
+}

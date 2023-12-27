@@ -7,7 +7,9 @@ export default function AdminRoutes() {
       <Route path="" element={<AdminLayout />}>
         <Route path="dashboard" element={<AdminDashboard />} />
         <Route path="wallet" element={<p>Wallet</p>} />
-        <Route path="track-agent" element={<p>Track Agent</p>} />
+        <Route path="records" element={<p>Wallet</p>} />
+        <Route path="track-agents" element={<p>Track Agent</p>} />
+        <Route path="track-buses" element={<p>Track Agent</p>} />
       </Route>
     </Routes>
   );
