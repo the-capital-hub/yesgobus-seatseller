@@ -61,16 +61,18 @@ const Seats = ({
   useEffect(() => {
     const fareArray = Array.isArray(fare) ? fare : [fare];
     setPrices(fareArray);
-  }, [fare])
+  }, [fare]);
 
   function convertMinutesToTime(minutes) {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     const journeyDay = Math.floor(hours / 24);
     const hour = hours % 24;
-    const ampm = hour < 12 ? 'am' : 'pm';
+    const ampm = hour < 12 ? "am" : "pm";
     const displayHour = hour > 12 ? hour - 12 : hour;
-    const formattedTime = `${displayHour.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')} ${ampm}`;
+    const formattedTime = `${displayHour.toString().padStart(2, "0")}:${mins
+      .toString()
+      .padStart(2, "0")} ${ampm}`;
     return formattedTime;
   }
 
@@ -108,7 +110,7 @@ const Seats = ({
     serviceTax,
     operatorTax,
     totalFare,
-    isLadiesSeat,
+    isLadiesSeat
     // isAC,
     // isSleeper
   ) => {
@@ -177,25 +179,30 @@ const Seats = ({
     });
   };
 
-
-
-  const lowerTierSeats = isVrl ?
-    seatDetails.filter((seat) => seat.UpLowBerth === "LB") :
-    isSrs ? seatDetails.coach_details.filter((seat) => seat.z_index === 0) :
-      seatDetails.filter((seat) => seat.zIndex === "0");
-  const upperTierSeats = isVrl ?
-    seatDetails.filter((seat) => seat.UpLowBerth === "UB") :
-    isSrs ? seatDetails.coach_details.filter((seat) => seat.z_index === 1) :
-      seatDetails.filter((seat) => seat.zIndex === "1");
+  const lowerTierSeats = isVrl
+    ? seatDetails.filter((seat) => seat.UpLowBerth === "LB")
+    : isSrs
+    ? seatDetails.coach_details.filter((seat) => seat.z_index === 0)
+    : seatDetails.filter((seat) => seat.zIndex === "0");
+  const upperTierSeats = isVrl
+    ? seatDetails.filter((seat) => seat.UpLowBerth === "UB")
+    : isSrs
+    ? seatDetails.coach_details.filter((seat) => seat.z_index === 1)
+    : seatDetails.filter((seat) => seat.zIndex === "1");
 
   const renderSeatTable = (seats, selectedSeats) => {
     if (isVrl) {
       const filteredSeats = seats;
       const highlightedPrice = selectedPriceFilter;
 
-      const numRows = Math.max(...filteredSeats?.map((seat) => parseInt(seat.Column, 10))) + 1;
-      const numCols = Math.max(...filteredSeats?.map((seat) => parseInt(seat.Row, 10))) + 1;
-      const minRow = Math.min(...filteredSeats?.map((seat) => parseInt(seat.Column, 10)));
+      const numRows =
+        Math.max(...filteredSeats?.map((seat) => parseInt(seat.Column, 10))) +
+        1;
+      const numCols =
+        Math.max(...filteredSeats?.map((seat) => parseInt(seat.Row, 10))) + 1;
+      const minRow = Math.min(
+        ...filteredSeats?.map((seat) => parseInt(seat.Column, 10))
+      );
 
       const seatTable = [];
       let previousSeatCount = -1;
@@ -205,7 +212,9 @@ const Seats = ({
         let seatCount = 0;
 
         for (let col = 0; col < numCols; col++) {
-          const seat = filteredSeats.find((s) => parseInt(s.Column, 10) === row && parseInt(s.Row, 10) === col);
+          const seat = filteredSeats.find(
+            (s) => parseInt(s.Column, 10) === row && parseInt(s.Row, 10) === col
+          );
 
           if (seat) {
             seatCount++;
@@ -214,7 +223,11 @@ const Seats = ({
               if (selectedSeats.includes(seat.SeatNo)) {
                 seatRow.push(
                   <td key={seat.SeatNo}>
-                    <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
+                    <div
+                      className={`seat_____container ${
+                        isHighlighted ? "highlighted_____seat" : ""
+                      }`}
+                    >
                       <img
                         onClick={() =>
                           seatSelectionHandler(
@@ -223,15 +236,19 @@ const Seats = ({
                             seat.ServiceTax,
                             0,
                             seat.SeatRate,
-                            seat.IsLadiesSeat,
+                            seat.IsLadiesSeat
                             // seat.ac,
                             // seat.sleeper
                           )
                         }
                         title={`ID: ${seat.SeatNo}\nFare: ₹${seat.BaseFare}`}
-                        src={seat.SeatType === 0 || seat.SeatType == 2 ? singleselected : selectedFill}
+                        src={
+                          seat.SeatType === 0 || seat.SeatType == 2
+                            ? singleselected
+                            : selectedFill
+                        }
                         alt="selected seat"
-                        className={(seat.ColumnSpan == "2") ? "vertical" : ""}
+                        className={seat.ColumnSpan == "2" ? "vertical" : ""}
                       />
                     </div>
                   </td>
@@ -240,7 +257,11 @@ const Seats = ({
                 if (seat.IsLadiesSeat === "Y") {
                   seatRow.push(
                     <td key={seat.SeatNo}>
-                      <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
+                      <div
+                        className={`seat_____container ${
+                          isHighlighted ? "highlighted_____seat" : ""
+                        }`}
+                      >
                         <img
                           onClick={() =>
                             seatSelectionHandler(
@@ -249,15 +270,19 @@ const Seats = ({
                               seat.ServiceTax,
                               0,
                               seat.SeatRate,
-                              seat.IsLadiesSeat,
+                              seat.IsLadiesSeat
                               // seat.ac,
                               // seat.sleeper
                             )
                           }
                           title={`ID: ${seat.SeatNo}\nFare: ₹${seat.BaseFare}`}
-                          src={seat.SeatType === 0 || seat.SeatType == 2 ? singleladiesavailable : ladiesavailable}
+                          src={
+                            seat.SeatType === 0 || seat.SeatType == 2
+                              ? singleladiesavailable
+                              : ladiesavailable
+                          }
                           alt="available ladies"
-                          className={(seat.ColumnSpan == "2") ? "vertical" : ""}
+                          className={seat.ColumnSpan == "2" ? "vertical" : ""}
                         />
                       </div>
                     </td>
@@ -265,7 +290,11 @@ const Seats = ({
                 } else {
                   seatRow.push(
                     <td key={seat.SeatNo}>
-                      <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
+                      <div
+                        className={`seat_____container ${
+                          isHighlighted ? "highlighted_____seat" : ""
+                        }`}
+                      >
                         <img
                           onClick={() =>
                             seatSelectionHandler(
@@ -274,15 +303,19 @@ const Seats = ({
                               seat.ServiceTax,
                               0,
                               seat.SeatRate,
-                              seat.IsLadiesSeat,
+                              seat.IsLadiesSeat
                               // seat.ac,
                               // seat.sleeper
                             )
                           }
                           title={`ID: ${seat.SeatNo}\nFare: ₹${seat.BaseFare}`}
-                          src={seat.SeatType === 0 || seat.SeatType == 2 ? singleavailable : available}
+                          src={
+                            seat.SeatType === 0 || seat.SeatType == 2
+                              ? singleavailable
+                              : available
+                          }
                           alt="available"
-                          className={(seat.ColumnSpan == "2") ? "vertical" : ""}
+                          className={seat.ColumnSpan == "2" ? "vertical" : ""}
                         />
                       </div>
                     </td>
@@ -294,12 +327,15 @@ const Seats = ({
                 seatRow.push(
                   <td key={seat.SeatNo}>
                     <div className={`seat_____container`}>
-
                       <img
                         title={`ID: ${seat.SeatNo}\nFare: ₹${seat.BaseFare}`}
-                        src={seat.SeatType === 0 || seat.SeatType == 2 ? singleladiesbooked : ladiesbooked}
+                        src={
+                          seat.SeatType === 0 || seat.SeatType == 2
+                            ? singleladiesbooked
+                            : ladiesbooked
+                        }
                         alt="ladiesbooked"
-                        className={(seat.ColumnSpan == "2") ? "vertical" : ""}
+                        className={seat.ColumnSpan == "2" ? "vertical" : ""}
                       />
                     </div>
                   </td>
@@ -308,13 +344,15 @@ const Seats = ({
                 seatRow.push(
                   <td key={seat.SeatNo}>
                     <div className={`seat_____container `}>
-
-
                       <img
                         title={`ID: ${seat.SeatNo}\nFare: ₹${seat.BaseFare}`}
-                        src={seat.SeatType === 0 || seat.SeatType == 2 ? singlebooked : booked}
+                        src={
+                          seat.SeatType === 0 || seat.SeatType == 2
+                            ? singlebooked
+                            : booked
+                        }
                         alt="booked"
-                        className={(seat.ColumnSpan == "2") ? "vertical" : ""}
+                        className={seat.ColumnSpan == "2" ? "vertical" : ""}
                       />
                     </div>
                   </td>
@@ -337,12 +375,16 @@ const Seats = ({
         </table>
       );
     } else if (isSrs) {
-
       const filteredSeats = seats;
       const highlightedPrice = selectedPriceFilter;
-      const numRows = Math.max(...filteredSeats?.map((seat) => parseInt(seat.column, 10))) + 1;
-      const numCols = Math.max(...filteredSeats?.map((seat) => parseInt(seat.row, 10))) + 1;
-      const minRow = Math.min(...filteredSeats?.map((seat) => parseInt(seat.column, 10)));
+      const numRows =
+        Math.max(...filteredSeats?.map((seat) => parseInt(seat.column, 10))) +
+        1;
+      const numCols =
+        Math.max(...filteredSeats?.map((seat) => parseInt(seat.row, 10))) + 1;
+      const minRow = Math.min(
+        ...filteredSeats?.map((seat) => parseInt(seat.column, 10))
+      );
 
       const seatTable = [];
       let previousSeatCount = -1;
@@ -352,20 +394,24 @@ const Seats = ({
         let seatCount = 0;
 
         for (let col = 0; col < numCols; col++) {
-          const seat = filteredSeats.find((s) => parseInt(s.column, 10) === row && parseInt(s.row, 10) === col);
+          const seat = filteredSeats.find(
+            (s) => parseInt(s.column, 10) === row && parseInt(s.row, 10) === col
+          );
           if (seat) {
             seatCount++;
-            console.log(highlightedPrice)
-            const isHighlighted = parseFloat(seatDetails.available[seat.seatName]) === parseFloat(highlightedPrice);
-
-
+            const isHighlighted =
+              parseFloat(seatDetails.available[seat.seatName]) ===
+              parseFloat(highlightedPrice);
 
             if (seatDetails.available[seat.seatName]) {
               if (selectedSeats.includes(seat.seatName)) {
                 seatRow.push(
                   <td key={seat.seatName}>
-                    <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
-
+                    <div
+                      className={`seat_____container ${
+                        isHighlighted ? "highlighted_____seat" : ""
+                      }`}
+                    >
                       <img
                         onClick={() =>
                           seatSelectionHandler(
@@ -373,16 +419,21 @@ const Seats = ({
                             seatDetails.available[seat.seatName],
                             seatDetails.available_gst[seat.seatName] || 0,
                             0,
-                            parseInt(seatDetails.available[seat.seatName]) + parseInt(seatDetails.available_gst[seat.seatName] || 0),
-                            seatDetails.ladies_seats?.includes(seat.seatName),
+                            parseInt(seatDetails.available[seat.seatName]) +
+                              parseInt(
+                                seatDetails.available_gst[seat.seatName] || 0
+                              ),
+                            seatDetails.ladies_seats?.includes(seat.seatName)
                             // seat.ac,
                             // seat.sleeper
                           )
                         }
-                        title={`ID: ${seat.seatName}\nFare: ₹${seatDetails.available[seat.seatName]}`}
-                        src={(seat.width === 1) ? singleselected : selectedFill}
+                        title={`ID: ${seat.seatName}\nFare: ₹${
+                          seatDetails.available[seat.seatName]
+                        }`}
+                        src={seat.width === 1 ? singleselected : selectedFill}
                         alt="selected seat"
-                      // className={(seat.width == "2") ? "vertical" : ""}
+                        // className={(seat.width == "2") ? "vertical" : ""}
                       />
                     </div>
                   </td>
@@ -391,8 +442,11 @@ const Seats = ({
                 if (seatDetails.ladies_seats?.includes(seat.seatName)) {
                   seatRow.push(
                     <td key={seat.seatName}>
-                      <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
-
+                      <div
+                        className={`seat_____container ${
+                          isHighlighted ? "highlighted_____seat" : ""
+                        }`}
+                      >
                         <img
                           onClick={() =>
                             seatSelectionHandler(
@@ -400,16 +454,25 @@ const Seats = ({
                               seatDetails.available[seat.seatName],
                               seatDetails.available_gst[seat.seatName] || 0,
                               0,
-                              parseInt(seatDetails.available[seat.seatName]) + parseInt(seatDetails.available_gst[seat.seatName] || 0),
-                              seatDetails.ladies_seats?.includes(seat.seatName),
+                              parseInt(seatDetails.available[seat.seatName]) +
+                                parseInt(
+                                  seatDetails.available_gst[seat.seatName] || 0
+                                ),
+                              seatDetails.ladies_seats?.includes(seat.seatName)
                               // seat.ac,
                               // seat.sleeper
                             )
                           }
-                          title={`ID: ${seat.seatName}\nFare: ₹${seatDetails.available_gst[seat.seatName]}`}
-                          src={(seat.width === 1) ? singleladiesavailable : ladiesavailable}
+                          title={`ID: ${seat.seatName}\nFare: ₹${
+                            seatDetails.available_gst[seat.seatName]
+                          }`}
+                          src={
+                            seat.width === 1
+                              ? singleladiesavailable
+                              : ladiesavailable
+                          }
                           alt="available ladies"
-                        // className={(seat.width == "2") ? "vertical" : ""}
+                          // className={(seat.width == "2") ? "vertical" : ""}
                         />
                       </div>
                     </td>
@@ -417,8 +480,11 @@ const Seats = ({
                 } else {
                   seatRow.push(
                     <td key={seat.seatName}>
-                      <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
-
+                      <div
+                        className={`seat_____container ${
+                          isHighlighted ? "highlighted_____seat" : ""
+                        }`}
+                      >
                         <img
                           onClick={() =>
                             seatSelectionHandler(
@@ -426,16 +492,21 @@ const Seats = ({
                               seatDetails.available[seat.seatName],
                               seatDetails.available_gst[seat.seatName] || 0,
                               0,
-                              parseInt(seatDetails.available[seat.seatName]) + parseInt(seatDetails.available_gst[seat.seatName] || 0),
-                              seatDetails.ladies_seats?.includes(seat.seatName),
+                              parseInt(seatDetails.available[seat.seatName]) +
+                                parseInt(
+                                  seatDetails.available_gst[seat.seatName] || 0
+                                ),
+                              seatDetails.ladies_seats?.includes(seat.seatName)
                               // seat.ac,
                               // seat.sleeper
                             )
                           }
-                          title={`ID: ${seat.seatName}\nFare: ₹${seatDetails.available[seat.seatName]}`}
-                          src={(seat.width === 1) ? singleavailable : available}
+                          title={`ID: ${seat.seatName}\nFare: ₹${
+                            seatDetails.available[seat.seatName]
+                          }`}
+                          src={seat.width === 1 ? singleavailable : available}
                           alt="available"
-                        // className={(seat.width == "2") ? "vertical" : ""}
+                          // className={(seat.width == "2") ? "vertical" : ""}
                         />
                       </div>
                     </td>
@@ -446,28 +517,35 @@ const Seats = ({
               if (seatDetails.ladies_booked_seats?.includes(seat.seatName)) {
                 seatRow.push(
                   <td key={seat.seatName}>
-                    <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
-
+                    <div
+                      className={`seat_____container ${
+                        isHighlighted ? "highlighted_____seat" : ""
+                      }`}
+                    >
                       <img
                         title={`ID: ${seat.seatName}`}
-                        src={(seat.width === 1) ? singleladiesbooked : ladiesbooked}
+                        src={
+                          seat.width === 1 ? singleladiesbooked : ladiesbooked
+                        }
                         alt="ladiesbooked"
-                      // className={(seat.width == "2") ? "vertical" : ""}
+                        // className={(seat.width == "2") ? "vertical" : ""}
                       />
                     </div>
                   </td>
-
                 );
               } else {
                 seatRow.push(
                   <td key={seat.seatName}>
-                    <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
-
+                    <div
+                      className={`seat_____container ${
+                        isHighlighted ? "highlighted_____seat" : ""
+                      }`}
+                    >
                       <img
                         title={`ID: ${seat.seatName}`}
-                        src={(seat.width === 1) ? singlebooked : booked}
+                        src={seat.width === 1 ? singlebooked : booked}
                         alt="booked"
-                      // className={(seat.width == "2") ? "vertical" : ""}
+                        // className={(seat.width == "2") ? "vertical" : ""}
                       />
                     </div>
                   </td>
@@ -492,8 +570,11 @@ const Seats = ({
       const filteredSeats = seats;
       const highlightedPrice = selectedPriceFilter;
 
-      const numRows = Math.max(...filteredSeats?.map((seat) => parseInt(seat.row, 10))) + 1;
-      const numCols = Math.max(...filteredSeats?.map((seat) => parseInt(seat.column, 10))) + 1;
+      const numRows =
+        Math.max(...filteredSeats?.map((seat) => parseInt(seat.row, 10))) + 1;
+      const numCols =
+        Math.max(...filteredSeats?.map((seat) => parseInt(seat.column, 10))) +
+        1;
 
       const seatTable = [];
       let previousSeatCount = -1;
@@ -503,7 +584,9 @@ const Seats = ({
         let seatCount = 0;
 
         for (let col = 0; col < numCols; col++) {
-          const seat = filteredSeats.find((s) => parseInt(s.row, 10) === row && parseInt(s.column, 10) === col);
+          const seat = filteredSeats.find(
+            (s) => parseInt(s.row, 10) === row && parseInt(s.column, 10) === col
+          );
 
           if (seat) {
             seatCount++;
@@ -512,8 +595,11 @@ const Seats = ({
               if (selectedSeats.includes(seat.name)) {
                 seatRow.push(
                   <td key={seat.name}>
-                    <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
-
+                    <div
+                      className={`seat_____container ${
+                        isHighlighted ? "highlighted_____seat" : ""
+                      }`}
+                    >
                       <img
                         onClick={() =>
                           seatSelectionHandler(
@@ -522,15 +608,19 @@ const Seats = ({
                             seat.serviceTaxAbsolute,
                             seat.operatorServiceChargeAbsolute,
                             seat.fare,
-                            seat.ladiesSeat,
+                            seat.ladiesSeat
                             // seat.ac,
                             // seat.sleeper
                           )
                         }
                         title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
-                        src={(seat.width !== "2" && seat.length !== "2") ? singleselected : selectedFill}
+                        src={
+                          seat.width !== "2" && seat.length !== "2"
+                            ? singleselected
+                            : selectedFill
+                        }
                         alt="selected seat"
-                        className={(seat.width == "2") ? "vertical" : ""}
+                        className={seat.width == "2" ? "vertical" : ""}
                       />
                     </div>
                   </td>
@@ -539,8 +629,11 @@ const Seats = ({
                 if (seat.ladiesSeat === "true") {
                   seatRow.push(
                     <td key={seat.name}>
-                      <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
-
+                      <div
+                        className={`seat_____container ${
+                          isHighlighted ? "highlighted_____seat" : ""
+                        }`}
+                      >
                         <img
                           onClick={() =>
                             seatSelectionHandler(
@@ -549,15 +642,19 @@ const Seats = ({
                               seat.serviceTaxAbsolute,
                               seat.operatorServiceChargeAbsolute,
                               seat.fare,
-                              seat.ladiesSeat,
+                              seat.ladiesSeat
                               // seat.ac,
                               // seat.sleeper
                             )
                           }
                           title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
-                          src={(seat.width !== "2" && seat.length !== "2") ? singleladiesavailable : ladiesavailable}
+                          src={
+                            seat.width !== "2" && seat.length !== "2"
+                              ? singleladiesavailable
+                              : ladiesavailable
+                          }
                           alt="available ladies"
-                          className={(seat.width == "2") ? "vertical" : ""}
+                          className={seat.width == "2" ? "vertical" : ""}
                         />
                       </div>
                     </td>
@@ -565,8 +662,11 @@ const Seats = ({
                 } else {
                   seatRow.push(
                     <td key={seat.name}>
-                      <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
-
+                      <div
+                        className={`seat_____container ${
+                          isHighlighted ? "highlighted_____seat" : ""
+                        }`}
+                      >
                         <img
                           onClick={() =>
                             seatSelectionHandler(
@@ -575,15 +675,19 @@ const Seats = ({
                               seat.serviceTaxAbsolute,
                               seat.operatorServiceChargeAbsolute,
                               seat.fare,
-                              seat.ladiesSeat,
+                              seat.ladiesSeat
                               // seat.ac,
                               // seat.sleeper
                             )
                           }
                           title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
-                          src={(seat.width !== "2" && seat.length !== "2") ? singleavailable : available}
+                          src={
+                            seat.width !== "2" && seat.length !== "2"
+                              ? singleavailable
+                              : available
+                          }
                           alt="available"
-                          className={(seat.width == "2") ? "vertical" : ""}
+                          className={seat.width == "2" ? "vertical" : ""}
                         />
                       </div>
                     </td>
@@ -594,28 +698,41 @@ const Seats = ({
               if (seat.ladiesSeat === "true") {
                 seatRow.push(
                   <td key={seat.name}>
-                    <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
-
+                    <div
+                      className={`seat_____container ${
+                        isHighlighted ? "highlighted_____seat" : ""
+                      }`}
+                    >
                       <img
                         title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
-                        src={(seat.width !== "2" && seat.length !== "2") ? singleladiesbooked : ladiesbooked}
+                        src={
+                          seat.width !== "2" && seat.length !== "2"
+                            ? singleladiesbooked
+                            : ladiesbooked
+                        }
                         alt="ladiesbooked"
-                        className={(seat.width == "2") ? "vertical" : ""}
+                        className={seat.width == "2" ? "vertical" : ""}
                       />
                     </div>
                   </td>
-
                 );
               } else {
                 seatRow.push(
                   <td key={seat.name}>
-                    <div className={`seat_____container ${isHighlighted ? 'highlighted_____seat' : ''}`}>
-
+                    <div
+                      className={`seat_____container ${
+                        isHighlighted ? "highlighted_____seat" : ""
+                      }`}
+                    >
                       <img
                         title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
-                        src={(seat.width !== "2" && seat.length !== "2") ? singlebooked : booked}
+                        src={
+                          seat.width !== "2" && seat.length !== "2"
+                            ? singlebooked
+                            : booked
+                        }
                         alt="booked"
-                        className={(seat.width == "2") ? "vertical" : ""}
+                        className={seat.width == "2" ? "vertical" : ""}
                       />
                     </div>
                   </td>
@@ -640,7 +757,6 @@ const Seats = ({
         </table>
       );
     }
-
   };
 
   // useEffect(() => {
@@ -727,24 +843,25 @@ const Seats = ({
           handleContinue();
         } else {
           setError("Please select a drop location.");
-
         }
         break;
       default:
         return null;
     }
-  }
+  };
 
   const handleBack = () => {
     switch (selectedTab) {
-      case "pickup": setSelectedTab("seats")
+      case "pickup":
+        setSelectedTab("seats");
         break;
-      case "drop": setSelectedTab("pickup")
+      case "drop":
+        setSelectedTab("pickup");
         break;
       default:
         return null;
     }
-  }
+  };
 
   const renderMobileContent = () => {
     switch (selectedTab) {
@@ -777,55 +894,65 @@ const Seats = ({
               subtitle={"(Booked)"}
               img={ladiesbooked}
             />
-
           </div>
-          {
-            prices.length > 1 && (
-              <div className="filters">
-                {/* <p className="tag">Seat Price:</p> */}
+          {prices.length > 1 && (
+            <div className="filters">
+              {/* <p className="tag">Seat Price:</p> */}
+              <p
+                className={`filter ${
+                  selectedPriceFilter === null ? "highlighted" : ""
+                }`}
+                onClick={() => setSelectedPriceFilter(null)}
+              >
+                All
+              </p>
+              {prices.map((price) => (
                 <p
-                  className={`filter ${selectedPriceFilter === null ? 'highlighted' : ''}`}
-                  onClick={() => setSelectedPriceFilter(null)}
+                  key={price}
+                  className={`filter ${
+                    selectedPriceFilter === price ? "highlighted" : ""
+                  }`}
+                  onClick={() => setSelectedPriceFilter(price)}
                 >
-                  All
+                  ₹{price}
                 </p>
-                {prices.map(price => (
-                  <p
-                    key={price}
-                    className={`filter ${selectedPriceFilter === price ? 'highlighted' : ''}`}
-                    onClick={() => setSelectedPriceFilter(price)}
-                  >
-                    ₹{price}
-                  </p>
-
-                ))}
-              </div>
-            )
-          }
-          <div className="bus-container" style={upperTierSeats.length === 0 ? { marginBottom: '130px', marginTop: '130px' } : {}}>
+              ))}
+            </div>
+          )}
+          <div
+            className="bus-container"
+            style={
+              upperTierSeats.length === 0
+                ? { marginBottom: "130px", marginTop: "130px" }
+                : {}
+            }
+          >
             <div className="bus">
               <div className="driver">
                 <img src={driver} alt="driver" />
-
+                {upperTierSeats.length > 0 && (
+                  <h4 className="tier-label">Lower Tier</h4>
+                )}
               </div>
 
               <div className="gridContainer">
-                {upperTierSeats.length > 0 && <h4>Lower Tier</h4>}
+                {/* {upperTierSeats.length > 0 && <h4>Lower Tier</h4>} */}
                 {renderSeatTable(lowerTierSeats, bookingDetails.selectedSeats)}
-
               </div>
-            </div >
+            </div>
             {upperTierSeats.length > 0 && (
-              <div className="bus" >
+              <div className="bus">
                 <div className="driver">
+                  <h4 className="tier-label">Upper Tier</h4>
                 </div>
                 <div className="gridContainer">
-
                   <>
-                    <h4>Upper Tier</h4>
-                    {renderSeatTable(upperTierSeats, bookingDetails.selectedSeats)}
+                    {/* <h4>Upper Tier</h4> */}
+                    {renderSeatTable(
+                      upperTierSeats,
+                      bookingDetails.selectedSeats
+                    )}
                   </>
-
                 </div>
               </div>
             )}
@@ -834,19 +961,22 @@ const Seats = ({
           <div className="price">
             <div className="selectedSeat">
               <span>Selected Seat(s):</span>
-              <p>{bookingDetails.selectedSeats.join(", ") || "None Selected"}</p>
+              <p>
+                {bookingDetails.selectedSeats.join(", ") || "None Selected"}
+              </p>
             </div>
             <p>₹ {bookingDetails.fare}</p>
           </div>
-          {error &&
-            <div className="alert">{error}</div>
-          }
+          {error && <div className="alert">{error}</div>}
           <div className="continue">
-            <Button onClicked={() => handleNext()} text={"Select Boarding Point"} />
+            <Button
+              onClicked={() => handleNext()}
+              text={"Select Boarding Point"}
+            />
           </div>
         </div>
       </>
-    )
+    );
   };
 
   const renderDropPoints = () => {
@@ -857,9 +987,15 @@ const Seats = ({
             <span className="title">DROP POINT</span>
             {dropLocationOne?.map((droppingPoint, index) => (
               <PickUpAndDropPoints
-                highlight={bookingDetails.droppingPoint.bpId === droppingPoint.bpId}
+                highlight={
+                  bookingDetails.droppingPoint.bpId === droppingPoint.bpId
+                }
                 key={droppingPoint.bpId}
-                time={isVrl || isSrs ? droppingPoint.time : convertMinutesToTime(droppingPoint.time)}
+                time={
+                  isVrl || isSrs
+                    ? droppingPoint.time
+                    : convertMinutesToTime(droppingPoint.time)
+                }
                 locationOne={droppingPoint.bpName}
                 locationTwo={droppingPoint.address}
                 onClick={() =>
@@ -873,14 +1009,18 @@ const Seats = ({
               />
             ))}
           </div>
-          {error &&
-            <div className="alert">{error}</div>
-          }
-
+          {error && <div className="alert">{error}</div>}
 
           <div className="continue">
-            <Button onClicked={() => handleBack()} text={"Back"} style={{ marginRight: '10px' }} />
-            <Button onClicked={() => handleNext()} text={"Fill Passenger Details"} />
+            <Button
+              onClicked={() => handleBack()}
+              text={"Back"}
+              style={{ marginRight: "10px" }}
+            />
+            <Button
+              onClicked={() => handleNext()}
+              text={"Fill Passenger Details"}
+            />
           </div>
         </div>
       </>
@@ -895,10 +1035,16 @@ const Seats = ({
           {pickUpLocationOne?.map((boardingPoint, index) => (
             <PickUpAndDropPoints
               key={boardingPoint.bpId}
-              time={isVrl || isSrs ? boardingPoint.time : convertMinutesToTime(boardingPoint.time)}
+              time={
+                isVrl || isSrs
+                  ? boardingPoint.time
+                  : convertMinutesToTime(boardingPoint.time)
+              }
               locationOne={boardingPoint.bpName}
               locationTwo={boardingPoint.address}
-              highlight={bookingDetails.boardingPoint.bpId === boardingPoint.bpId}
+              highlight={
+                bookingDetails.boardingPoint.bpId === boardingPoint.bpId
+              }
               onClick={() =>
                 setBookingDetails((prev) => {
                   return {
@@ -910,26 +1056,26 @@ const Seats = ({
             />
           ))}
         </div>
-        {error &&
-          <div className="alert">{error}</div>
-        }
+        {error && <div className="alert">{error}</div>}
         <div className="continue">
-          <Button onClicked={() => handleBack()} text={"Back"} style={{ marginRight: '10px' }} />
-          <Button onClicked={() => handleNext()} text={"Select Dropping Point"} />
+          <Button
+            onClicked={() => handleBack()}
+            text={"Back"}
+            style={{ marginRight: "10px" }}
+          />
+          <Button
+            onClicked={() => handleNext()}
+            text={"Select Dropping Point"}
+          />
         </div>
       </div>
     );
   };
 
-
   return (
     <>
-
       <div className="seats">
-
-        <div className="mobile-seats">
-          {renderMobileContent()}
-        </div>
+        <div className="mobile-seats">{renderMobileContent()}</div>
         {/* <div className="desktop-seats-layout"> */}
 
         <div className="seatsLeft">
@@ -940,10 +1086,16 @@ const Seats = ({
               {pickUpLocationOne?.map((boardingPoint, index) => (
                 <PickUpAndDropPoints
                   key={boardingPoint.bpId}
-                  time={isVrl || isSrs ? boardingPoint.time : convertMinutesToTime(boardingPoint.time)}
+                  time={
+                    isVrl || isSrs
+                      ? boardingPoint.time
+                      : convertMinutesToTime(boardingPoint.time)
+                  }
                   locationOne={boardingPoint.bpName}
                   locationTwo={boardingPoint.address}
-                  highlight={bookingDetails.boardingPoint.bpId === boardingPoint.bpId}
+                  highlight={
+                    bookingDetails.boardingPoint.bpId === boardingPoint.bpId
+                  }
                   onClick={() =>
                     setBookingDetails((prev) => {
                       return {
@@ -959,9 +1111,15 @@ const Seats = ({
               <span className="title">DROP POINT</span>
               {dropLocationOne?.map((droppingPoint, index) => (
                 <PickUpAndDropPoints
-                  highlight={bookingDetails.droppingPoint.bpId === droppingPoint.bpId}
+                  highlight={
+                    bookingDetails.droppingPoint.bpId === droppingPoint.bpId
+                  }
                   key={droppingPoint.bpId}
-                  time={isVrl || isSrs ? droppingPoint.time : convertMinutesToTime(droppingPoint.time)}
+                  time={
+                    isVrl || isSrs
+                      ? droppingPoint.time
+                      : convertMinutesToTime(droppingPoint.time)
+                  }
                   locationOne={droppingPoint.bpName}
                   locationTwo={droppingPoint.address}
                   onClick={() =>
@@ -978,10 +1136,7 @@ const Seats = ({
           </div>
         </div>
 
-
-
         <div className="seatsRight">
-
           <h5>Selected Seats</h5>
           <div className="legend">
             <SeatLegend title={"Booked"} img={booked} />
@@ -997,21 +1152,24 @@ const Seats = ({
               subtitle={"(Booked)"}
               img={ladiesbooked}
             />
-
           </div>
 
           {prices.length > 1 && (
             <div className="filters">
               <p
-                className={`filter ${selectedPriceFilter === null ? 'highlighted' : ''}`}
+                className={`filter ${
+                  selectedPriceFilter === null ? "highlighted" : ""
+                }`}
                 onClick={() => setSelectedPriceFilter(null)}
               >
                 All
               </p>
-              {prices.map(price => (
+              {prices.map((price) => (
                 <p
                   key={price}
-                  className={`filter ${selectedPriceFilter === price ? 'highlighted' : ''}`}
+                  className={`filter ${
+                    selectedPriceFilter === price ? "highlighted" : ""
+                  }`}
                   onClick={() => setSelectedPriceFilter(price)}
                 >
                   ₹{price}
@@ -1019,7 +1177,6 @@ const Seats = ({
               ))}
             </div>
           )}
-
 
           <div className="bus">
             <div className="driver">
@@ -1033,7 +1190,10 @@ const Seats = ({
               {upperTierSeats.length > 0 && (
                 <>
                   <h4>Upper Tier</h4>
-                  {renderSeatTable(upperTierSeats, bookingDetails.selectedSeats)}
+                  {renderSeatTable(
+                    upperTierSeats,
+                    bookingDetails.selectedSeats
+                  )}
                 </>
               )}
             </div>
@@ -1046,7 +1206,9 @@ const Seats = ({
           <div className="price">
             <div className="selectedSeat">
               <span>Selected Seat(s):</span>
-              <p>{bookingDetails.selectedSeats.join(", ") || "None Selected"}</p>
+              <p>
+                {bookingDetails.selectedSeats.join(", ") || "None Selected"}
+              </p>
             </div>
             <p>₹ {bookingDetails.fare}</p>
           </div>
