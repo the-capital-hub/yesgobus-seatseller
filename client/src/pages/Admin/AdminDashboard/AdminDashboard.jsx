@@ -24,7 +24,9 @@ export default function AdminDashboard() {
             <p className="m-0 text-lg justify-self-start">Bus Route</p>
             <p className="m-0 text-lg">Bus Number</p>
             <p className="m-0 text-lg">Buses</p>
-            <p className="m-0 text-lg justify-self-end">Track</p>
+            <p className="m-0 text-lg justify-self-end w-[150px] text-center">
+              Track
+            </p>
           </header>
           {Array(4)
             .fill(0)
@@ -46,7 +48,7 @@ export default function AdminDashboard() {
                   </div>
                   <p className="m-0">Bus Number</p>
                   <p className="m-0">No. of Buses</p>
-                  <Link className="no-underline text-inherit  justify-self-end">
+                  <Link className="no-underline text-inherit justify-self-end w-[150px]">
                     <Button
                       htmlType="button"
                       type="primary"
