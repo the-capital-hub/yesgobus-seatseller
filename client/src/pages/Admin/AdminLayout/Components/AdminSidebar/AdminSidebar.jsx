@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   IconAgents,
   IconDashboard,
@@ -7,9 +7,11 @@ import {
   IconWallet,
 } from "../../../../../components/Admin/SvgIcons";
 import { LuLogOut } from "react-icons/lu";
-import { MdMenu, MdMenuOpen } from "react-icons/md";
+import { MdMenu } from "react-icons/md";
 import "./AdminSidebar.scss";
 import { useRef } from "react";
+import { Button, Modal } from "antd";
+import { ADMIN_KEY } from "../../../AdminLogin/AdminLogin";
 
 const NAVLINKS = [
   {
@@ -37,14 +39,12 @@ const NAVLINKS = [
     icon: <IconTrack />,
     link: "/admin/track-buses",
   },
-  {
-    label: "Logout",
-    icon: <LuLogOut size={20} />,
-    link: "",
-  },
 ];
 
 export default function AdminSidebar() {
+  const navigate = useNavigate();
+
+  const [modal, contextHolder] = Modal.useModal();
   const navigationRef = useRef();
 
   function handleMenuClick() {
@@ -53,6 +53,26 @@ export default function AdminSidebar() {
 
   function handleLinkClick() {
     navigationRef.current.classList.add("collapsed");
+  }
+
+  function logoutModal() {
+    modal.confirm({
+      title: "Logout",
+      content: "Are you sure you want to logout?",
+      okText: "Logout",
+      cancelText: "cancel",
+      centered: true,
+      maskClosable: true,
+      onOk() {
+        handleLogout();
+      },
+    });
+  }
+
+  function handleLogout() {
+    localStorage.removeItem(`${ADMIN_KEY}-loggedInAdmin`);
+    localStorage.removeItem(`${ADMIN_KEY}-token`);
+    navigate("/admin/login");
   }
 
   return (
@@ -78,7 +98,6 @@ export default function AdminSidebar() {
                 to={link}
                 className={"nav-item"}
                 key={label}
-                end={index === NAVLINKS.length - 1 ? true : false}
                 onClick={handleLinkClick}
               >
                 <span className="sidebar-link p-5">
@@ -88,8 +107,19 @@ export default function AdminSidebar() {
               </NavLink>
             );
           })}
+
+          {/* logout */}
+          <div className={"nav-item mt-auto"} onClick={logoutModal}>
+            <span className="sidebar-link p-5">
+              <span style={{ flex: "0 0 20px" }}>
+                <LuLogOut />
+              </span>{" "}
+              <p className="m-0 lg:hidden xl:block">Logout</p>
+            </span>
+          </div>
         </nav>
       </div>
+      {contextHolder}
     </div>
   );
 }

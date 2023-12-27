@@ -34,15 +34,15 @@
       }
     }
 
-    &:last-of-type {
-      margin-top: auto;
+    // &:last-of-type {
+    //   margin-top: auto;
 
-      &.active {
-        &::before {
-          display: none;
-        }
-      }
-    }
+    //   &.active {
+    //     &::before {
+    //       display: none;
+    //     }
+    //   }
+    // }
 
     .sidebar-link {
       cursor: pointer;
@@ -51,17 +51,11 @@
 
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 0.5rem;
 
-      @media (min-width: 1024px) {
-        justify-content: center;
-      }
-
-      @media (min-width: 1280px) {
-        justify-content: flex-start;
-      }
-
       p {
+        flex: 0 0 60%;
         cursor: pointer;
       }
     }
