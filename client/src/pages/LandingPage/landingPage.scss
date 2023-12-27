@@ -79,7 +79,7 @@
               width: 90%;
               &::placeholder {
                 color: rgba(255, 255, 255, 0.384);
-                font-size: 0.8rem;
+                font-size: 0.875rem;
                 letter-spacing: 1px;
                 font-weight: 100;
               }
@@ -411,7 +411,7 @@
           .infoCard {
             h1 {
               input {
-                font-size: 0.75rem;
+                font-size: 0.875rem;
               }
             }
             .infosubtitle {
@@ -422,7 +422,6 @@
             flex-direction: row;
           }
           button {
-
           }
         }
       }
