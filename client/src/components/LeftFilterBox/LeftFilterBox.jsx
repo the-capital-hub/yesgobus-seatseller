@@ -9,7 +9,7 @@ const LeftFilterBox = ({ title, points, count, name, onFilterChange, filters, so
 
   useEffect(() => {
     setSelectedPoints(filters || []);
-  }, [filters]);
+  }, [filters, sourceCity, destinationCity]);
 
   const displayLocation = (location) => {
     const maxLength = 30;

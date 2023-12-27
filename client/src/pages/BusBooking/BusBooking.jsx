@@ -64,9 +64,8 @@ const BusBooking = () => {
   for (let i = 0; i <= 6; i++) {
     const nextDate = new Date(date);
     nextDate.setDate(date.getDate() + i);
-    const formattedDate = `${daysOfWeek[nextDate.getDay()]},${
-      months[nextDate.getMonth()]
-    }-${nextDate.getDate()}`;
+    const formattedDate = `${daysOfWeek[nextDate.getDay()]},${months[nextDate.getMonth()]
+      }-${nextDate.getDate()}`;
     dates.push(formattedDate);
   }
 
@@ -197,8 +196,10 @@ const BusBooking = () => {
       setSrsBuses(filteredBuses);
       setNoSrsOfBuses(filteredBuses?.length);
 
+    } else {
+      isFilter = false;
     }
-
+    console.log(isFilter);  
     //vrl buses
     for (const sourceCity of sourceCities) {
       for (const destinationCity of destinationCities) {
@@ -242,8 +243,6 @@ const BusBooking = () => {
             setSrsBuses(prevBuses => [...prevBuses, ...filteredBuses]);
             setSrsBusesForFilter(prevFilteredBuses => [...prevFilteredBuses, ...filteredBuses]);
             setNoSrsOfBuses(prevCount => prevCount + filteredBuses?.length);
-            const operators = [...new Set(filteredBuses.map(bus => bus.operator_service_name))];
-            setSrsBusOperators(operators);
           }
         } catch (error) {
           //   setSrsBuses([]);
