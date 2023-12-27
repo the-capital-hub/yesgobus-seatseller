@@ -682,11 +682,15 @@ export const srsCancelBooking = async (ticket_number, seat_numbers) => {
 export const getSrsFilters = async (args) => {
   try {
     let searchResponse = await getSrsSchedules(args.sourceCity, args.destinationCity, args.doj);
-    const boardingPoints = searchResponse.flatMap(bus => bus.boarding_stages);
-    const droppingPoints = searchResponse.flatMap(bus => bus.dropoff_stages);
+    const filteredBuses = searchResponse.filter(bus => bus?.status === "New" || bus.status === "Update");
+    const boardingPoints = filteredBuses.flatMap(bus => bus.boarding_stages);
+    const droppingPoints = filteredBuses.flatMap(bus => bus.dropoff_stages);
+    const busPartners = filteredBuses.map(bus => bus.operator_service_name);
+    const uniqueBusPartners = [...new Set(busPartners)];
     return {
       boardingPoints,
       droppingPoints,
+      busPartners: uniqueBusPartners,
     };
   } catch (error) {
     throw error.message;

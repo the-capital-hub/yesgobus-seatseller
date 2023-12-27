@@ -399,7 +399,6 @@ const Seats = ({
           );
           if (seat) {
             seatCount++;
-            console.log(highlightedPrice);
             const isHighlighted =
               parseFloat(seatDetails.available[seat.seatName]) ===
               parseFloat(highlightedPrice);
