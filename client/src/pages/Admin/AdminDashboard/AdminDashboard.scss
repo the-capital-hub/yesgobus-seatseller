@@ -1,0 +1,16 @@
+.dashboard-wrapper {
+  padding: 1rem;
+  .dashboard-header {
+    display: grid;
+    grid-template-columns: calc(100% - 21rem) 19rem;
+    justify-content: space-between;
+  }
+
+  .list-container {
+    .list-bar {
+      & + .list-bar {
+        border-top: 1px solid #0000003b;
+      }
+    }
+  }
+}

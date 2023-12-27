@@ -11,8 +11,8 @@ export default function NotificationIcon(props) {
       {...props}
     >
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M9.5 16.8476C15.1392 16.8476 17.7481 16.1242 18 13.2205C18 10.3188 16.1812 10.5054 16.1812 6.94511C16.1812 4.16414 13.5452 1 9.5 1C5.45477 1 2.81885 4.16414 2.81885 6.94511C2.81885 10.5054 1 10.3188 1 13.2205C1.25295 16.1352 3.86177 16.8476 9.5 16.8476Z"
         stroke="currentColor"
         strokeWidth="1.5"
