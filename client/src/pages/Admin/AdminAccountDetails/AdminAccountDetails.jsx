@@ -29,12 +29,14 @@ export default function AdminAccountDetails() {
       password: incomingData.password,
     };
 
-    console.log("formData", formData);
+    // console.log("formData", formData);
 
     try {
       setLoading(true);
-      const response = await agentRegisterAPI(formData);
-      console.log("register response", response);
+
+      await agentRegisterAPI(formData);
+      // const response = await agentRegisterAPI(formData);
+      // console.log("register response", response);
       messageApi.open({
         type: "success",
         content: "Registration Successful!",
