@@ -1,4 +1,4 @@
-import { Input, InputNumber, Radio, Form } from "antd";
+import { Input, Radio, Form } from "antd";
 
 export default function BankingDetails() {
   return (
@@ -45,6 +45,7 @@ export default function BankingDetails() {
                 required: true,
               },
             ]}
+            hasFeedback
           >
             <Input />
           </Form.Item>
@@ -57,22 +58,41 @@ export default function BankingDetails() {
               {
                 required: true,
               },
+              {
+                pattern: /^[A-Za-z0-9]+$/,
+                message: "Please enter a valid Account Number",
+              },
             ]}
+            hasFeedback
           >
-            <InputNumber style={{ width: "100%" }} />
+            <Input />
           </Form.Item>
           {/* Confirm Account Number */}
           <Form.Item
             label={"Confirm Account Number"}
             name="confirmAccountNumber"
             className="custom-form-item"
+            dependencies={["bankAccNum"]}
             rules={[
               {
                 required: true,
               },
+              {
+                pattern: /^[A-Za-z0-9]+$/,
+                message: "Please enter a valid Account Number",
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("bankAccNum") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject("Account Numbers do not match");
+                },
+              }),
             ]}
+            hasFeedback
           >
-            <InputNumber style={{ width: "100%" }} />
+            <Input />
           </Form.Item>
           {/* IFSC code */}
           <Form.Item
@@ -84,6 +104,7 @@ export default function BankingDetails() {
                 required: true,
               },
             ]}
+            hasFeedback
           >
             <Input />
           </Form.Item>
