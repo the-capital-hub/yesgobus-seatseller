@@ -8,6 +8,7 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_REGEX = /^\d{10}$/;
 
 const INITIAL_ERROR = {
+  userId: "",
   fullName: "",
   email_phone: "",
   password: "",
@@ -27,9 +28,9 @@ export default function CreateAccountForm() {
   async function handleCreateAccountSubmit(e) {
     e.preventDefault();
 
-    const { fullName, email_phone, password, confirmPassword } = e.target;
-
+    const { fullName, email_phone, password, confirmPassword, userId } = e.target;
     const { error, hasError } = validateCreateAccountData({
+      userId,
       fullName,
       email_phone,
       password,
@@ -52,6 +53,7 @@ export default function CreateAccountForm() {
       }
 
       let formData = {
+        userId: userId.value,
         firstName: firstName,
         lastName: lastName,
         phNum: phNum,
@@ -77,6 +79,22 @@ export default function CreateAccountForm() {
       noValidate
     >
       <div className="flex flex-col gap-1">
+
+        <input
+          type="text"
+          name="userId"
+          id="admin-userId"
+          className="create-input"
+          placeholder="Yesgobus User Id"
+          required
+          onChange={handleChange}
+          autoComplete="one-time-code"
+          autoFocus
+        />
+      </div>
+      <div className="flex flex-col gap-1">
+
+
         <input
           type="text"
           name="fullName"
@@ -86,7 +104,6 @@ export default function CreateAccountForm() {
           required
           onChange={handleChange}
           autoComplete="one-time-code"
-          autoFocus
         />
         {error.fullName && (
           <em className="text-error text-xs ps-4 slide-down">

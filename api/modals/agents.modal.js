@@ -4,6 +4,14 @@ const { Schema } = mongoose;
 
 const agentSchema = new Schema(
   {
+    userId: {
+      type: String,
+      required: true,
+    },
+    id: {
+      type: String,
+      required: true,
+    },
     firstName: {
       type: String,
       required: true
