@@ -4,6 +4,7 @@ const PHONE_REGEX = /^\d{10}$/;
 
 export function validateCreateAccountData(formData) {
   let error = {
+    userId: "",
     fullName: "",
     email_phone: "",
     password: "",
@@ -11,17 +12,23 @@ export function validateCreateAccountData(formData) {
   };
   let hasError = false;
 
-  const { fullName, email_phone, password, confirmPassword } = formData;
+  const { fullName, email_phone, password, confirmPassword, userId } = formData;
+
+  //userId
+  if (!userId.value || userId.value === " ") {
+    error.userId = "User ID is Required";
+    hasError = true;
+  }
 
   //   full name
   if (!fullName.value || fullName.value === " ") {
-    error.fullName = "Full Name is Required";
+    error.fullName = "Please enter Full Name";
     hasError = true;
   }
 
   //   email or phone
   if (!email_phone.value) {
-    error.email_phone = "Email or Phone Number is Required";
+    error.email_phone = "Please enter Email or Phone Number";
     hasError = true;
   } else if (
     !EMAIL_REGEX.test(email_phone.value) &&
@@ -33,7 +40,7 @@ export function validateCreateAccountData(formData) {
 
   //   password
   if (!password.value || password.value === " ") {
-    error.password = "Valid Password is Required";
+    error.password = "Please enter Password";
     hasError = true;
   }
 
@@ -44,6 +51,32 @@ export function validateCreateAccountData(formData) {
   }
   if (confirmPassword.value !== password.value) {
     error.confirmPassword = "Both passwords should match";
+    hasError = true;
+  }
+
+  return { error, hasError };
+}
+
+// Validate Login data
+export function ValidateLoginData(formData) {
+  let error = {
+    emailMobile: "",
+    password: "",
+  };
+  let hasError = false;
+
+  const { emailMobile, password } = formData;
+
+  if (!emailMobile) {
+    error.emailMobile = "Please enter Email or Phone Number";
+    hasError = true;
+  } else if (!EMAIL_REGEX.test(emailMobile) && !PHONE_REGEX.test(emailMobile)) {
+    error.emailMobile = "Valid Email or Phone Number is Required";
+    hasError = true;
+  }
+
+  if (!password || password === " ") {
+    error.password = "Please enter Password";
     hasError = true;
   }
 

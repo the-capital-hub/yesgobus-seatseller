@@ -1,6 +1,7 @@
 import User from "../modals/user.modal.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { generateRandomNumber } from "../utils/generateRandomNumber.js";
 
 export const signUp = async (userData) => {
   try {
@@ -8,9 +9,11 @@ export const signUp = async (userData) => {
       $or: [{ email: userData.email }, { phoneNumber: userData.phoneNumber }],
     });
     if (!existingUser) {
+      const userId = generateRandomNumber(8);
       const hashedPassword = bcrypt.hashSync(userData.password, 5);
       const newUser = new User({
         ...userData,
+        userId: userId,
         password: hashedPassword,
       });
       await newUser.save();
