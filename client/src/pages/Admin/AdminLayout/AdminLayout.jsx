@@ -39,7 +39,7 @@ export default function AdminLayout() {
       <AdminSidebar />
       <div className="" id="main">
         <div className="main-content" id="main-content">
-          <Outlet context={admin} />
+          <Outlet context={{ admin }} />
         </div>
       </div>
     </div>
