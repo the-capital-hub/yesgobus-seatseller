@@ -5,21 +5,21 @@ import { WatermarkIcon } from "../../../../../assets/contact";
 export default function TrackAgentList() {
   return (
     <div className="list-container flex flex-col rounded-lg border border-solid border-gray-300 bg-white shadow-lg">
-      <header className="list-bar grid grid-cols-4 place-items-center py-4 px-8">
-        <p className="m-0 text-lg justify-self-start">Bus Route</p>
+      <header className="list-bar grid grid-cols-1 min-[350px]:grid-cols-2 md:grid-cols-4 place-items-center gap-4 py-4 px-8">
+        <p className="m-0 text-lg md:justify-self-start">Bus Route</p>
         <p className="m-0 text-lg">Bus Number</p>
         <p className="m-0 text-lg">Buses</p>
-        <p className="m-0 text-lg justify-self-end w-[150px] text-center">
+        <p className="m-0 text-lg md:justify-self-end w-[150px] text-center">
           Track
         </p>
       </header>
       {Array.from({ length: 5 }).map((elem, index) => {
         return (
           <div
-            className="list-bar grid grid-cols-4 place-items-center py-4 px-8"
+            className="list-bar grid grid-cols-1 min-[350px]:grid-cols-2 md:grid-cols-4 place-items-center gap-4 py-4 px-8"
             key={`${elem}-${index}`}
           >
-            <div className="flex items-center gap-4 justify-self-start">
+            <div className="flex items-center gap-4 md:justify-self-start">
               <img
                 src={WatermarkIcon}
                 alt="route"
@@ -31,7 +31,7 @@ export default function TrackAgentList() {
             </div>
             <p className="m-0">Bus Number</p>
             <p className="m-0">No. of Buses</p>
-            <Link className="no-underline text-inherit justify-self-end w-[150px]">
+            <Link className="no-underline text-inherit md:justify-self-end w-[150px]">
               <Button
                 htmlType="button"
                 type="primary"

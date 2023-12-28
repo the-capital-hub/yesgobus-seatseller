@@ -21,7 +21,7 @@ export default function SideHistory() {
             key={`${text}-${index}`}
           >
             {/* Details */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 justify-self-start">
               <TransactionArrow
                 backgroundClass={isDebit ? "bg-black" : "bg-gray-200"}
                 colorClass={isDebit ? "text-primary" : "text-black"}

@@ -9,22 +9,25 @@ export default function DashboardSide() {
   let fullName = admin?.firstName + " " + admin?.lastName || "Full Name";
 
   return (
-    <div className="shortBoard border border-solid border-gray-300 bg-white rounded-lg shadow-lg">
-      <div className="flex flex-col gap-1 items-center pt-2">
+    <div
+      className="shortBoard border border-solid border-gray-300 bg-white rounded-lg shadow-lg"
+      id="dashboardSidebar"
+    >
+      <div className="flex flex-col gap-1 md:items-center pt-2">
         {/* Profile Picture */}
         <img
           src={WatermarkIcon}
           alt="username"
           width={65}
           height={65}
-          className="object-contain rounded-full border border-solid border-gray-300"
+          className="object-contain rounded-full border border-solid border-gray-300 mx-auto"
         />
 
         {/* Name */}
-        <p className="m-0 text-lg">{fullName}</p>
+        <p className="m-0 mx-auto text-lg">{fullName}</p>
 
         {/* Icons */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 mx-auto">
           <div className="flex flex-col gap-2">
             <TransactionArrow />
             <p className="m-0 text-xs">Transfer</p>
