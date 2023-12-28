@@ -106,7 +106,9 @@ export default function CreateAccountForm() {
           autoComplete="one-time-code"
         />
         {error.fullName && (
-          <em className="text-error text-xs ps-4">{error.fullName}</em>
+          <em className="text-error text-xs ps-4 slide-down">
+            {error.fullName}
+          </em>
         )}
       </div>
 
@@ -122,7 +124,9 @@ export default function CreateAccountForm() {
           autoComplete="one-time-code"
         />
         {error.email_phone && (
-          <em className="text-error text-xs ps-4">{error.email_phone}</em>
+          <em className="text-error text-xs ps-4 slide-down">
+            {error.email_phone}
+          </em>
         )}
       </div>
 
@@ -154,7 +158,9 @@ export default function CreateAccountForm() {
           </span>
         </div>
         {error.password && (
-          <em className="text-error text-xs ps-4">{error.password}</em>
+          <em className="text-error text-xs ps-4 slide-down">
+            {error.password}
+          </em>
         )}
       </div>
 
@@ -186,7 +192,9 @@ export default function CreateAccountForm() {
           </span>
         </div>
         {error.confirmPassword && (
-          <em className="text-error text-xs ps-4">{error.confirmPassword}</em>
+          <em className="text-error text-xs ps-4 slide-down">
+            {error.confirmPassword}
+          </em>
         )}
       </div>
 

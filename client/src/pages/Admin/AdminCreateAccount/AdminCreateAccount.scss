@@ -87,4 +87,19 @@
   //     }
   //   }
   // }
+  .slide-down {
+    animation: slide-down 0.1s linear 0s 1 forwards;
+  }
+}
+
+@keyframes slide-down {
+  0% {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translate(0px);
+    opacity: 1;
+  }
 }
