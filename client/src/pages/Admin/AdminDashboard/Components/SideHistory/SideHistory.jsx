@@ -38,7 +38,7 @@ export default function SideHistory() {
                 isDebit ? "text-primary" : ""
               }`}
             >
-              {isDebit ? "-" : "+"}Rs.{"3000"}
+              {isDebit ? "-" : "+"}Rs. {"3000"}
             </p>
           </div>
         );

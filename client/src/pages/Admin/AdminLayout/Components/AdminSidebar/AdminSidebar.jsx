@@ -60,7 +60,7 @@ export default function AdminSidebar() {
       title: "Logout",
       content: "Are you sure you want to logout?",
       okText: "Logout",
-      cancelText: "cancel",
+      cancelText: "Cancel",
       centered: true,
       maskClosable: true,
       onOk() {
