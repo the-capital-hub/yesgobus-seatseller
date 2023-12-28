@@ -1,0 +1,12 @@
+.track-agent-wrapper {
+    padding: 1rem;
+  
+    .list-container {
+      .list-bar {
+        & + .list-bar {
+          border-top: 1px solid #0000003b;
+        }
+      }
+    }
+  }
+  
