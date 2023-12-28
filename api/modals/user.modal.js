@@ -4,6 +4,10 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema(
   {
+    userId: {
+      type: Number,
+      // required: true
+    },
     fullName: {
       type: String,
       required: true

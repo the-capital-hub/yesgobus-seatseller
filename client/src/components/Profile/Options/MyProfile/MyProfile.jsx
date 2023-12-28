@@ -67,6 +67,14 @@ export default function MyProfile() {
       <form onSubmit={handleSubmit} autoComplete="off" className="info__grid">
         <input
           type="Name"
+          id="userId"
+          name="userId"
+          className="profile__input"
+          value={loggedInUser.userId}
+          disabled
+        />
+        <input
+          type="Name"
           id="name"
           name="fullName"
           placeholder="Enter Name"
@@ -130,9 +138,9 @@ export default function MyProfile() {
         </button>
       </form>
       <div className="container">
-  <h1>Change Language:</h1>
-  <div id="google_translate_element"></div>
-</div>
+        <h1>Change Language:</h1>
+        <div id="google_translate_element"></div>
+      </div>
 
     </div>
   );

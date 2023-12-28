@@ -4,6 +4,7 @@ const PHONE_REGEX = /^\d{10}$/;
 
 export function validateCreateAccountData(formData) {
   let error = {
+    userId: "",
     fullName: "",
     email_phone: "",
     password: "",
@@ -11,7 +12,13 @@ export function validateCreateAccountData(formData) {
   };
   let hasError = false;
 
-  const { fullName, email_phone, password, confirmPassword } = formData;
+  const { fullName, email_phone, password, confirmPassword, userId } = formData;
+
+  //userId
+  if (!userId.value || userId.value === " ") {
+    error.userId = "User ID is Required";
+    hasError = true;
+  }
 
   //   full name
   if (!fullName.value || fullName.value === " ") {

@@ -202,6 +202,7 @@ const Login = () => {
           createAccountData
         );
         if (response.status === 200) {
+          setLoading(false);
           toast.dismiss(loadingToast);
           toast.success("Account Created", {
             duration: 2000,

@@ -21,19 +21,21 @@ export default function AdminAccountDetails() {
     if (incomingData) {
       setLoading(false);
     }
+    console.log(incomingData);
   }, [incomingData]);
 
   async function handleDetailsSubmit(values) {
     let { confirmAccountNumber, ...formData } = {
       ...values,
       password: incomingData.password,
+      userId: incomingData.userId,
     };
 
     // console.log("formData", formData);
 
     try {
       setLoading(true);
-
+      console.log(formData);
       await agentRegisterAPI(formData);
       // const response = await agentRegisterAPI(formData);
       // console.log("register response", response);
@@ -47,12 +49,26 @@ export default function AdminAccountDetails() {
         navigate("/admin/login");
       }, 2000);
     } catch (error) {
-      console.error("Error Registering User:", error);
-      messageApi.open({
-        type: "error",
-        content: "Error Submitting Registration. Please try again.",
-        duration: 3,
-      });
+      console.error("Error Registering User:", error.response.data.message);
+      if (error.response.data.message === "Yesgobus account doesnot exists") {
+        messageApi.open({
+          type: "error",
+          content: "Yesgobus account user id doesnot exists.",
+          duration: 3,
+        });
+      } else if (error.response.data.message === "Agent already exists") {
+        messageApi.open({
+          type: "error",
+          content: "Agent already exists.",
+          duration: 3,
+        });
+      } else {
+        messageApi.open({
+          type: "error",
+          content: "Error Submitting Registration. Please try again.",
+          duration: 3,
+        });
+      }
     } finally {
       setLoading(false);
     }
