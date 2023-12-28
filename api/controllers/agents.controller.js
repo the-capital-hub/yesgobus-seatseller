@@ -1,4 +1,9 @@
-import { registerAgent, loginAgent } from '../service/agents.service.js';
+import {
+  registerAgent,
+  loginAgent,
+  getAgentBookings,
+  getAllAgentsBookings,
+} from '../service/agents.service.js';
 
 export const registerAgentController = async (req, res) => {
   try {
@@ -23,5 +28,27 @@ export const loginAgentController = async (req, res) => {
     res.status(result.status).json({ message: result.message, token: result.token, data: result.data });
   } catch (err) {
     res.status(500).json({ message: "An error occurred while logging in" });
+  }
+};
+
+
+export const getAgentBookingsController = async (req, res) => {
+  try {
+    const { agentId } = req.params;
+    const result = await getAgentBookings(agentId);
+    res.status(result.status).send(result);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Error getting bookings" });
+  }
+};
+
+export const getAllAgentBookingsController = async (req, res) => {
+  try {
+    const result = await getAllAgentsBookings();
+    res.status(result.status).send(result);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Error getting bookings" });
   }
 };
