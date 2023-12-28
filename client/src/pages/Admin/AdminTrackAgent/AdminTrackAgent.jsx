@@ -1,9 +1,12 @@
 import React from "react";
 
 import "./AdminTrackAgent.scss";
+import HeaderWithSort from "../../../components/Admin/HeaderWithSort/HeaderWithSort";
 function AdminTrackAgent() {
   return (
     <div className="track-agent-wrapper bg-white lg:rounded-xl my-4 mx-8 border border-solid border-gray-300">
+      <HeaderWithSort />
+
       <div className="trackAgent-container flex flex-col gap-5 py-5">
         <h2 className="m-0">Track Agent</h2>
 
