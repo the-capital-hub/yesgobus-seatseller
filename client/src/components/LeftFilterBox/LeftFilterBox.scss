@@ -12,6 +12,7 @@
       align-items: center;
 
       p {
+
         &:hover {
           cursor: pointer;
         }
@@ -31,6 +32,9 @@
         .types {
           display: flex;
           gap: 10px;
+          font-weight: 600;
+          font-size: 13px;
+          align-items: center;
         }
       }
     }
