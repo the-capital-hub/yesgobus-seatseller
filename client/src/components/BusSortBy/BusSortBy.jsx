@@ -6,8 +6,8 @@ const SORT_OPTIONS = [{ label: "Price", sortTerm: "price" }];
 
 export default function BusSortBy({ handleSortByChange, sortBy, setSortBy }) {
   return (
-    <div className="sortBy-container py-4 px-2">
-      <div className="flex items-center gap-8 flex-wrap">
+    <div className="sortBy-container py-4 px-2 border-0 border-b border-solid border-gray-300">
+      <div className="flex items-center gap-4 md:gap-8 flex-wrap">
         <p className="text-xl">Sort By:</p>
         {SORT_OPTIONS.map(({ label, sortTerm }, index) => {
           return (
@@ -48,7 +48,7 @@ export function SortToggle({ handleSortByChange, sortTerm, label }) {
 
   return (
     <button
-      className="border-0 bg-transparent outline-none text-lg flex items-center justify-center gap-2"
+      className="border-0 bg-transparent outline-none text-lg flex items-center justify-center gap-1"
       onClick={handleClick}
     >
       {label}
