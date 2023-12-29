@@ -2,6 +2,9 @@ import { ConfigProvider, Table } from "antd";
 import NotificationIcon from "../../../components/SvgIcons/NotificationIcon";
 import UserIcon from "../../../components/SvgIcons/UserIcon";
 import "./AdminRecords.scss";
+import { useState, useEffect } from "react";
+import { getAgentBookings } from "../../../api/admin";
+import { ADMIN_KEY } from "../AdminLogin/AdminLogin";
 
 const dataSource = [
   {
@@ -69,39 +72,39 @@ const dataSource = [
 const columns = [
   {
     title: "Name",
-    dataIndex: "name",
-    key: "name",
+    dataIndex: "customerName",
+    key: "customerName",
   },
   {
     title: "Time of Booking",
-    dataIndex: "timeOfBooking",
-    key: "timeOfBooking",
+    dataIndex: "doj",
+    key: "doj",
   },
   {
     title: "Operator",
-    dataIndex: "operator",
-    key: "operator",
+    dataIndex: "busOperator",
+    key: "busOperator",
   },
   {
     title: "From",
-    dataIndex: "from",
-    key: "from",
+    dataIndex: "sourceCity",
+    key: "sourceCity",
   },
   {
     title: "To",
-    dataIndex: "to",
-    key: "to",
+    dataIndex: "destinationCity",
+    key: "destinationCity",
   },
   {
     title: "Cost (Rs)",
-    dataIndex: "cost",
-    key: "cost",
+    dataIndex: "totalAmount",
+    key: "totalAmount",
   },
-  {
-    title: "Agent",
-    dataIndex: "agent",
-    key: "agent",
-  },
+  // {
+  //   title: "Agent",
+  //   dataIndex: "agent",
+  //   key: "agent",
+  // },
 ];
 
 const tableStyles = {
@@ -110,6 +113,28 @@ const tableStyles = {
 };
 
 export default function AdminRecords() {
+  const loggedInAdmin = JSON.parse(localStorage.getItem(`${ADMIN_KEY}-loggedInAdmin`));
+
+  const [bookings, setBookings] = useState(null);
+
+  const getAllAgentBookings = async () => {
+    try {
+      const response = await getAgentBookings(loggedInAdmin._id);
+      const bookingsData = response.data.map((booking) => {
+        booking.doj = new Date(booking.doj).toISOString().split('T')[0];
+        booking.customerName = booking.customerName + " " + (booking.customerLastName || "");
+        return booking;
+      })
+      setBookings(bookingsData);
+    } catch (error) {
+      console.error("Error :", error);
+    }
+  }
+
+  useEffect(() => {
+    getAllAgentBookings();
+  }, [])
+
   return (
     <div className="admin-records-wrapper">
       <div className="bg-white rounded-lg border border-solid border-gray-300 flex flex-col gap-4 p-3 lg:px-8 lg:py-8">
@@ -137,11 +162,15 @@ export default function AdminRecords() {
             }}
           >
             <Table
-              dataSource={dataSource}
+              dataSource={bookings}
               columns={columns}
               scroll={{ x: true }}
               bordered
               style={tableStyles}
+              pagination={{
+                pageSize: 5,
+                hideOnSinglePage: true, 
+              }}
             />
           </ConfigProvider>
         </div>

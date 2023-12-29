@@ -6,6 +6,7 @@ import {
   getAllAgentBookingsController,
   getBalanceAPIController,
   adminApproveAgentController,
+  adminRejecteAgentController,
   getAllPendingAgentsControllr,
   getAllBookingsController,
   getAllBookingRefundsController,
@@ -20,6 +21,7 @@ router.get("/getAgentBookings/:agentId", getAgentBookingsController);
 router.get("/getAllAgentBookings", getAllAgentBookingsController);
 router.get("/getBalance", getBalanceAPIController);
 router.patch("/approveAgent/:agentId", adminApproveAgentController);
+router.delete("/rejectAgent/:agentId", adminRejecteAgentController);
 router.get("/getAllPendingAgents", getAllPendingAgentsControllr);
 router.get("/getAllBookings", getAllBookingsController);
 router.get("/getAllBookingRefunds", getAllBookingRefundsController);

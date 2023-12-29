@@ -5,6 +5,7 @@ import {
   getAllAgentsBookings,
   getBalanceAPI,
   adminApproveAgent,
+  adminRejectAgent,
   getAllPendingAgents,
   getAllBookings,
   getAllBookingRefund,
@@ -78,6 +79,18 @@ export const adminApproveAgentController = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(err.status || 500).json({ message: "Error approving agent" });
+  }
+};
+
+
+export const adminRejecteAgentController = async (req, res) => {
+  try {
+    const { agentId } = req.params;
+    const result = await adminRejectAgent(agentId);
+    res.status(200).send(result);
+  } catch (err) {
+    console.log(err);
+    res.status(err.status || 500).json({ message: "Error rejecting agent" });
   }
 };
 
