@@ -41,7 +41,7 @@ const NAVLINKS = [
   },
 ];
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ admin }) {
   const navigate = useNavigate();
 
   const [modal, contextHolder] = Modal.useModal();
@@ -93,6 +93,12 @@ export default function AdminSidebar() {
       <div className={`navigation py-10 h-full`} ref={navigationRef}>
         <nav className="flex flex-col gap-5 h-full">
           {NAVLINKS.map(({ label, icon, link }, index) => {
+             if (label === "Track Agent" && admin.role !== "YSB_ADMIN") {
+              return null; 
+            }
+            if (label === "Records" && admin.role === "YSB_ADMIN") {
+              return null; 
+            }
             return (
               <NavLink
                 to={link}

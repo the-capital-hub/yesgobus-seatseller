@@ -8,8 +8,16 @@ import { cityMapping } from "../../utils/cityMapping";
 import { map } from "../../assets/homepage";
 import { getVrlBusFilters } from "../../api/vrlBusesApis";
 import { getSrsBuseFilters } from "../../api/srsBusesApis";
+import { sortPartners } from "../../utils/BusBookingHelpers";
 
-const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs, allSrsBusOperators }) => {
+const LeftFilter = ({
+  sourceCity,
+  destinationCity,
+  doj,
+  onFilterChange,
+  isSrs,
+  allSrsBusOperators,
+}) => {
   const [range, setRange] = useState([100, 4000]);
   const [filters, setFilters] = useState([]);
   const [boardingPointsFilter, setBoardingPointsFilter] = useState([]);
@@ -44,13 +52,13 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs, a
         const mapping = cityMapping[sourceCity.trim().toLowerCase()];
         sourceCities = mapping.sourceCity;
       } else {
-        sourceCities.push(sourceCity)
+        sourceCities.push(sourceCity);
       }
       if (destinationCity.trim().toLowerCase() in cityMapping) {
         const mapping = cityMapping[destinationCity.trim().toLowerCase()];
         destinationCities = mapping.sourceCity;
       } else {
-        destinationCities.push(destinationCity)
+        destinationCities.push(destinationCity);
       }
 
       for (const sourceCity of sourceCities) {
@@ -90,10 +98,9 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs, a
             // console.error("Error fetching filters:", error);
           }
 
-
           combinedBoardingPoints = combinedBoardingPoints.concat(
             vrlResponse?.data?.boardingPoints || [],
-            srsResponse?.boardingPoints || [],
+            srsResponse?.boardingPoints || []
             // response?.data?.data?.boardingPoints || []
           );
 
@@ -105,32 +112,43 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs, a
 
           combinedBusPartners = combinedBusPartners.concat(
             response?.data?.data?.busPartners || [],
-            srsResponse?.busPartners || [],
+            srsResponse?.busPartners || []
           );
           console.log(srsResponse);
 
-          if (vrlResponse?.data) {
+          if (
+            vrlResponse?.data.boardingPoints.length ||
+            vrlResponse.data.droppingPoints.length
+          ) {
+            console.log("VRL response", vrlResponse);
             combinedBusPartners.push("VRL Travels");
           }
         }
       }
       // Create Set objects to remove duplicates
-      const uniqueBoardingPointsSet = new Set(combinedBoardingPoints.map(point => point));
-      const uniqueDroppingPointsSet = new Set(combinedDroppingPoints.map(point => point));
-      const uniqueBusPartnersSet = new Set(combinedBusPartners.map(partner => partner));
+      const uniqueBoardingPointsSet = new Set(
+        combinedBoardingPoints.map((point) => point)
+      );
+      const uniqueDroppingPointsSet = new Set(
+        combinedDroppingPoints.map((point) => point)
+      );
+      const uniqueBusPartnersSet = new Set(
+        combinedBusPartners.map((partner) => partner)
+      );
 
       // Convert Set objects to arrays
       const uniqueBoardingPoints = [...uniqueBoardingPointsSet];
       const uniqueDroppingPoints = [...uniqueDroppingPointsSet];
       const uniqueBusPartners = [...uniqueBusPartnersSet];
 
+      const sortedBusPartners = sortPartners(uniqueBusPartners);
+
       setFilters({
-        ...response?.data?.data || [],
+        ...(response?.data?.data || []),
         boardingPoints: uniqueBoardingPoints,
         droppingPoints: uniqueDroppingPoints,
-        busPartners: uniqueBusPartners,
+        busPartners: sortedBusPartners,
       });
-
     };
 
     getFilters();
@@ -173,6 +191,7 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs, a
           filters={selectedBoardingPoints}
           sourceCity={sourceCity}
           destinationCity={destinationCity}
+          key={"Boarding Points"}
         />
         <LeftFilterBox
           title={"Drop Points"}
@@ -183,6 +202,7 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs, a
           filters={selectedDroppingPoints}
           sourceCity={sourceCity}
           destinationCity={destinationCity}
+          key={"Drop Points"}
         />
         <LeftFilterBox
           title={"Bus Partner"}
@@ -192,6 +212,7 @@ const LeftFilter = ({ sourceCity, destinationCity, doj, onFilterChange, isSrs, a
           onFilterChange={handleFilterChange}
           sourceCity={sourceCity}
           destinationCity={destinationCity}
+          key={"Bus Partner"}
         />
         {/* <LeftFilterBox
           title={"Bus Type"}

@@ -68,38 +68,7 @@ const columns = [
     ),
   },
 ];
-const transactionData = [
-  {
-    key: 1,
-    name: "John Doe",
-    date: "2023-01-15",
-    amount: 150.0,
-  },
-  {
-    key: 2,
-    name: "Alice Smith",
-    date: "2023-02-05",
-    amount: 75.5,
-  },
-  {
-    key: 3,
-    name: "Bob Johnson",
-    date: "2023-03-20",
-    amount: 200.0,
-  },
-  {
-    key: 4,
-    name: "Eva Williams",
-    date: "2023-04-10",
-    amount: 120.75,
-  },
-  {
-    key: 5,
-    name: "Charlie Brown",
-    date: "2023-05-05",
-    amount: 50.25,
-  },
-];
+
 
 const AdminWallet = () => {
   const [balance, setBalance] = useState(null);
@@ -118,7 +87,12 @@ const AdminWallet = () => {
   const getAllBookingDetails = async () => {
     try {
       const response = await getAllBookings();
-      setBookings(response.data);
+      const bookingsData = response.data.map((booking) => {
+        booking.doj = new Date(booking.doj).toISOString().split('T')[0];
+        booking.customerName = booking.customerName + " " + (booking.customerLastName || "");
+        return booking;
+      })
+      setBookings(bookingsData);
     } catch (error) {
       console.error("Error :", error);
     }
@@ -127,7 +101,12 @@ const AdminWallet = () => {
   const getBookingRefundDetails = async () => {
     try {
       const response = await getAllBookingRefund();
-      setRefunds(response.data);
+      const bookingsData = response.data.map((booking) => {
+        booking.doj = new Date(booking.doj).toISOString().split('T')[0];
+        booking.customerName = booking.customerName + " " + (booking.customerLastName || "");
+        return booking;
+      })
+      setRefunds(bookingsData);
     } catch (error) {
       console.error("Error :", error);
     }
@@ -179,6 +158,10 @@ const AdminWallet = () => {
           columns={columns}
           dataSource={bookings}
           className="box-container"
+          pagination={{
+            pageSize: 5,
+            hideOnSinglePage: true,
+          }}
         />
       </section>
       {/* History Transferred*/}
@@ -193,6 +176,10 @@ const AdminWallet = () => {
           columns={columns}
           dataSource={refunds}
           className="box-container"
+          pagination={{
+            pageSize: 5,
+            hideOnSinglePage: true,
+          }}
         />
       </section>
     </div>

@@ -2,7 +2,16 @@ import { useEffect, useState } from "react";
 import { downarrow } from "../../assets/busbooking";
 import "./LeftFilterBox.scss";
 
-const LeftFilterBox = ({ title, points, count, name, onFilterChange, filters, sourceCity, destinationCity }) => {
+const LeftFilterBox = ({
+  title,
+  points,
+  count,
+  name,
+  onFilterChange,
+  filters,
+  sourceCity,
+  destinationCity,
+}) => {
   const [showPoints, setShowPoints] = useState(false);
   const [selectedPoints, setSelectedPoints] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -54,25 +63,23 @@ const LeftFilterBox = ({ title, points, count, name, onFilterChange, filters, so
               style={{ marginTop: "15px" }}
             />
             <ul>
-              {points
-                ?.filter(filterPoints)
-                .map((point, index) => (
-                  <>
-                    <div className="filterTypes" key={index}>
-                      <label className="types" htmlFor={point}>
-                        <input
-                          type="checkbox"
-                          id={point}
-                          onChange={() => handleCheckboxChange(point)}
-                          checked={selectedPoints.includes(point)}
-                        />
-                        <p>{capitalizeFirstLetter(displayLocation(point))}</p>
-                      </label>
-                      {/* <p>({count[index]})</p> */}
-                    </div>
-                    <hr />
-                  </>
-                ))}
+              {points?.filter(filterPoints).map((point, index) => (
+                <>
+                  <div className="filterTypes" key={index}>
+                    <label className="types" htmlFor={point}>
+                      <input
+                        type="checkbox"
+                        id={point}
+                        onChange={() => handleCheckboxChange(point)}
+                        checked={selectedPoints.includes(point)}
+                      />
+                      <p>{capitalizeFirstLetter(displayLocation(point))}</p>
+                    </label>
+                    {/* <p>({count[index]})</p> */}
+                  </div>
+                  <hr />
+                </>
+              ))}
             </ul>
           </div>
         )}

@@ -40,6 +40,7 @@ const Payment = () => {
     mobile: loggedInUser.phoneNumber || "",
     gender: "M",
     idType: "PAN",
+    agentCode: "",
   });
 
   const [countdown, setCountdown] = useState(10);
@@ -117,8 +118,7 @@ const Payment = () => {
         setLoading(true);
         // get bookings
         const getBookingDetails = await axiosInstance.get(
-          `${
-            import.meta.env.VITE_BASE_URL
+          `${import.meta.env.VITE_BASE_URL
           }/api/busBooking/getBookingById/${bookingId}`
         );
         if (getBookingDetails.status === 200) {
@@ -127,8 +127,7 @@ const Payment = () => {
 
           // check payment status
           const checkPaymentStatus = await axiosInstance.get(
-            `${
-              import.meta.env.VITE_BASE_URL
+            `${import.meta.env.VITE_BASE_URL
             }/api/payment/checkPaymentStatus/${merchantTransactionId}`
           );
 
@@ -146,8 +145,7 @@ const Payment = () => {
               if (vrlBookSeatResponse.Status === 1) {
                 const { data: updatePaymentDetails } =
                   await axiosInstance.patch(
-                    `${
-                      import.meta.env.VITE_BASE_URL
+                    `${import.meta.env.VITE_BASE_URL
                     }/api/busBooking/updateBooking/${bookingId}`,
                     {
                       bookingStatus: "paid",
@@ -172,8 +170,7 @@ const Payment = () => {
                     contact: updatePaymentDetails?.data?.driverNumber,
                   };
                   const sendMail = await axiosInstance.post(
-                    `${
-                      import.meta.env.VITE_BASE_URL
+                    `${import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationEmail`,
                     mailBody
                   );
@@ -195,8 +192,7 @@ const Payment = () => {
                     contact: updatePaymentDetails?.data?.driverNumber,
                   };
                   const sendMessage = await axiosInstance.post(
-                    `${
-                      import.meta.env.VITE_BASE_URL
+                    `${import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationMessage`,
                     messageBody
                   );
@@ -213,8 +209,7 @@ const Payment = () => {
               if (srsBookSeatResponse.result) {
                 const { data: updatePaymentDetails } =
                   await axiosInstance.patch(
-                    `${
-                      import.meta.env.VITE_BASE_URL
+                    `${import.meta.env.VITE_BASE_URL
                     }/api/busBooking/updateBooking/${bookingId}`,
                     {
                       bookingStatus: "paid",
@@ -245,8 +240,7 @@ const Payment = () => {
                     contact: updatePaymentDetails?.data?.driverNumber,
                   };
                   const sendMail = await axiosInstance.post(
-                    `${
-                      import.meta.env.VITE_BASE_URL
+                    `${import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationEmail`,
                     mailBody
                   );
@@ -268,8 +262,7 @@ const Payment = () => {
                     contact: updatePaymentDetails?.data?.driverNumber,
                   };
                   const sendMessage = await axiosInstance.post(
-                    `${
-                      import.meta.env.VITE_BASE_URL
+                    `${import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationMessage`,
                     messageBody
                   );
@@ -391,6 +384,7 @@ const Payment = () => {
     //seats data
     if (isVrl) {
       try {
+        console.log(userData.agentCode);
         const totalPassenger = bookingDetails?.selectedSeats?.length;
 
         const seatAndGenderArray = bookingDetails?.selectedSeats?.map(
@@ -399,8 +393,7 @@ const Payment = () => {
         const resultSeatString = seatAndGenderArray.join("|");
         const seatDetailsWithName = bookingDetails?.selectedSeats?.map(
           (seat, index) =>
-            `${seat},${userData[`firstName_${index}`]},${userData.mobile},${
-              userData[`age_${index}`]
+            `${seat},${userData[`firstName_${index}`]},${userData.mobile},${userData[`age_${index}`]
             }`
         );
         const resultseatDetailsWithNameString = seatDetailsWithName.join("|");
@@ -485,6 +478,7 @@ const Payment = () => {
               boardingPoint: bookingDetails?.boardingPoint?.bpName,
               droppingPoint: bookingDetails?.droppingPoint?.bpName,
               driverNumber: bookingDetails?.boardingPoint?.number,
+              agentCode: userData.agentCode,
             }
           );
 
@@ -499,8 +493,7 @@ const Payment = () => {
           if (response.status === 200) {
             // update merchantTransactionId
             const updatePaymentDetails = await axiosInstance.patch(
-              `${import.meta.env.VITE_BASE_URL}/api/busBooking/updateBooking/${
-                bookResponse.data._id
+              `${import.meta.env.VITE_BASE_URL}/api/busBooking/updateBooking/${bookResponse.data._id
               }`,
               {
                 merchantTransactionId: response.data.data.merchantTransactionId,
@@ -614,6 +607,7 @@ const Payment = () => {
               boardingPoint: bookingDetails?.boardingPoint?.bpName,
               droppingPoint: bookingDetails?.droppingPoint?.bpName,
               driverNumber: bookingDetails?.boardingPoint?.number,
+              agentCode: userData.agentCode,
             }
           );
 
@@ -628,8 +622,7 @@ const Payment = () => {
           if (response.status === 200) {
             // update merchantTransactionId
             const updatePaymentDetails = await axiosInstance.patch(
-              `${import.meta.env.VITE_BASE_URL}/api/busBooking/updateBooking/${
-                bookResponse.data._id
+              `${import.meta.env.VITE_BASE_URL}/api/busBooking/updateBooking/${bookResponse.data._id
               }`,
               {
                 merchantTransactionId: response.data.data.merchantTransactionId,
@@ -793,9 +786,8 @@ const Payment = () => {
       const genderKey = `gender_${index}`;
 
       if (!userData[firstNameKey]?.trim()) {
-        errors[firstNameKey] = `First name for Traveler ${
-          index + 1
-        } is required`;
+        errors[firstNameKey] = `First name for Traveler ${index + 1
+          } is required`;
       }
       if (!userData[lastNameKey]?.trim()) {
         errors[lastNameKey] = `Last name for Traveler ${index + 1} is required`;
@@ -881,8 +873,8 @@ const Payment = () => {
                 isVrl
                   ? bookingDetails?.boardingPoint?.time
                   : isSrs
-                  ? bookingDetails?.boardingPoint?.time
-                  : convertMinutesToTime(bookingDetails?.boardingPoint?.time)
+                    ? bookingDetails?.boardingPoint?.time
+                    : convertMinutesToTime(bookingDetails?.boardingPoint?.time)
               }
               // locationOne={bookingDetails.boardingPoint.location}
               locationTwo={bookingDetails?.boardingPoint?.bpName}
@@ -893,8 +885,8 @@ const Payment = () => {
                 isVrl
                   ? bookingDetails?.droppingPoint?.time
                   : isSrs
-                  ? bookingDetails?.droppingPoint?.time
-                  : convertMinutesToTime(bookingDetails?.droppingPoint?.time)
+                    ? bookingDetails?.droppingPoint?.time
+                    : convertMinutesToTime(bookingDetails?.droppingPoint?.time)
               }
               // locationOne={bookingDetails.droppingPoint.location}
               locationTwo={bookingDetails?.droppingPoint?.bpName}
@@ -989,6 +981,21 @@ const Payment = () => {
                 placeholder={"Address"}
                 onChanged={handleInputChange}
                 givenName={"address"}
+              />
+            </div>
+          </div>
+
+          {/* Agent Details */}
+          <div className="details">
+            <h4>Enter Agent Code</h4>
+            <div className="detailsContainer">
+              <Input
+                title={"Agent Code"}
+                type={"text"}
+                placeholder={"ys2tx7"}
+                onChanged={handleInputChange}
+                givenName={"agentCode"}
+                value={userData.agentCode}
               />
             </div>
           </div>

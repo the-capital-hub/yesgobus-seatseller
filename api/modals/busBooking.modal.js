@@ -167,6 +167,9 @@ const busBookingSchema = new Schema({
     type: String,
   },
   srsBlockSeatDetails: srsBlockSeatDetails,
+  agentCode: {
+    type: String,
+  }
 },
   {
     timestamps: true,

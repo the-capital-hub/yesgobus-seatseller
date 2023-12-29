@@ -36,7 +36,7 @@ export default function AdminLayout() {
   return (
     <div className="admin-layout-wrapper">
       {/* Sidebar */}
-      <AdminSidebar />
+      <AdminSidebar admin={admin}/>
       <div className="" id="main">
         <div className="main-content" id="main-content">
           <Outlet context={{ admin }} />

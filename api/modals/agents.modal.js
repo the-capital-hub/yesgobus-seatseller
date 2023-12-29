@@ -52,6 +52,10 @@ const agentSchema = new Schema(
       type: Boolean,
       default: false
     },
+    agentCode: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true
