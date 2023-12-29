@@ -4,6 +4,7 @@ import BusBooking from "../modals/busBooking.modal.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { sendSrsRequest, sendVrlRequest } from "./buBooking.service.js";
+import { generateId } from "../utils/generateRandomNumber.js";
 
 export const registerAgent = async (agentData) => {
   try {
@@ -20,11 +21,13 @@ export const registerAgent = async (agentData) => {
       $or: [{ email: agentData.email }, { phNum: agentData.phNum }, { userId: agentData.userId }],
     });
     if (!existingAgent) {
+      const agentCode = generateId(6);
       const hashedPassword = bcrypt.hashSync(agentData.password, 5);
       const newAgent = new Agent({
         ...agentData,
         password: hashedPassword,
         id: existingUserAccount._id,
+        agentCode: agentCode,
       });
       await newAgent.save();
       return {
@@ -115,7 +118,13 @@ export const getAgentBookings = async (agentId) => {
         message: "Agent not found",
       }
     }
-    const bookings = await BusBooking.find({ userId: agent.id, bookingStatus: "paid" })
+    const bookings = await BusBooking.find({
+      $or: [
+        { userId: agent.id },
+        { agentCode: agent.agentCode },
+      ],
+      bookingStatus: "paid",
+    });
     return {
       status: 200,
       message: "Booking records retrived",
@@ -194,6 +203,30 @@ export const adminApproveAgent = async (agentId) => {
   }
 }
 
+
+export const adminRejectAgent = async (agentId) => {
+  try {
+    const agent = await Agent.findByIdAndDelete(agentId);
+    if (!agent) {
+      return {
+        status: 404,
+        message: "Agent not found",
+      }
+    }
+    return {
+      status: 200,
+      message: "Agent rejected",
+      data: agent
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      message: error.message || "Internal Server Error",
+    };
+  }
+}
+
 export const getAllPendingAgents = async () => {
   try {
     const agents = await Agent.find({ status: false });
@@ -249,7 +282,7 @@ export const getAllBookingRefund = async () => {
 
 export const getAgentPerformanceReport = async () => {
   try {
-    const agents = await Agent.find({ email: { $ne: 'admin@yesgobus.com' } });
+    const agents = await Agent.find({ email: { $ne: 'admin@yesgobus.com' }, status: true });
     const allBookings = await Promise.all(agents.map(async (agent) => {
       const bookings = await BusBooking.find({ userId: agent.id, bookingStatus: "paid" });
       const totalRevenue = bookings.reduce((sum, booking) => sum + booking.totalAmount, 0);

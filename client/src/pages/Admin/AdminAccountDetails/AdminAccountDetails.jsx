@@ -41,10 +41,10 @@ export default function AdminAccountDetails() {
       // console.log("register response", response);
       messageApi.open({
         type: "success",
-        content: "Registration Successful!",
+        content: "Your account request has been sent. Please wait for admin approval.",
         duration: 2,
       });
-
+      
       setTimeout(() => {
         navigate("/admin/login");
       }, 2000);
