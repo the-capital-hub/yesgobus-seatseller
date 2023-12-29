@@ -3,23 +3,40 @@ import HeaderWithSort from "../../../components/Admin/HeaderWithSort/HeaderWithS
 import WalletCard from "../../../components/Admin/WalletCard/WalletCard";
 import "./AdminWallet.scss";
 import { HiArrowSmUp, HiArrowSmDown } from "react-icons/hi";
+import { useState, useEffect } from "react";
+import { getBalanceAPI, getAllBookings, getAllBookingRefund } from "../../../api/admin";
 
 const columns = [
   {
     title: "Name",
-    dataIndex: "name",
-    key: "name",
+    dataIndex: "customerName",
+    key: "customerName",
     render: (text) => <a>{text}</a>,
   },
   {
+    title: "Source City",
+    dataIndex: "sourceCity",
+    key: "sourceCity",
+  },
+  {
+    title: "Destination City",
+    dataIndex: "destinationCity",
+    key: "destinationCity",
+  },
+  {
     title: "Date & Time",
-    dataIndex: "date",
-    key: "date",
+    dataIndex: "doj",
+    key: "doj",
+  },
+  {
+    title: "Operator",
+    dataIndex: "busOperator",
+    key: "busOperator",
   },
   {
     title: "Amount",
-    dataIndex: "amount",
-    key: "amount",
+    dataIndex: "totalAmount",
+    key: "totalAmount",
   },
   //   {
   //     title: "Actions",
@@ -85,14 +102,51 @@ const transactionData = [
 ];
 
 const AdminWallet = () => {
+  const [balance, setBalance] = useState(null);
+  const [bookings, setBookings] = useState(null);
+  const [refunds, setRefunds] = useState(null);
+
+  const getBalance = async () => {
+    try {
+      const response = await getBalanceAPI();
+      setBalance(response);
+    } catch (error) {
+      console.error("Error :", error);
+    }
+  }
+
+  const getAllBookingDetails = async () => {
+    try {
+      const response = await getAllBookings();
+      setBookings(response.data);
+    } catch (error) {
+      console.error("Error :", error);
+    }
+  }
+
+  const getBookingRefundDetails = async () => {
+    try {
+      const response = await getAllBookingRefund();
+      setRefunds(response.data);
+    } catch (error) {
+      console.error("Error :", error);
+    }
+  }
+
+  useEffect(() => {
+    getBalance();
+    getAllBookingDetails();
+    getBookingRefundDetails();
+  }, [])
+
   return (
     <div className="admin-wallet-wrapper">
       <HeaderWithSort />
       <h2 className="m-0">Wallet</h2>
       {/* Wallet Cards */}
-      <div className="wallet-cards flex flex-col md:flex-row gap-3 items-stretch">
-        <WalletCard color="#fd5901" />
-        <WalletCard color="#3f3f3f" />
+      <div className="wallet-cards flex flex-col md:flex-row gap-3 items-center md:items-stretch">
+        <WalletCard color="#fd5901" name={"VRL Wallet"} balance={balance?.vrl} />
+        <WalletCard color="#3f3f3f" name={"Bitlasoft Wallet"} balance={balance?.ticketSimply} />
         <Card className="border border-solid border-gray-300 shadow-lg">
           <div className="w-48 flex justify-around items-center">
             <div className="flex flex-col gap-4 items-center">
@@ -123,7 +177,7 @@ const AdminWallet = () => {
         </h2>
         <Table
           columns={columns}
-          dataSource={transactionData}
+          dataSource={bookings}
           className="box-container"
         />
       </section>
@@ -137,7 +191,7 @@ const AdminWallet = () => {
         </h2>
         <Table
           columns={columns}
-          dataSource={transactionData}
+          dataSource={refunds}
           className="box-container"
         />
       </section>

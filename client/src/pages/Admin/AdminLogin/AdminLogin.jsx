@@ -39,7 +39,7 @@ export default function AdminLogin() {
         content: "Verifying. Please wait.",
       });
 
-      const { data, token } = await agentLoginAPI(loginData);
+      const { data, token, isMasterAdmin } = await agentLoginAPI(loginData);
       // console.log("login response", data, token);
       messageApi.open({
         key: "login",
@@ -49,8 +49,12 @@ export default function AdminLogin() {
       });
 
       localStorage.setItem(`${ADMIN_KEY}-token`, JSON.stringify(token));
+      if (isMasterAdmin) {
+        data.role = 'YSB_ADMIN'
+      } else {
+        data.role = 'YSB_AGENT'
+      }
       localStorage.setItem(`${ADMIN_KEY}-loggedInAdmin`, JSON.stringify(data));
-
       setTimeout(() => {
         navigate("/admin/dashboard");
       }, 2000);

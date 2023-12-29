@@ -3,6 +3,12 @@ import {
   loginAgent,
   getAgentBookings,
   getAllAgentsBookings,
+  getBalanceAPI,
+  adminApproveAgent,
+  getAllPendingAgents,
+  getAllBookings,
+  getAllBookingRefund,
+  getAgentPerformanceReport,
 } from '../service/agents.service.js';
 
 export const registerAgentController = async (req, res) => {
@@ -25,7 +31,7 @@ export const loginAgentController = async (req, res) => {
       });
     }
 
-    res.status(result.status).json({ message: result.message, token: result.token, data: result.data });
+    res.status(result.status).json(result);
   } catch (err) {
     res.status(500).json({ message: "An error occurred while logging in" });
   }
@@ -50,5 +56,67 @@ export const getAllAgentBookingsController = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Error getting bookings" });
+  }
+};
+
+
+export const getBalanceAPIController = async (req, res) => {
+  try {
+    const result = await getBalanceAPI();
+    res.status(200).send(result);
+  } catch (err) {
+    console.log(err);
+    res.status(err.status || 500).json({ message: "Error getting balance" });
+  }
+};
+
+export const adminApproveAgentController = async (req, res) => {
+  try {
+    const { agentId } = req.params;
+    const result = await adminApproveAgent(agentId);
+    res.status(200).send(result);
+  } catch (err) {
+    console.log(err);
+    res.status(err.status || 500).json({ message: "Error approving agent" });
+  }
+};
+
+export const getAllPendingAgentsControllr = async (req, res) => {
+  try {
+    const result = await getAllPendingAgents();
+    res.status(200).send(result);
+  } catch (err) {
+    console.log(err);
+    res.status(err.status || 500).json({ message: "Error getting pending agent data" });
+  }
+};
+
+export const getAllBookingsController = async (req, res) => {
+  try {
+    const result = await getAllBookings();
+    res.status(200).send(result);
+  } catch (err) {
+    console.log(err);
+    res.status(err.status || 500).json({ message: "Error getting all bookings" });
+  }
+};
+
+export const getAllBookingRefundsController = async (req, res) => {
+  try {
+    const result = await getAllBookingRefund();
+    res.status(200).send(result);
+  } catch (err) {
+    console.log(err);
+    res.status(err.status || 500).json({ message: "Error getting all booking refunds" });
+  }
+};
+
+export const getAgentPerformanceReportController = async (req, res) => {
+  try {
+    const result = await getAgentPerformanceReport();
+    res.status(200).send(result);
+  } catch (err) {
+    console.log(err);
+    res.status(err.status || 500).json({ message: "Error getting all agents performance report" });
   }
 };

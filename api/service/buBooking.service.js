@@ -479,6 +479,10 @@ export const getVrlBusDetails = async (searchArgs, filters) => {
 
     let searchResponse = await sendVrlRequest("GetAvailableRoutes", requestBody);
     searchResponse = searchResponse.data.AllRouteBusLists;
+    searchResponse = searchResponse.map((routes) => {
+      routes.type = "vrl";
+      return routes;
+    })
 
     if (!hasFilters(filters)) {
       return {
@@ -584,7 +588,7 @@ export const getSrsSchedules = async (origin_id, destination_id, travel_date) =>
       const [stage, time] = item.split('|');
       return stages[stage];
     });
-
+    bus.type = "srs";
     return bus;
   });
 
