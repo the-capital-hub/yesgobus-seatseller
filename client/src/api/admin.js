@@ -9,6 +9,8 @@ const ADMIN_ENDPOINTS = {
   getAllBookings: "api/agent/getAllBookings",
   getAllRefunds: "api/agent/getAllBookingRefunds",
   approveAgent: "api/agent/approveAgent",
+  rejectAgent: "api/agent/rejectAgent",
+  getAllPendingAgents: "api/agent/getAllPendingAgents",
   getAgentPerfomanceReport: "api/agent/getAgentPerformanceReport",
   getAgentBookings: "api/agent/getAgentBookings",
 };
@@ -94,6 +96,35 @@ export const approveAgent = async (agentId) => {
   }
 };
 
+
+//reject agent
+export const rejectAgent = async (agentId) => {
+  try {
+    const response = await axiosInstance.delete(
+      `${baseUrl}/${ADMIN_ENDPOINTS.rejectAgent}/${agentId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error rejecting agent", error);
+    throw error;
+  }
+};
+
+
+//get pending agent request
+export const getAllPendingAgents = async () => {
+  try {
+    const response = await axiosInstance.get(
+      `${baseUrl}/${ADMIN_ENDPOINTS.getAllPendingAgents}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error getting pending agents", error);
+    throw error;
+  }
+};
+
+
 //get agent performance report
 export const getAgentPerfomanceReport = async () => {
   try {
@@ -108,10 +139,10 @@ export const getAgentPerfomanceReport = async () => {
 };
 
 //get all agent booking
-export const getAgentBookings = async () => {
+export const getAgentBookings = async (agentId) => {
   try {
     const response = await axiosInstance.get(
-      `${baseUrl}/${ADMIN_ENDPOINTS.getAgentBookings}`
+      `${baseUrl}/${ADMIN_ENDPOINTS.getAgentBookings}/${agentId}`
     );
     return response.data;
   } catch (error) {
