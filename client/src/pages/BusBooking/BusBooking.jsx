@@ -24,6 +24,10 @@ import { filterIcon } from "../../assets/busbooking";
 import { getVrlBuses } from "../../api/vrlBusesApis";
 import { getSrsBuses } from "../../api/srsBusesApis";
 import BusSortBy from "../../components/BusSortBy/BusSortBy";
+import {
+  getBusBookingCardProps,
+  sortBuses,
+} from "../../utils/BusBookingHelpers";
 
 const BusBooking = () => {
   const loggedInUser = localStorage.getItem("loggedInUser");
@@ -44,7 +48,7 @@ const BusBooking = () => {
   const [allSrsBusOperators, setSrsBusOperators] = useState([]);
 
   // SortState
-  const [sortby, setSortBy] = useState("");
+  const [sortBy, setSortBy] = useState(null);
 
   //dates
   const date = new Date();
@@ -355,23 +359,23 @@ const BusBooking = () => {
     }
   };
 
-  const priceToDisplaySrs = (fare) => {
-    const prices = fare.split("/");
-    if (prices.length === 1) {
-      return prices[0];
-    } else {
-      const minPrice = Math.min(...prices).toFixed(2);
-      return minPrice;
-    }
-  };
+  // const priceToDisplaySrs = (fare) => {
+  //   const prices = fare.split("/");
+  //   if (prices.length === 1) {
+  //     return prices[0];
+  //   } else {
+  //     const minPrice = Math.min(...prices).toFixed(2);
+  //     return minPrice;
+  //   }
+  // };
 
-  const formatTravelTime = (durationInMins) => {
-    const hours = Math.floor(durationInMins / 60);
-    const minutes = durationInMins % 60;
-    const formattedHours = hours > 0 ? `${hours} :` : "";
-    const formattedMinutes = minutes > 0 ? ` ${minutes}` : "";
-    return `${formattedHours}${formattedMinutes}`;
-  };
+  // const formatTravelTime = (durationInMins) => {
+  //   const hours = Math.floor(durationInMins / 60);
+  //   const minutes = durationInMins % 60;
+  //   const formattedHours = hours > 0 ? `${hours} :` : "";
+  //   const formattedMinutes = minutes > 0 ? ` ${minutes}` : "";
+  //   return `${formattedHours}${formattedMinutes}`;
+  // };
 
   const handleFilter = (filters) => {
     handleSearch(fromLocation, toLocation, selectedDate, filters);
@@ -407,25 +411,25 @@ const BusBooking = () => {
     return totalTimeTaken;
   }
 
-  function calculateVrlTravelTime(pickupTime, arrivalTime) {
-    const currentDate = new Date();
+  // function calculateVrlTravelTime(pickupTime, arrivalTime) {
+  //   const currentDate = new Date();
 
-    const [hours, minutes, seconds] = pickupTime.split(":");
-    currentDate.setHours(hours);
-    currentDate.setMinutes(minutes);
-    currentDate.setSeconds(seconds || 0);
+  //   const [hours, minutes, seconds] = pickupTime.split(":");
+  //   currentDate.setHours(hours);
+  //   currentDate.setMinutes(minutes);
+  //   currentDate.setSeconds(seconds || 0);
 
-    const arrivalDateTime = new Date(
-      arrivalTime.replace(
-        /(\d+)-(\d+)-(\d+) (\d+):(\d+) ([APMapm]{2})/,
-        "$2/$1/$3 $4:$5 $6"
-      )
-    );
-    const timeDifference = arrivalDateTime - currentDate;
+  //   const arrivalDateTime = new Date(
+  //     arrivalTime.replace(
+  //       /(\d+)-(\d+)-(\d+) (\d+):(\d+) ([APMapm]{2})/,
+  //       "$2/$1/$3 $4:$5 $6"
+  //     )
+  //   );
+  //   const timeDifference = arrivalDateTime - currentDate;
 
-    const travelTimeInMinutes = timeDifference / (1000 * 60);
-    return formatTravelTime(parseInt(travelTimeInMinutes));
-  }
+  //   const travelTimeInMinutes = timeDifference / (1000 * 60);
+  //   return formatTravelTime(parseInt(travelTimeInMinutes));
+  // }
 
   // Handle sort change
   function handleSortByChange(sortTerm) {
@@ -433,6 +437,8 @@ const BusBooking = () => {
   }
 
   // get sortedData
+  const busList = [...vrlBuses, ...srsBuses];
+  const sortedBusList = sortBuses(busList, sortBy);
 
   return (
     <div className="busBooking">
@@ -533,14 +539,32 @@ const BusBooking = () => {
               />
 
               {/* Sort By */}
-              <BusSortBy handleSortByChange={handleSortByChange} />
+              <BusSortBy
+                handleSortByChange={handleSortByChange}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+              />
 
               <ColumnNames
                 noOfBuses={noOfBuses + noOfVrlBuses + noOfSrsBuses}
               />
 
+              {/* Render Bus list */}
+              {sortedBusList?.map((bus) => {
+                const busProps = getBusBookingCardProps(bus);
+
+                return (
+                  <div
+                    className="bus-card-container"
+                    key={bus?.ReferenceNumber}
+                  >
+                    <BusBookingCard {...busProps} key={bus?.ReferenceNumber} />
+                  </div>
+                );
+              })}
+
               {/* vrl buses */}
-              {vrlBuses?.map((bus) => (
+              {/* {vrlBuses?.map((bus) => (
                 <div className="bus-card-container" key={bus?.ReferenceNumber}>
                   <BusBookingCard
                     key={bus?.ReferenceNumber}
@@ -567,7 +591,8 @@ const BusBooking = () => {
                     )}
                     seatsLeft={bus?.EmptySeats}
                     // avlWindowSeats={bus?.avlWindowSeats}
-                    price={"0"}
+                    price={bus?.lowestPrice}
+                    allPrices={bus?.allPrices}
                     // pickUpTimes={pickUpTimes}
                     pickUpLocationOne={bus?.BoardingPoints}
                     // pickUpLocationTwo={pickUpLocationTwo}
@@ -580,10 +605,10 @@ const BusBooking = () => {
                     isVrl={true}
                   />
                 </div>
-              ))}
+              ))} */}
 
               {/* srs buses */}
-              {srsBuses?.map((bus) => (
+              {/* {srsBuses?.map((bus) => (
                 <div className="bus-card-container" key={bus?.id}>
                   <BusBookingCard
                     key={bus?.id}
@@ -620,7 +645,7 @@ const BusBooking = () => {
                     isSrs={true}
                   />
                 </div>
-              ))}
+              ))} */}
 
               {/* seat seller buses */}
               {busDetails?.map((bus) => (

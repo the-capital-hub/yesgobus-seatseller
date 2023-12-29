@@ -29,6 +29,7 @@ const BusBookingCard = ({
   reachTime,
   reachLocation,
   price,
+  allPrices,
   seatsLeft,
   avlWindowSeats,
   cancellationPolicy,
@@ -448,12 +449,12 @@ const BusBookingCard = ({
       const availableSeats = seatData?.filter((seat) => seat.Available === "Y");
 
       // extract prices
-      const uniqueBaseFaresSet = new Set();
-      seatData.forEach((seatDetail) => {
-        uniqueBaseFaresSet.add(seatDetail.BaseFare);
-      });
-      const uniqueBaseFares = Array.from(uniqueBaseFaresSet);
-      setVrlPrices(uniqueBaseFares);
+      // const uniqueBaseFaresSet = new Set();
+      // seatData.forEach((seatDetail) => {
+      //   uniqueBaseFaresSet.add(seatDetail.BaseFare);
+      // });
+      // const uniqueBaseFares = Array.from(uniqueBaseFaresSet);
+      // setVrlPrices(uniqueBaseFares);
 
       setSeatDetails(seatData);
       setAvailableSeats(availableSeats.length);
@@ -636,9 +637,7 @@ const BusBookingCard = ({
             {/* <BusBookingCardInfo img={true} title={travelTime} /> */}
             <BusBookingCardInfo title={travelTime} />
             <BusBookingCardInfo subtitle={reachLocation} title={reachTime} />
-            <p className="price">
-              ₹{isVrl ? priceToDisplay(vrlPrices) : price}
-            </p>
+            <p className="price">₹{price}</p>
             <BusBookingCardInfo
               setShowSeats={fetchSeatData}
               buttonText={!availableSeats || (!seatDetails && "Full")}
@@ -657,10 +656,7 @@ const BusBookingCard = ({
               {pickUpTime} ─ {reachTime}
             </h4>
             <span className="price-container">
-              <p>From</p>{" "}
-              <p className="price">
-                ₹ {isVrl ? priceToDisplay(vrlPrices) : price}
-              </p>
+              <p>From</p> <p className="price">₹ {price}</p>
             </span>
           </div>
           <div className="duration-and-seats-left">
@@ -744,7 +740,7 @@ const BusBookingCard = ({
           price={price}
           seatDetails={seatDetails}
           cancellationPolicy={cancellationPolicy}
-          fare={isVrl ? vrlPrices : isSrs ? convertSrsFare(fare) : fare}
+          fare={isVrl ? allPrices : isSrs ? convertSrsFare(fare) : fare}
           isVrl={isVrl}
           ReferenceNumber={ReferenceNumber}
           scheduleId={scheduleId}

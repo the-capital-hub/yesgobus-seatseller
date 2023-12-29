@@ -1,12 +1,13 @@
+import { Button } from "antd";
 import { useState } from "react";
 import { IoArrowUp, IoArrowDown } from "react-icons/io5";
 
 const SORT_OPTIONS = [{ label: "Price", sortTerm: "price" }];
 
-export default function BusSortBy({ handleSortByChange }) {
+export default function BusSortBy({ handleSortByChange, sortBy, setSortBy }) {
   return (
     <div className="sortBy-container py-4 px-2">
-      <div className="flex items-center gap-8">
+      <div className="flex items-center gap-8 flex-wrap">
         <p className="text-xl">Sort By:</p>
         {SORT_OPTIONS.map(({ label, sortTerm }, index) => {
           return (
@@ -14,9 +15,19 @@ export default function BusSortBy({ handleSortByChange }) {
               handleSortByChange={handleSortByChange}
               label={label}
               sortTerm={sortTerm}
+              key={label}
             />
           );
         })}
+        {sortBy && (
+          <Button
+            htmlType="button"
+            style={{ marginLeft: "auto" }}
+            onClick={() => setSortBy(null)}
+          >
+            Clear All
+          </Button>
+        )}
       </div>
     </div>
   );
