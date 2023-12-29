@@ -6,6 +6,11 @@ const ADMIN_ENDPOINTS = {
   agentRegister: "api/agent/register",
   agentLogin: "api/agent/login",
   getBalance: "api/agent/getBalance",
+  getAllBookings: "api/agent/getAllBookings",
+  getAllRefunds: "api/agent/getAllBookingRefunds",
+  approveAgent: "api/agent/approveAgent",
+  getAgentPerfomanceReport: "api/agent/getAgentPerformanceReport",
+  getAgentBookings: "api/agent/getAgentBookings",
 };
 
 // Register Agent
@@ -48,3 +53,70 @@ export const getBalanceAPI = async () => {
     throw error;
   }
 };
+
+//get all bookings
+export const getAllBookings = async () => {
+  try {
+    const response = await axiosInstance.get(
+      `${baseUrl}/${ADMIN_ENDPOINTS.getAllBookings}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error getting bookings", error);
+    throw error;
+  }
+};
+
+//get all bookings refund
+export const getAllBookingRefund = async () => {
+  try {
+    const response = await axiosInstance.get(
+      `${baseUrl}/${ADMIN_ENDPOINTS.getAllRefunds}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error getting booking refunds", error);
+    throw error;
+  }
+};
+
+
+//approve agent
+export const approveAgent = async (agentId) => {
+  try {
+    const response = await axiosInstance.patch(
+      `${baseUrl}/${ADMIN_ENDPOINTS.approveAgent}/${agentId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error approving agent", error);
+    throw error;
+  }
+};
+
+//get agent performance report
+export const getAgentPerfomanceReport = async () => {
+  try {
+    const response = await axiosInstance.get(
+      `${baseUrl}/${ADMIN_ENDPOINTS.getAgentPerfomanceReport}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error getting agent performance report", error);
+    throw error;
+  }
+};
+
+//get all agent booking
+export const getAgentBookings = async () => {
+  try {
+    const response = await axiosInstance.get(
+      `${baseUrl}/${ADMIN_ENDPOINTS.getAgentBookings}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error getting agent bookings", error);
+    throw error;
+  }
+};
+

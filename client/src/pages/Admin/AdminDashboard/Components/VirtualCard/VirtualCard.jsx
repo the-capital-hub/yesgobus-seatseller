@@ -1,7 +1,7 @@
 import { Card } from "antd";
 import "./VirtualCard.scss";
 
-export default function VirtualCard({ color }) {
+export default function VirtualCard({ color, name, balance }) {
   return (
     <Card
       hoverable
@@ -14,8 +14,8 @@ export default function VirtualCard({ color }) {
     >
       <div className="flex flex-col gap-1">
         <p className="m-0 text-base">Name</p>
-        <p className="m-0 text-lg">Full Name</p>
-        <p className="m-0 text-base">
+        <p className="m-0 text-lg">{name}</p>
+        {/* <p className="m-0 text-base">
           {Array(3)
             .fill(0)
             .map((elem, index) => {
@@ -30,9 +30,9 @@ export default function VirtualCard({ color }) {
               );
             })}
           <span>1234</span>
-        </p>
+        </p> */}
         <p className="m-0 text-base">Balance</p>
-        <p className="m-0 text-base">Rs. 1,00,000</p>
+        <p className="m-0 text-base">Rs. {balance}</p>
       </div>
     </Card>
   );

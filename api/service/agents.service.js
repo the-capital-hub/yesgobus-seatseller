@@ -214,10 +214,18 @@ export const getAllPendingAgents = async () => {
 export const getAllBookings = async () => {
   try {
     const bookings = await BusBooking.find({ bookingStatus: "paid" }).sort({ createdAt: -1 });
+    const modifiedBookings = bookings.map(booking => {
+      if (booking.isVrl) {
+        booking.busOperator = "VRL travels";
+      }
+      booking.doj = new Date(booking.doj).toISOString().split('T')[0];
+      booking.customerName = booking.customerName + " " + (booking.customerLastName || "");
+      return booking;
+    });
     return {
       status: 200,
       message: "Bookings details retrived",
-      data: bookings
+      data: modifiedBookings
     }
   } catch (error) {
     console.log(error);
@@ -232,10 +240,18 @@ export const getAllBookingRefund = async () => {
   try {
     const bookings = await BusBooking.find({ bookingStatus: "cancelled" })
       .sort({ createdAt: -1 });
+    const modifiedBookings = bookings.map(booking => {
+      if (booking.isVrl) {
+        booking.busOperator = "VRL travels";
+      }
+      booking.doj = new Date(booking.doj).toISOString().split('T')[0];
+      booking.customerName = booking.customerName + " " + (booking.customerLastName || "");
+      return booking;
+    });
     return {
       status: 200,
       message: "Bookings details retrived",
-      data: bookings
+      data: modifiedBookings
     }
   } catch (error) {
     console.log(error);
