@@ -23,6 +23,7 @@ import { cityMapping } from "../../utils/cityMapping";
 import { filterIcon } from "../../assets/busbooking";
 import { getVrlBuses } from "../../api/vrlBusesApis";
 import { getSrsBuses } from "../../api/srsBusesApis";
+import BusSortBy from "../../components/BusSortBy/BusSortBy";
 
 const BusBooking = () => {
   const loggedInUser = localStorage.getItem("loggedInUser");
@@ -41,6 +42,9 @@ const BusBooking = () => {
   const [srsBuses, setSrsBuses] = useState([]);
   const [srsBusesForFilter, setSrsBusesForFilter] = useState([]);
   const [allSrsBusOperators, setSrsBusOperators] = useState([]);
+
+  // SortState
+  const [sortby, setSortBy] = useState("");
 
   //dates
   const date = new Date();
@@ -64,8 +68,9 @@ const BusBooking = () => {
   for (let i = 0; i <= 6; i++) {
     const nextDate = new Date(date);
     nextDate.setDate(date.getDate() + i);
-    const formattedDate = `${daysOfWeek[nextDate.getDay()]},${months[nextDate.getMonth()]
-      }-${nextDate.getDate()}`;
+    const formattedDate = `${daysOfWeek[nextDate.getDay()]}, ${
+      months[nextDate.getMonth()]
+    }-${nextDate.getDate()}`;
     dates.push(formattedDate);
   }
 
@@ -162,44 +167,59 @@ const BusBooking = () => {
     }
     let isFilter = false;
 
-    if (filters && (filters.busPartners.length > 0 || filters.boardingPoints.length > 0 || filters.droppingPoints.length > 0 || (filters.minPrice && filters.maxPrice))) {
+    if (
+      filters &&
+      (filters.busPartners.length > 0 ||
+        filters.boardingPoints.length > 0 ||
+        filters.droppingPoints.length > 0 ||
+        (filters.minPrice && filters.maxPrice))
+    ) {
       isFilter = true;
       let filteredBuses = srsBusesForFilter;
       if (filters.busPartners.length > 0) {
-        filteredBuses = filteredBuses.filter(bus =>
+        filteredBuses = filteredBuses.filter((bus) =>
           filters?.busPartners
-            .map(partner => partner.toLowerCase())
+            .map((partner) => partner.toLowerCase())
             .includes(bus?.operator_service_name.toLowerCase())
         );
       }
       if (filters.boardingPoints.length > 0) {
-        filteredBuses = filteredBuses.filter(bus =>
-          filters.boardingPoints.some(point => bus.boarding_stages.includes(point))
+        filteredBuses = filteredBuses.filter((bus) =>
+          filters.boardingPoints.some((point) =>
+            bus.boarding_stages.includes(point)
+          )
         );
       }
       if (filters.droppingPoints.length > 0) {
-        filteredBuses = filteredBuses.filter(bus =>
-          filters.droppingPoints.some(point => bus.dropoff_stages.includes(point))
+        filteredBuses = filteredBuses.filter((bus) =>
+          filters.droppingPoints.some((point) =>
+            bus.dropoff_stages.includes(point)
+          )
         );
       }
       if (filters.minPrice && filters.maxPrice) {
         setVrlBuses([]);
         setNoVrlOfBuses(0);
-        filteredBuses = filteredBuses.filter(bus => {
-          const prices = bus.show_fare_screen.split("/").map(price => parseFloat(price));
-          return prices.some(price => price >= filters.minPrice && price <= filters.maxPrice);
+        filteredBuses = filteredBuses.filter((bus) => {
+          const prices = bus.show_fare_screen
+            .split("/")
+            .map((price) => parseFloat(price));
+          return prices.some(
+            (price) => price >= filters.minPrice && price <= filters.maxPrice
+          );
         });
       }
-      const uniqueBusesSet = new Set(filteredBuses.map(bus => bus.id));
-      filteredBuses = Array.from(uniqueBusesSet, id => filteredBuses.find(bus => bus.id === id));
+      const uniqueBusesSet = new Set(filteredBuses.map((bus) => bus.id));
+      filteredBuses = Array.from(uniqueBusesSet, (id) =>
+        filteredBuses.find((bus) => bus.id === id)
+      );
 
       setSrsBuses(filteredBuses);
       setNoSrsOfBuses(filteredBuses?.length);
-
     } else {
       isFilter = false;
     }
-    console.log(isFilter);  
+    console.log(isFilter);
     //vrl buses
     for (const sourceCity of sourceCities) {
       for (const destinationCity of destinationCities) {
@@ -214,7 +234,7 @@ const BusBooking = () => {
           const vrlResponse = await getVrlBuses(requestBody);
           if (Array.isArray(vrlResponse.data)) {
             const uniqueReferenceNumbersSet = new Set();
-            const uniqueBusesArray = vrlResponse.data.filter(bus => {
+            const uniqueBusesArray = vrlResponse.data.filter((bus) => {
               if (!uniqueReferenceNumbersSet.has(bus.ReferenceNumber)) {
                 uniqueReferenceNumbersSet.add(bus.ReferenceNumber);
                 return true;
@@ -222,8 +242,8 @@ const BusBooking = () => {
               return false;
             });
 
-            setVrlBuses(prevBuses => [...prevBuses, ...uniqueBusesArray]);
-            setNoVrlOfBuses(prevCount => prevCount + uniqueBusesArray.length);
+            setVrlBuses((prevBuses) => [...prevBuses, ...uniqueBusesArray]);
+            setNoVrlOfBuses((prevCount) => prevCount + uniqueBusesArray.length);
           } else {
             console.error("Invalid vrlResponse.data:", vrlResponse.data);
           }
@@ -238,11 +258,20 @@ const BusBooking = () => {
         //srs buses
         try {
           if (isFilter === false) {
-            const srsResponse = await getSrsBuses(sourceCity.trim(), destinationCity.trim(), doj);
-            const filteredBuses = srsResponse.filter(bus => bus?.status === "New" || bus.status === "Update");
-            setSrsBuses(prevBuses => [...prevBuses, ...filteredBuses]);
-            setSrsBusesForFilter(prevFilteredBuses => [...prevFilteredBuses, ...filteredBuses]);
-            setNoSrsOfBuses(prevCount => prevCount + filteredBuses?.length);
+            const srsResponse = await getSrsBuses(
+              sourceCity.trim(),
+              destinationCity.trim(),
+              doj
+            );
+            const filteredBuses = srsResponse.filter(
+              (bus) => bus?.status === "New" || bus.status === "Update"
+            );
+            setSrsBuses((prevBuses) => [...prevBuses, ...filteredBuses]);
+            setSrsBusesForFilter((prevFilteredBuses) => [
+              ...prevFilteredBuses,
+              ...filteredBuses,
+            ]);
+            setNoSrsOfBuses((prevCount) => prevCount + filteredBuses?.length);
           }
         } catch (error) {
           //   setSrsBuses([]);
@@ -398,6 +427,13 @@ const BusBooking = () => {
     return formatTravelTime(parseInt(travelTimeInMinutes));
   }
 
+  // Handle sort change
+  function handleSortByChange(sortTerm) {
+    setSortBy(sortTerm);
+  }
+
+  // get sortedData
+
   return (
     <div className="busBooking">
       <Navbar />
@@ -495,12 +531,15 @@ const BusBooking = () => {
                 date={selectedDate}
                 onDateChange={handleDate}
               />
+
+              {/* Sort By */}
+              <BusSortBy handleSortByChange={handleSortByChange} />
+
               <ColumnNames
                 noOfBuses={noOfBuses + noOfVrlBuses + noOfSrsBuses}
               />
 
               {/* vrl buses */}
-
               {vrlBuses?.map((bus) => (
                 <div className="bus-card-container" key={bus?.ReferenceNumber}>
                   <BusBookingCard

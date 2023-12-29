@@ -15,3 +15,42 @@ export function sortPartners(partnersList) {
     return sortedPartners;
   }
 }
+
+// Sort Buses
+export function sortBuses(busList, sortData) {
+  if (!sortData) return busList;
+
+  let { ascending, sortBy } = sortData;
+  let sortKey;
+  switch (sortBy) {
+    case "price":
+      sortKey = { srs: "show_fare_screen", vrl: "lowestPrice" };
+      break;
+
+    default:
+      break;
+  }
+
+  let copy = [...busList];
+
+  copy.sort((a, b) => {
+    let typeOfA = a.type;
+    let typeOfB = b.type;
+
+    if (a[sortKey[typeOfA]] < b[sortBy[typeOfB]]) {
+      return -1;
+    }
+
+    if (a[sortKey[typeOfA]] > b[sortBy[typeOfB]]) {
+      return 1;
+    }
+
+    return 0;
+  });
+
+  if (!ascending) {
+    return copy.reverse();
+  }
+
+  return copy;
+}
