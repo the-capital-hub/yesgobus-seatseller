@@ -1,12 +1,13 @@
 .LeftFilterBox {
-  padding: 15px;
   border: 0.5px solid #dadada;
+  padding-inline: 15px;
 
   .leftFilterContainer {
     display: flex;
     flex-direction: column;
 
     .title {
+      padding-block: 15px;
       display: flex;
       justify-content: space-between;
       align-items: center;

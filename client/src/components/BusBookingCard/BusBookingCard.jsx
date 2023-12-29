@@ -6,7 +6,7 @@ import "./BusBookingCard.scss";
 import Seats from "../Seats/Seats";
 import axiosInstance from "../../utils/service";
 import { Spin } from "antd";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
 import { getVrlSeatLayout } from "../../api/vrlBusesApis";
 import { getSrsSeatLayout } from "../../api/srsBusesApis";
 
@@ -29,6 +29,7 @@ const BusBookingCard = ({
   reachTime,
   reachLocation,
   price,
+  allPrices,
   seatsLeft,
   avlWindowSeats,
   cancellationPolicy,
@@ -64,313 +65,312 @@ const BusBookingCard = ({
 
   // srs seat layout
   const seatTypes = {
-    "SS": {
+    SS: {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
-    "SL": {
+    SL: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "LB": {
+    LB: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "UB": {
+    UB: {
       width: 2,
       length: 2,
-      z_index: 1
+      z_index: 1,
     },
-    "BS": {
+    BS: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "PB": {
+    PB: {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
-    "NPB": {
+    NPB: {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
-    "SLB": {
+    SLB: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "SUB": {
+    SUB: {
       width: 2,
       length: 2,
-      z_index: 1
+      z_index: 1,
     },
-    "SST": {
+    SST: {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
-    "NA": {
+    NA: {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
-    "ST": {
+    ST: {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
-    "DLB": {
+    DLB: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "DUB": {
+    DUB: {
       width: 2,
       length: 2,
-      z_index: 1
+      z_index: 1,
     },
-    "WSS": {
+    WSS: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "WST": {
+    WST: {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
-    "WLB": {
+    WLB: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "WUB": {
+    WUB: {
       width: 2,
       length: 2,
-      z_index: 1
+      z_index: 1,
     },
-    "WSL": {
+    WSL: {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
-    "WSU": {
+    WSU: {
       width: 1,
       length: 1,
-      z_index: 1
+      z_index: 1,
     },
-    "BU": {
+    BU: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "EC": {
+    EC: {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
     "SEMI CAMA": {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
     "SALON CAMA": {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "CLASICO": {
+    CLASICO: {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
-    "EJECUTIVO": {
+    EJECUTIVO: {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
-    "PREMIUM": {
+    PREMIUM: {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
-    "SC": {
+    SC: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "CO": {
+    CO: {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
-    "EX": {
+    EX: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "SP": {
+    SP: {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
-    "SALON": {
+    SALON: {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
     "SALON MIXTO": {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
-    "SEMICAMA": {
+    SEMICAMA: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "CAMA": {
+    CAMA: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "COMUN": {
+    COMUN: {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
     "COMUN CON AIRE": {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
-    "SCA": {
+    SCA: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "SX": {
+    SX: {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
-    "BLACK": {
+    BLACK: {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
-    "PULLMAN": {
+    PULLMAN: {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
-    "CA": {
+    CA: {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
-    "XP": {
+    XP: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
     "PREMIUM PROMO": {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
     "SALON CAMA PROMO": {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
     "SEMICAMA PROMO": {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
     "CAMA VIP": {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
     "Cama Ejecutivo": {
       width: 1,
       length: 1,
-      z_index: 0
+      z_index: 0,
     },
     "Cama Suite": {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "BJ": {
+    BJ: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "EJ": {
+    EJ: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "SU": {
+    SU: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "BT": {
+    BT: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "SJ": {
+    SJ: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "LS": {
+    LS: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
     "SUITE CAMA": {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "COMPARTIDO": {
+    COMPARTIDO: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
-    "EXCLUSIVO": {
+    EXCLUSIVO: {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
     "SEMI EXCLUSIVO": {
       width: 2,
       length: 2,
-      z_index: 0
+      z_index: 0,
     },
   };
 
-
   // Function to parse the coach_details string
   function parseCoachDetails(coachDetails) {
-    const rows = coachDetails?.split(',');
+    const rows = coachDetails?.split(",");
     const seatLayout = [];
 
     rows.forEach((row, rowIndex) => {
-      const columns = row?.split('-');
+      const columns = row?.split("-");
       columns.forEach((column, columnIndex) => {
-        const seats = column?.split('|');
+        const seats = column?.split("|");
         const isValid = seats[0].match(/[A-Z0-9.]+/g);
 
         if (isValid) {
@@ -393,8 +393,8 @@ const BusBookingCard = ({
   // Function to parse the available string
   function parseAvailable(available) {
     const seatObject = {};
-    available?.split(',').forEach(seatInfo => {
-      const [seatName, fare] = seatInfo?.split('|');
+    available?.split(",").forEach((seatInfo) => {
+      const [seatName, fare] = seatInfo?.split("|");
       seatObject[seatName.trim()] = parseFloat(fare);
     });
 
@@ -405,36 +405,36 @@ const BusBookingCard = ({
     if (error.response) {
       toast.error(`Server Error: ${error.response.status}`, {
         duration: 2000,
-        position: 'top-center',
+        position: "top-center",
         style: {
-          background: 'red',
-          color: 'white',
+          background: "red",
+          color: "white",
         },
       });
       console.error("Server Error:", error.response.data);
       setSeatLoading(false);
     } else if (error.request) {
-      toast.error('Network Error: Unable to connect to the server', {
+      toast.error("Network Error: Unable to connect to the server", {
         duration: 2000,
-        position: 'top-center',
+        position: "top-center",
         style: {
-          background: 'red',
-          color: 'white',
+          background: "red",
+          color: "white",
         },
       });
       setSeatLoading(false);
       console.error("Network Error:", error.request);
     } else {
-      toast.error('An unexpected error occurred', {
+      toast.error("An unexpected error occurred", {
         duration: 2000,
-        position: 'top-center',
+        position: "top-center",
         style: {
-          background: 'red',
-          color: 'white',
+          background: "red",
+          color: "white",
         },
       });
     }
-  }
+  };
 
   // fetch vrl seats
   const fetchVrlSeats = async () => {
@@ -445,8 +445,17 @@ const BusBookingCard = ({
       });
       let seatData = seatsResponse.data?.ITSSeatDetails;
       // seatData = seatData?.filter(seat => !seat.SeatNo.startsWith('T'));
-      seatData = seatData?.filter(seat => seat.BlockType === 0);
-      const availableSeats = seatData?.filter(seat => seat.Available === "Y");
+      seatData = seatData?.filter((seat) => seat.BlockType === 0);
+      const availableSeats = seatData?.filter((seat) => seat.Available === "Y");
+
+      // extract prices
+      // const uniqueBaseFaresSet = new Set();
+      // seatData.forEach((seatDetail) => {
+      //   uniqueBaseFaresSet.add(seatDetail.BaseFare);
+      // });
+      // const uniqueBaseFares = Array.from(uniqueBaseFaresSet);
+      // setVrlPrices(uniqueBaseFares);
+
       setSeatDetails(seatData);
       setAvailableSeats(availableSeats.length);
       setSeatLoading(false);
@@ -454,9 +463,9 @@ const BusBookingCard = ({
     } catch (error) {
       errorToast(error);
       console.error(error.message);
-      setSeatLoading(false)
+      setSeatLoading(false);
     }
-  }
+  };
 
   //fetch srs seats
   const fetchSrsSeats = async () => {
@@ -465,21 +474,30 @@ const BusBookingCard = ({
       let coach_details = seatsResponse.result.bus_layout.coach_details;
       let available = seatsResponse.result.bus_layout.available;
       let available_gst = seatsResponse.result.bus_layout.available_gst;
-      let ladies_seats = seatsResponse.result.bus_layout.ladies_seats?.split(",");
+      let ladies_seats =
+        seatsResponse.result.bus_layout.ladies_seats?.split(",");
       let gents_seats = seatsResponse.result.bus_layout.gents_seats?.split(",");
-      let ladies_booked_seats = seatsResponse.result.bus_layout.ladies_booked_seats?.split(",");
-      let gents_booked_seats = seatsResponse.result.bus_layout.gents_booked_seats?.split(",");
+      let ladies_booked_seats =
+        seatsResponse.result.bus_layout.ladies_booked_seats?.split(",");
+      let gents_booked_seats =
+        seatsResponse.result.bus_layout.gents_booked_seats?.split(",");
       let boarding_stages = seatsResponse.result.bus_layout.boarding_stages;
       let dropoff_stages = seatsResponse.result.bus_layout.dropoff_stages;
 
-      const boardingPointlocationsAndTimes = boarding_stages?.split("~").map(entry => {
-        const [bpId, time, address, land_mark, number, bpName] = entry?.split("|");
-        return { bpId, bpName, time, number };
-      });
-      const droppingPointlocationsAndTimes = dropoff_stages?.split("~").map(entry => {
-        const [bpId, time, address, land_mark, contact, bpName] = entry?.split("|");
-        return { bpId, bpName, time };
-      });
+      const boardingPointlocationsAndTimes = boarding_stages
+        ?.split("~")
+        .map((entry) => {
+          const [bpId, time, address, land_mark, number, bpName] =
+            entry?.split("|");
+          return { bpId, bpName, time, number };
+        });
+      const droppingPointlocationsAndTimes = dropoff_stages
+        ?.split("~")
+        .map((entry) => {
+          const [bpId, time, address, land_mark, contact, bpName] =
+            entry?.split("|");
+          return { bpId, bpName, time };
+        });
 
       const parsedCoachDetails = parseCoachDetails(coach_details);
       const parsedAvailable = parseAvailable(available);
@@ -501,19 +519,22 @@ const BusBookingCard = ({
     } catch (error) {
       errorToast(error);
       console.error(error.message);
-      setSeatLoading(false)
+      setSeatLoading(false);
     }
-  }
-
+  };
 
   const fetchSeatSellerSeats = async () => {
     let seatData = [];
     try {
       const response = await axiosInstance.get(
-        `${import.meta.env.VITE_BASE_URL}/api/busBooking/getSeatLayout/${tripId}`,
+        `${
+          import.meta.env.VITE_BASE_URL
+        }/api/busBooking/getSeatLayout/${tripId}`
       );
       seatData = response.data?.seats;
-      const availableSeats = seatData?.filter(seat => seat.available === "true");
+      const availableSeats = seatData?.filter(
+        (seat) => seat.available === "true"
+      );
       setAvailableSeats(availableSeats?.length);
       setSeatDetails(seatData);
       setSeatLoading(false);
@@ -521,9 +542,9 @@ const BusBookingCard = ({
     } catch (error) {
       errorToast(error);
       console.log(error.message);
-      setSeatLoading(false)
+      setSeatLoading(false);
     }
-  }
+  };
 
   const fetchSeatData = async () => {
     if (!showSeats === false) {
@@ -549,42 +570,46 @@ const BusBookingCard = ({
 
   useEffect(() => {
     if (isVrl) {
-      getVrlSeatsPrices();
-      const boardingPointlocationsAndTimes = pickUpLocationOne?.split("#").map(entry => {
-        const [bpId, bpName, time, number] = entry?.split("|");
-        return { bpId, bpName, time, number };
-      });
-      const droppingPointlocationsAndTimes = dropLocationOne?.split("#").map(entry => {
-        const [bpId, bpName, time] = entry?.split("|");
-        return { bpId, bpName, time };
-      });
+      // getVrlSeatsPrices();
+      const boardingPointlocationsAndTimes = pickUpLocationOne
+        ?.split("#")
+        .map((entry) => {
+          const [bpId, bpName, time, number] = entry?.split("|");
+          return { bpId, bpName, time, number };
+        });
+      const droppingPointlocationsAndTimes = dropLocationOne
+        ?.split("#")
+        .map((entry) => {
+          const [bpId, bpName, time] = entry?.split("|");
+          return { bpId, bpName, time };
+        });
       setVrlPickupLocations(boardingPointlocationsAndTimes);
       setVrlDropLocations(droppingPointlocationsAndTimes);
     }
-  }, [])
+  }, []);
 
-  const getVrlSeatsPrices = async () => {
-    const seatsResponse = await getVrlSeatLayout({
-      referenceNumber: ReferenceNumber,
-    });
-    let seatData = seatsResponse.data?.ITSSeatDetails;
-    // seatData = seatData?.filter(seat => !seat.SeatNo.startsWith('T'));
-    seatData = seatData?.filter(seat => seat.BlockType === 0);
-    const availableSeats = seatData?.filter(seat => seat.Available === "Y");
-    setAvailableSeats(availableSeats.length);
-    const uniqueBaseFaresSet = new Set();
-    seatData.forEach(seatDetail => {
-      uniqueBaseFaresSet.add(seatDetail.BaseFare);
-    });
-    const uniqueBaseFares = Array.from(uniqueBaseFaresSet);
-    setVrlPrices(uniqueBaseFares);
-  }
+  // const getVrlSeatsPrices = async () => {
+  //   const seatsResponse = await getVrlSeatLayout({
+  //     referenceNumber: ReferenceNumber,
+  //   });
+  //   let seatData = seatsResponse.data?.ITSSeatDetails;
+  //   // seatData = seatData?.filter(seat => !seat.SeatNo.startsWith('T'));
+  //   seatData = seatData?.filter((seat) => seat.BlockType === 0);
+  //   const availableSeats = seatData?.filter((seat) => seat.Available === "Y");
+  //   setAvailableSeats(availableSeats.length);
+  //   const uniqueBaseFaresSet = new Set();
+  //   seatData.forEach((seatDetail) => {
+  //     uniqueBaseFaresSet.add(seatDetail.BaseFare);
+  //   });
+  //   const uniqueBaseFares = Array.from(uniqueBaseFaresSet);
+  //   setVrlPrices(uniqueBaseFares);
+  // };
 
   const convertSrsFare = (fare) => {
     if (!fare) {
       return [];
     }
-    const fareComponents = fare?.split('/');
+    const fareComponents = fare?.split("/");
     const uniqueFares = fareComponents.reduce((acc, fare) => {
       if (fare && !acc.includes(fare)) {
         acc.push(fare);
@@ -612,7 +637,7 @@ const BusBookingCard = ({
             {/* <BusBookingCardInfo img={true} title={travelTime} /> */}
             <BusBookingCardInfo title={travelTime} />
             <BusBookingCardInfo subtitle={reachLocation} title={reachTime} />
-            <p className="price">₹{isVrl ? priceToDisplay(vrlPrices) : price}</p>
+            <p className="price">₹{price}</p>
             <BusBookingCardInfo
               setShowSeats={fetchSeatData}
               buttonText={!availableSeats || (!seatDetails && "Full")}
@@ -631,13 +656,14 @@ const BusBookingCard = ({
               {pickUpTime} ─ {reachTime}
             </h4>
             <span className="price-container">
-              <p>From</p>{" "}
-              <p className="price">₹ {isVrl ? priceToDisplay(vrlPrices) : price}</p>
+              <p>From</p> <p className="price">₹ {price}</p>
             </span>
           </div>
           <div className="duration-and-seats-left">
             <span className="duration">{travelTime}</span>
-            <span className="seats-left text-orange">{availableSeats} Seats</span>
+            <span className="seats-left text-orange">
+              {availableSeats} Seats
+            </span>
           </div>
           <div className="bus-details-container">
             <div className="bus-details">
@@ -687,14 +713,26 @@ const BusBookingCard = ({
           destinationCityId={destinationCityId}
           doj={doj}
           // pickUpTimes={pickUpTimes}
-          pickUpLocationOne={isVrl ? vrlPickupLocations :
-            isSrs ? seatDetails.boardingPointlocationsAndTimes :
-              Array.isArray(pickUpLocationOne) ? pickUpLocationOne : [pickUpLocationOne]}
+          pickUpLocationOne={
+            isVrl
+              ? vrlPickupLocations
+              : isSrs
+              ? seatDetails.boardingPointlocationsAndTimes
+              : Array.isArray(pickUpLocationOne)
+              ? pickUpLocationOne
+              : [pickUpLocationOne]
+          }
           // pickUpLocationTwo={pickUpLocationTwo}
           // dropTimes={dropTimes}
-          dropLocationOne={isVrl ? vrlDropLocations :
-            isSrs ? seatDetails.droppingPointlocationsAndTimes :
-              Array.isArray(dropLocationOne) ? dropLocationOne : [dropLocationOne]}
+          dropLocationOne={
+            isVrl
+              ? vrlDropLocations
+              : isSrs
+              ? seatDetails.droppingPointlocationsAndTimes
+              : Array.isArray(dropLocationOne)
+              ? dropLocationOne
+              : [dropLocationOne]
+          }
           // dropLocationTwo={dropLocationTwo}
           backSeat={backSeat}
           busName={busName}
@@ -702,7 +740,7 @@ const BusBookingCard = ({
           price={price}
           seatDetails={seatDetails}
           cancellationPolicy={cancellationPolicy}
-          fare={isVrl ? vrlPrices : isSrs ? convertSrsFare(fare) : fare}
+          fare={isVrl ? allPrices : isSrs ? convertSrsFare(fare) : fare}
           isVrl={isVrl}
           ReferenceNumber={ReferenceNumber}
           scheduleId={scheduleId}
@@ -711,7 +749,6 @@ const BusBookingCard = ({
       )}
       <Toaster />
     </div>
-
   );
 };
 
