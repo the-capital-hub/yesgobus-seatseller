@@ -3,6 +3,8 @@ import HeaderWithSort from "../../../components/Admin/HeaderWithSort/HeaderWithS
 import WalletCard from "../../../components/Admin/WalletCard/WalletCard";
 import "./AdminWallet.scss";
 import { HiArrowSmUp, HiArrowSmDown } from "react-icons/hi";
+import { useState, useEffect } from "react";
+import { getBalanceAPI } from "../../../api/admin";
 
 const columns = [
   {
@@ -85,14 +87,29 @@ const transactionData = [
 ];
 
 const AdminWallet = () => {
+  const [balance, setBalance] = useState(null);
+
+  const getBalance = async () => {
+    try {
+      const response = await getBalanceAPI();
+      setBalance(response);
+    } catch (error) {
+      console.error("Error :", error);
+    }
+  }
+
+  useEffect(() => {
+    getBalance();
+  }, [])
+
   return (
     <div className="admin-wallet-wrapper">
       <HeaderWithSort />
       <h2 className="m-0">Wallet</h2>
       {/* Wallet Cards */}
       <div className="wallet-cards flex flex-col md:flex-row gap-3 items-stretch">
-        <WalletCard color="#fd5901" />
-        <WalletCard color="#3f3f3f" />
+        <WalletCard color="#fd5901" name={"VRL Wallet"} balance={balance?.vrl} />
+        <WalletCard color="#3f3f3f" name={"Bitlasoft Wallet"} balance={balance?.ticketSimply} />
         <Card className="border border-solid border-gray-300 shadow-lg">
           <div className="w-48 flex justify-around items-center">
             <div className="flex flex-col gap-4 items-center">

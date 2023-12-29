@@ -5,6 +5,7 @@ const baseUrl = import.meta.env.VITE_BASE_URL;
 const ADMIN_ENDPOINTS = {
   agentRegister: "api/agent/register",
   agentLogin: "api/agent/login",
+  getBalance: "api/agent/getBalance",
 };
 
 // Register Agent
@@ -31,6 +32,19 @@ export const agentLoginAPI = async (formData) => {
     return response.data;
   } catch (error) {
     console.error("Error verifying credentials", error);
+    throw error;
+  }
+};
+
+//get balance
+export const getBalanceAPI = async () => {
+  try {
+    const response = await axiosInstance.get(
+      `${baseUrl}/${ADMIN_ENDPOINTS.getBalance}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error getting balance", error);
     throw error;
   }
 };
