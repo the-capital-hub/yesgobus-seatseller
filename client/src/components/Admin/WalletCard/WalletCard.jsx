@@ -1,6 +1,6 @@
 import { Card } from "antd";
 
-const WalletCard = ({ color = "black" }) => {
+const WalletCard = ({ color = "black", name, balance }) => {
   return (
     <Card
       hoverable
@@ -13,8 +13,8 @@ const WalletCard = ({ color = "black" }) => {
       className="wallet-card-container"
     >
       <p className="m-0 text-base">Name</p>
-      <p className="m-0 text-lg">Full Name</p>
-      <p className="m-0 text-base">
+      <p className="m-0 text-lg">{name}</p>
+      {/* <p className="m-0 text-base">
         {Array(3)
           .fill(0)
           .map((_, index) => {
@@ -29,9 +29,9 @@ const WalletCard = ({ color = "black" }) => {
             );
           })}
         <span>1234</span>
-      </p>
+      </p> */}
       <p className="m-0 text-base">Balance</p>
-      <p className="m-0 text-base">Rs. 1,00,000</p>
+      <p className="m-0 text-base">Rs. {balance}</p>
     </Card>
   );
 };
