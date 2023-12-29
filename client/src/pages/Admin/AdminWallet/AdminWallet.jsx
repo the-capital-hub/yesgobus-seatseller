@@ -107,9 +107,9 @@ const AdminWallet = () => {
       <HeaderWithSort />
       <h2 className="m-0">Wallet</h2>
       {/* Wallet Cards */}
-      <div className="wallet-cards flex flex-col md:flex-row gap-3 items-stretch">
+      <div className="wallet-cards flex flex-col md:flex-row gap-3 items-center md:items-stretch">
         <WalletCard color="#fd5901" name={"VRL Wallet"} balance={balance?.vrl} />
-        <WalletCard color="#3f3f3f" name={"Bitlasoft Wallet"} balance={balance?.ticketSimply} />
+        <WalletCard color="#3f3f3f" name={"Bitlasoft Wallet"} balance={balance.ticketSimply} />
         <Card className="border border-solid border-gray-300 shadow-lg">
           <div className="w-48 flex justify-around items-center">
             <div className="flex flex-col gap-4 items-center">
