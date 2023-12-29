@@ -6,11 +6,11 @@ const agentSchema = new Schema(
   {
     userId: {
       type: String,
-      required: true,
+      // required: true,
     },
     id: {
       type: String,
-      required: true,
+      // required: true,
     },
     firstName: {
       type: String,
@@ -38,15 +38,19 @@ const agentSchema = new Schema(
     },
     accHolderName: {
       type: String,
-      required: true
+      // required: true
     },
     bankAccNum: {
       type: String,
-      required: true
+      // required: true
     },
     ifsc: {
       type: String,
-      required: true
+      // required: true
+    },
+    status: {
+      type: Boolean,
+      default: false
     },
   },
   {
