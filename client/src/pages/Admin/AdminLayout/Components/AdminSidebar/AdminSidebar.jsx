@@ -87,7 +87,7 @@ export default function AdminSidebar() {
         >
           <MdMenu size={30} />
         </button>
-        <h1 className="m-0  text-center">LOGO</h1>
+        <h1 className="m-0 text-center">YesGoBus</h1>
       </div>
 
       <div className={`navigation py-10 h-full`} ref={navigationRef}>

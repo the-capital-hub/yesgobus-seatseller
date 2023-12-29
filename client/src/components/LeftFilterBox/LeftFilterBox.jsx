@@ -59,14 +59,15 @@ const LeftFilterBox = ({ title, points, count, name, onFilterChange, filters, so
                 .map((point, index) => (
                   <>
                     <div className="filterTypes" key={index}>
-                      <div className="types">
+                      <label className="types" htmlFor={point}>
                         <input
                           type="checkbox"
+                          id={point}
                           onChange={() => handleCheckboxChange(point)}
                           checked={selectedPoints.includes(point)}
                         />
                         <p>{capitalizeFirstLetter(displayLocation(point))}</p>
-                      </div>
+                      </label>
                       {/* <p>({count[index]})</p> */}
                     </div>
                     <hr />

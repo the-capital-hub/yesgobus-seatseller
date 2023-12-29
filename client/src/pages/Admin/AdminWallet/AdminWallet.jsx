@@ -90,7 +90,7 @@ const AdminWallet = () => {
       <HeaderWithSort />
       <h2 className="m-0">Wallet</h2>
       {/* Wallet Cards */}
-      <div className="wallet-cards flex flex-col md:flex-row gap-3 items-stretch">
+      <div className="wallet-cards flex flex-col md:flex-row gap-3 items-center md:items-stretch">
         <WalletCard color="#fd5901" />
         <WalletCard color="#3f3f3f" />
         <Card className="border border-solid border-gray-300 shadow-lg">
