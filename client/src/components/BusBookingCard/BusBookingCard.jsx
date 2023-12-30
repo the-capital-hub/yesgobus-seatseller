@@ -372,17 +372,18 @@ const BusBookingCard = ({
       columns.forEach((column, columnIndex) => {
         const seats = column?.split("|");
         const isValid = seats[0].match(/[A-Z0-9.]+/g);
-
         if (isValid) {
-          seatLayout.push({
-            seatName: seats[0],
-            row: rowIndex + 1,
-            column: columnIndex + 1,
-            // berth: seatTypes[seats[1]],
-            z_index: seatTypes[seats[1]].z_index,
-            width: seatTypes[seats[1]].width,
-            length: seatTypes[seats[1]].length,
-          });
+          if (seats[0] !== ".DOOR") {
+            seatLayout.push({
+              seatName: seats[0],
+              row: rowIndex + 1,
+              column: columnIndex + 1,
+              // berth: seatTypes[seats[1]],
+              z_index: seatTypes[seats[1]]?.z_index || 0,
+              width: seatTypes[seats[1]]?.width || 1,
+              length: seatTypes[seats[1]]?.length || 1,
+            });
+          }
         }
       });
     });
@@ -471,6 +472,7 @@ const BusBookingCard = ({
   const fetchSrsSeats = async () => {
     try {
       const seatsResponse = await getSrsSeatLayout(scheduleId);
+      console.log(seatsResponse);
       let coach_details = seatsResponse.result.bus_layout.coach_details;
       let available = seatsResponse.result.bus_layout.available;
       let available_gst = seatsResponse.result.bus_layout.available_gst;
@@ -527,8 +529,7 @@ const BusBookingCard = ({
     let seatData = [];
     try {
       const response = await axiosInstance.get(
-        `${
-          import.meta.env.VITE_BASE_URL
+        `${import.meta.env.VITE_BASE_URL
         }/api/busBooking/getSeatLayout/${tripId}`
       );
       seatData = response.data?.seats;
@@ -717,10 +718,10 @@ const BusBookingCard = ({
             isVrl
               ? vrlPickupLocations
               : isSrs
-              ? seatDetails.boardingPointlocationsAndTimes
-              : Array.isArray(pickUpLocationOne)
-              ? pickUpLocationOne
-              : [pickUpLocationOne]
+                ? seatDetails.boardingPointlocationsAndTimes
+                : Array.isArray(pickUpLocationOne)
+                  ? pickUpLocationOne
+                  : [pickUpLocationOne]
           }
           // pickUpLocationTwo={pickUpLocationTwo}
           // dropTimes={dropTimes}
@@ -728,10 +729,10 @@ const BusBookingCard = ({
             isVrl
               ? vrlDropLocations
               : isSrs
-              ? seatDetails.droppingPointlocationsAndTimes
-              : Array.isArray(dropLocationOne)
-              ? dropLocationOne
-              : [dropLocationOne]
+                ? seatDetails.droppingPointlocationsAndTimes
+                : Array.isArray(dropLocationOne)
+                  ? dropLocationOne
+                  : [dropLocationOne]
           }
           // dropLocationTwo={dropLocationTwo}
           backSeat={backSeat}
