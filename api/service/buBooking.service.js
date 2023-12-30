@@ -536,6 +536,7 @@ export const getVrlBusDetails = async (searchArgs, filters) => {
 
 // srs buses APIS
 export const sendSrsRequest = async (url, method, data) => {
+  console.log(data);
   try {
     const headers = {
       'api-key': process.env.SRS_API_KEY,
@@ -553,7 +554,7 @@ export const sendSrsRequest = async (url, method, data) => {
       headers: headers,
       data: data,
     });
-
+    
     return response;
   } catch (error) {
     throw error.message;

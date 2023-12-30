@@ -2,7 +2,7 @@ import React from "react";
 
 import "./AdminTrackAgent.scss";
 import HeaderWithSort from "../../../components/Admin/HeaderWithSort/HeaderWithSort";
-import { Table, Space } from "antd";
+import { Table, Space, Spin } from "antd";
 import { getAgentPerfomanceReport, getAllPendingAgents, approveAgent, rejectAgent } from "../../../api/admin";
 import { useState, useEffect } from "react";
 
@@ -149,8 +149,9 @@ function AdminTrackAgent() {
           className="w-full rounded-lg border border-solid border-gray-300 bg-white shadow-xl"
           pagination={{
             pageSize: 5,
-            hideOnSinglePage: true, 
+            hideOnSinglePage: true,
           }}
+          loading={{ indicator: <div><Spin /></div>, spinning: !agentPerformanceReport }}
         />
       </div>
 
@@ -165,8 +166,9 @@ function AdminTrackAgent() {
           className="w-full rounded-lg border border-solid border-gray-300 bg-white shadow-xl"
           pagination={{
             pageSize: 5,
-            hideOnSinglePage: true, 
+            hideOnSinglePage: true,
           }}
+          loading={{ indicator: <div><Spin /></div>, spinning: !pendingAgents }}
         />
       </div>
     </div>

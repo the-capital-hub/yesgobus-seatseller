@@ -1,4 +1,4 @@
-import { Card, Space, Table, Tag } from "antd";
+import { Card, Space, Table, Tag, Spin } from "antd";
 import HeaderWithSort from "../../../components/Admin/HeaderWithSort/HeaderWithSort";
 import WalletCard from "../../../components/Admin/WalletCard/WalletCard";
 import "./AdminWallet.scss";
@@ -162,6 +162,7 @@ const AdminWallet = () => {
             pageSize: 5,
             hideOnSinglePage: true,
           }}
+          loading={{ indicator: <div><Spin /></div>, spinning: !bookings }}
         />
       </section>
       {/* History Transferred*/}
@@ -180,6 +181,8 @@ const AdminWallet = () => {
             pageSize: 5,
             hideOnSinglePage: true,
           }}
+          loading={{ indicator: <div><Spin /></div>, spinning: !refunds }}
+
         />
       </section>
     </div>
