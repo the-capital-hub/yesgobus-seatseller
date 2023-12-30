@@ -72,7 +72,7 @@ const BusBooking = () => {
   for (let i = 0; i <= 6; i++) {
     const nextDate = new Date(date);
     nextDate.setDate(date.getDate() + i);
-    const formattedDate = `${daysOfWeek[nextDate.getDay()]}, ${
+    const formattedDate = `${daysOfWeek[nextDate.getDay()]},${
       months[nextDate.getMonth()]
     }-${nextDate.getDate()}`;
     dates.push(formattedDate);
@@ -246,7 +246,20 @@ const BusBooking = () => {
               return false;
             });
 
-            setVrlBuses((prevBuses) => [...prevBuses, ...uniqueBusesArray]);
+            setVrlBuses((prevBuses) => {
+              // extract a unique list of buses from combined bus list
+              let newBuslist = [...prevBuses, ...uniqueBusesArray];
+              const newUniqueBusListSet = new Set();
+              const newUniqueBusList = newBuslist.filter((bus) => {
+                if (!newUniqueBusListSet.has(bus.ReferenceNumber)) {
+                  newUniqueBusListSet.add(bus.ReferenceNumber);
+                  return true;
+                }
+                return false;
+              });
+
+              return [...newUniqueBusList];
+            });
             setNoVrlOfBuses((prevCount) => prevCount + uniqueBusesArray.length);
           } else {
             console.error("Invalid vrlResponse.data:", vrlResponse.data);
@@ -437,7 +450,7 @@ const BusBooking = () => {
   }
 
   // get sortedData
-  const busList = [...vrlBuses, ...srsBuses];
+  const busList = [...vrlBuses, ...srsBuses]; // vrlbuses always go first
   const sortedBusList = sortBuses(busList, sortBy);
 
   return (
@@ -459,6 +472,7 @@ const BusBooking = () => {
             onFilterChange={handleFilter}
             isSrs={noOfSrsBuses > 0}
             allSrsBusOperators={allSrsBusOperators}
+            key={"left-filter"}
           />
         </div>
 
@@ -478,6 +492,7 @@ const BusBooking = () => {
                 destinationCity={toLocation}
                 doj={selectedDate}
                 onFilterChange={handleFilter}
+                key={"mobile-left-filter"}
               />
               <div className="dates">
                 {dates.map((date) => (
@@ -551,12 +566,14 @@ const BusBooking = () => {
 
               {/* Render Bus list */}
               {sortedBusList?.map((bus) => {
+                const isVrl = bus.type === "vrl" ? true : false;
+
                 const busProps = getBusBookingCardProps(bus);
 
                 return (
                   <div
                     className="bus-card-container"
-                    key={bus?.ReferenceNumber}
+                    key={isVrl ? bus?.ReferenceNumber : bus.id}
                   >
                     <BusBookingCard {...busProps} key={bus?.ReferenceNumber} />
                   </div>

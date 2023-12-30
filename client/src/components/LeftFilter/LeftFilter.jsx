@@ -114,13 +114,12 @@ const LeftFilter = ({
             response?.data?.data?.busPartners || [],
             srsResponse?.busPartners || []
           );
-          console.log(srsResponse);
 
           if (
-            vrlResponse?.data.boardingPoints.length ||
-            vrlResponse.data.droppingPoints.length
+            vrlResponse?.data?.boardingPoints?.length ||
+            vrlResponse?.data?.droppingPoints?.length
           ) {
-            console.log("VRL response", vrlResponse);
+            // console.log("VRL response", vrlResponse);
             combinedBusPartners.push("VRL Travels");
           }
         }
@@ -191,7 +190,7 @@ const LeftFilter = ({
           filters={selectedBoardingPoints}
           sourceCity={sourceCity}
           destinationCity={destinationCity}
-          key={"Boarding Points"}
+          key={"Boarding-Points"}
         />
         <LeftFilterBox
           title={"Drop Points"}
@@ -202,7 +201,7 @@ const LeftFilter = ({
           filters={selectedDroppingPoints}
           sourceCity={sourceCity}
           destinationCity={destinationCity}
-          key={"Drop Points"}
+          key={"Drop-Points"}
         />
         <LeftFilterBox
           title={"Bus Partner"}
@@ -212,7 +211,7 @@ const LeftFilter = ({
           onFilterChange={handleFilterChange}
           sourceCity={sourceCity}
           destinationCity={destinationCity}
-          key={"Bus Partner"}
+          key={"Bus-Partner"}
         />
         {/* <LeftFilterBox
           title={"Bus Type"}

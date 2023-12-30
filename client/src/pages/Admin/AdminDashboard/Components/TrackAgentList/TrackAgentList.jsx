@@ -1,19 +1,69 @@
-import { Button } from "antd";
-import { Link } from "react-router-dom";
-import { WatermarkIcon } from "../../../../../assets/contact";
-
+// import { Button } from "antd";
+// import { Link } from "react-router-dom";
+// import { WatermarkIcon } from "../../../../../assets/contact";
+import { getAgentPerfomanceReport } from "../../../../../api/admin";
+import { useEffect, useState } from "react";
+import { Table, Spin } from "antd";
+const performanceColumn = [
+  {
+    title: "Agent Name",
+    dataIndex: "agentName",
+    key: "agentName",
+  },
+  {
+    title: "Email",
+    dataIndex: "email",
+    key: "email",
+  },
+  {
+    title: "Phone Number",
+    dataIndex: "phone",
+    key: "phone",
+  },
+  {
+    title: "No of Bookings Made",
+    dataIndex: "bookingsMade",
+    key: "bookingsMade",
+  },
+  {
+    title: "Revenue",
+    dataIndex: "revenue",
+    key: "revenue",
+  },
+  {
+    title: "UserId",
+    dataIndex: "userId",
+    key: "userId",
+  },
+];
 export default function TrackAgentList() {
+  const [agentPerformanceReport, setAgentPerformanceReport] = useState(null);
+
+  const getPerfomanceReport = async () => {
+    try {
+      const response = await getAgentPerfomanceReport();
+      setAgentPerformanceReport(response.data);
+    } catch (error) {
+      console.error("Error", error.message);
+    }
+  }
+
+  useEffect(() => {
+    getPerfomanceReport();
+  }, [])
+
   return (
     <div className="list-container flex flex-col rounded-lg border border-solid border-gray-300 bg-white shadow-lg">
-      <header className="list-bar grid grid-cols-1 min-[350px]:grid-cols-2 md:grid-cols-4 place-items-center gap-4 py-4 px-8">
-        <p className="m-0 text-lg md:justify-self-start">Bus Route</p>
-        <p className="m-0 text-lg">Bus Number</p>
-        <p className="m-0 text-lg">Buses</p>
+      {/* <header className="list-bar grid grid-cols-1 min-[350px]:grid-cols-2 md:grid-cols-4 place-items-center gap-4 py-4 px-8">
+        <p className="m-0 text-lg md:justify-self-start">Agent Name</p>
+        <p className="m-0 text-lg">Email</p>
+        <p className="m-0 text-lg">Phone</p>
+        <p className="m-0 text-lg">Phone</p>
         <p className="m-0 text-lg md:justify-self-end w-[150px] text-center">
           Track
         </p>
-      </header>
-      {Array.from({ length: 5 }).map((elem, index) => {
+      </header> */}
+      {/* {agentPerformanceReport?.map((elem, index) => {
         return (
           <div
             className="list-bar grid grid-cols-1 min-[350px]:grid-cols-2 md:grid-cols-4 place-items-center gap-4 py-4 px-8"
@@ -44,8 +94,21 @@ export default function TrackAgentList() {
             </Link>
           </div>
         );
-      })}
-      <footer className="list-bar grid grid-cols-4 place-items-center py-7 px-8"></footer>
+      })} */}
+      {/* <Spin spinning={loading}> */}
+      <Table
+        dataSource={agentPerformanceReport}
+        columns={performanceColumn}
+        bordered={false}
+        footer={() => ""}
+        className="w-full rounded-lg border border-solid border-gray-300 bg-white shadow-xl"
+        pagination={{
+          pageSize: 5,
+          hideOnSinglePage: true,
+        }}
+        loading={{ indicator: <div><Spin /></div>, spinning: !agentPerformanceReport }}
+      />
+      {/* </Spin> */}
     </div>
   );
 }

@@ -11,6 +11,7 @@ import {
   getAllBookingsController,
   getAllBookingRefundsController,
   getAgentPerformanceReportController,
+  verifyAgentCodeController,
 } from "../controllers/agents.controller.js";
 
 const router = express.Router();
@@ -26,5 +27,6 @@ router.get("/getAllPendingAgents", getAllPendingAgentsControllr);
 router.get("/getAllBookings", getAllBookingsController);
 router.get("/getAllBookingRefunds", getAllBookingRefundsController);
 router.get("/getAgentPerformanceReport", getAgentPerformanceReportController);
+router.get("/verifyAgentCode/:agentCode", verifyAgentCodeController);
 
 export default router;
