@@ -437,7 +437,7 @@ const BusBooking = () => {
   }
 
   // get sortedData
-  const busList = [...vrlBuses, ...srsBuses];
+  const busList = [...vrlBuses, ...srsBuses]; // vrlbuses always go first
   const sortedBusList = sortBuses(busList, sortBy);
 
   return (
@@ -459,6 +459,7 @@ const BusBooking = () => {
             onFilterChange={handleFilter}
             isSrs={noOfSrsBuses > 0}
             allSrsBusOperators={allSrsBusOperators}
+            key={"left-filter"}
           />
         </div>
 
@@ -478,6 +479,7 @@ const BusBooking = () => {
                 destinationCity={toLocation}
                 doj={selectedDate}
                 onFilterChange={handleFilter}
+                key={"mobile-left-filter"}
               />
               <div className="dates">
                 {dates.map((date) => (
@@ -551,12 +553,14 @@ const BusBooking = () => {
 
               {/* Render Bus list */}
               {sortedBusList?.map((bus) => {
+                const isVrl = bus.type === "vrl" ? true : false;
+
                 const busProps = getBusBookingCardProps(bus);
 
                 return (
                   <div
                     className="bus-card-container"
-                    key={bus?.ReferenceNumber}
+                    key={isVrl ? bus?.ReferenceNumber : bus.id}
                   >
                     <BusBookingCard {...busProps} key={bus?.ReferenceNumber} />
                   </div>
