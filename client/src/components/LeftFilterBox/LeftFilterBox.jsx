@@ -65,11 +65,11 @@ const LeftFilterBox = ({
             <ul>
               {points?.filter(filterPoints).map((point, index) => (
                 <>
-                  <div className="filterTypes" key={index}>
-                    <label className="types" htmlFor={point}>
+                  <div className="filterTypes" key={`${point}-${index}`}>
+                    <label className="types" htmlFor={`${point}-${index}`}>
                       <input
                         type="checkbox"
-                        id={point}
+                        id={`${point}-${index}`}
                         onChange={() => handleCheckboxChange(point)}
                         checked={selectedPoints.includes(point)}
                       />

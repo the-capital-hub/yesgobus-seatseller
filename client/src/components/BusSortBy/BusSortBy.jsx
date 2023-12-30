@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoArrowUp, IoArrowDown } from "react-icons/io5";
 
 const SORT_OPTIONS = [{ label: "Price", sortTerm: "price" }];
@@ -16,6 +16,7 @@ export default function BusSortBy({ handleSortByChange, sortBy, setSortBy }) {
               label={label}
               sortTerm={sortTerm}
               key={label}
+              sortBy={sortBy}
             />
           );
         })}
@@ -25,7 +26,7 @@ export default function BusSortBy({ handleSortByChange, sortBy, setSortBy }) {
             style={{ marginLeft: "auto" }}
             onClick={() => setSortBy(null)}
           >
-            Clear All
+            Clear Sort
           </Button>
         )}
       </div>
@@ -33,8 +34,14 @@ export default function BusSortBy({ handleSortByChange, sortBy, setSortBy }) {
   );
 }
 
-export function SortToggle({ handleSortByChange, sortTerm, label }) {
+export function SortToggle({ handleSortByChange, sortTerm, label, sortBy }) {
   const [isAscending, setIsAscending] = useState(true);
+
+  useEffect(() => {
+    if (!sortBy) {
+      setIsAscending(true);
+    }
+  }, [sortBy]);
 
   function handleClick() {
     if (isAscending) {
