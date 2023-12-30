@@ -246,7 +246,20 @@ const BusBooking = () => {
               return false;
             });
 
-            setVrlBuses((prevBuses) => [...prevBuses, ...uniqueBusesArray]);
+            setVrlBuses((prevBuses) => {
+              // extract a unique list of buses from combined bus list
+              let newBuslist = [...prevBuses, ...uniqueBusesArray];
+              const newUniqueBusListSet = new Set();
+              const newUniqueBusList = newBuslist.filter((bus) => {
+                if (!newUniqueBusListSet.has(bus.ReferenceNumber)) {
+                  newUniqueBusListSet.add(bus.ReferenceNumber);
+                  return true;
+                }
+                return false;
+              });
+
+              return [...newUniqueBusList];
+            });
             setNoVrlOfBuses((prevCount) => prevCount + uniqueBusesArray.length);
           } else {
             console.error("Invalid vrlResponse.data:", vrlResponse.data);
