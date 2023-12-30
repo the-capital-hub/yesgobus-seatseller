@@ -10,6 +10,7 @@ import {
   getAllBookings,
   getAllBookingRefund,
   getAgentPerformanceReport,
+  verifyAgentCode,
 } from '../service/agents.service.js';
 
 export const registerAgentController = async (req, res) => {
@@ -127,6 +128,17 @@ export const getAllBookingRefundsController = async (req, res) => {
 export const getAgentPerformanceReportController = async (req, res) => {
   try {
     const result = await getAgentPerformanceReport();
+    res.status(200).send(result);
+  } catch (err) {
+    console.log(err);
+    res.status(err.status || 500).json({ message: "Error getting all agents performance report" });
+  }
+};
+
+export const verifyAgentCodeController = async (req, res) => {
+  try {
+    const { agentCode } = req.params;
+    const result = await verifyAgentCode(agentCode);
     res.status(200).send(result);
   } catch (err) {
     console.log(err);

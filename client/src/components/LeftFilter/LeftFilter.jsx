@@ -114,7 +114,6 @@ const LeftFilter = ({
             response?.data?.data?.busPartners || [],
             srsResponse?.busPartners || []
           );
-          console.log(srsResponse);
 
           if (
             vrlResponse?.data?.boardingPoints?.length ||

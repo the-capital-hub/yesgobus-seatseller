@@ -22,9 +22,11 @@ import { Spin } from "antd";
 import { Modal } from "antd";
 import { vrlBlockSeat, vrlBookSeat } from "../../api/vrlBusesApis";
 import { srsBlockSeat, srsConfirmBooking } from "../../api/srsBusesApis";
+import { verifyAgentCode } from "../../api/admin";
 
 const Payment = () => {
   const [loading, setLoading] = useState(false);
+  const [agentCodeVerified, setAgentCodeVerified] = useState(true);
   const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
   if (!loggedInUser) {
     return <Navigate to="/login" replace />;
@@ -368,6 +370,12 @@ const Payment = () => {
 
   //handle payment
   const handlePayment = async () => {
+    //validate agent code
+    if (!agentCodeVerified && userData.agentCode) {
+      alert("Agent Code is invalid");
+      return;
+    }
+
     //validate input
     const errors = validateUserData();
     if (errors.femaleReserved === true) {
@@ -819,6 +827,26 @@ const Payment = () => {
     return errors;
   };
 
+  const handleAgentCodeVerify = async () => {
+    if (userData.agentCode === "") {
+      setAgentCodeVerified(true);
+      return;
+    }
+    try {
+      console.log(userData.agentCode);
+      const response = await verifyAgentCode(userData.agentCode);
+      if (response.status === 200) {
+        setAgentCodeVerified(true);
+        alert("Agent code Verified");
+      } else {
+        setAgentCodeVerified(false);
+        alert("Agent Code not found")
+      }
+    } catch (error) {
+      console.error("Error", error);
+    }
+  }
+
   return (
     <div className="Payment">
       <Navbar />
@@ -987,7 +1015,7 @@ const Payment = () => {
 
           {/* Agent Details */}
           <div className="details">
-            <h4>Enter Agent Code</h4>
+            <h4>Enter Agent Code (Optional)</h4>
             <div className="detailsContainer">
               <Input
                 title={"Agent Code"}
@@ -996,6 +1024,11 @@ const Payment = () => {
                 onChanged={handleInputChange}
                 givenName={"agentCode"}
                 value={userData.agentCode}
+              />
+              <Button
+                text={`Verify`}
+                onClicked={handleAgentCodeVerify}
+                style={{ height: "40px", marginTop: "35px" }}
               />
             </div>
           </div>

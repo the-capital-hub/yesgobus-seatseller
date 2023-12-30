@@ -13,6 +13,7 @@ const ADMIN_ENDPOINTS = {
   getAllPendingAgents: "api/agent/getAllPendingAgents",
   getAgentPerfomanceReport: "api/agent/getAgentPerformanceReport",
   getAgentBookings: "api/agent/getAgentBookings",
+  verifyAgentCode: "api/agent/verifyAgentCode",
 };
 
 // Register Agent
@@ -147,6 +148,19 @@ export const getAgentBookings = async (agentId) => {
     return response.data;
   } catch (error) {
     console.error("Error getting agent bookings", error);
+    throw error;
+  }
+};
+
+//get all agent booking
+export const verifyAgentCode = async (agentCode) => {
+  try {
+    const response = await axiosInstance.get(
+      `${baseUrl}/${ADMIN_ENDPOINTS.verifyAgentCode}/${agentCode}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error verifying agent code", error);
     throw error;
   }
 };
