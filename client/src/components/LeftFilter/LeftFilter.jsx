@@ -117,8 +117,8 @@ const LeftFilter = ({
           console.log(srsResponse);
 
           if (
-            vrlResponse?.data.boardingPoints.length ||
-            vrlResponse.data.droppingPoints.length
+            vrlResponse?.data?.boardingPoints?.length ||
+            vrlResponse?.data?.droppingPoints?.length
           ) {
             console.log("VRL response", vrlResponse);
             combinedBusPartners.push("VRL Travels");

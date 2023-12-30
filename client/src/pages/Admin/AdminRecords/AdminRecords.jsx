@@ -1,4 +1,4 @@
-import { ConfigProvider, Table } from "antd";
+import { ConfigProvider, Table, Spin } from "antd";
 import NotificationIcon from "../../../components/SvgIcons/NotificationIcon";
 import UserIcon from "../../../components/SvgIcons/UserIcon";
 import "./AdminRecords.scss";
@@ -169,8 +169,9 @@ export default function AdminRecords() {
               style={tableStyles}
               pagination={{
                 pageSize: 5,
-                hideOnSinglePage: true, 
+                hideOnSinglePage: true,
               }}
+              loading={{ indicator: <div><Spin /></div>, spinning: !bookings }}
             />
           </ConfigProvider>
         </div>

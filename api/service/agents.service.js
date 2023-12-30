@@ -144,7 +144,13 @@ export const getAllAgentsBookings = async () => {
   try {
     const agents = await Agent.find({ email: { $ne: 'admin@yesgobus.com' } });
     const allBookings = await Promise.all(agents.map(async (agent) => {
-      const bookings = await BusBooking.find({ userId: agent.id, bookingStatus: "paid" });
+      const bookings = await BusBooking.find({
+        $or: [
+          { userId: agent.id },
+          { agentCode: agent.agentCode },
+        ],
+        bookingStatus: "paid",
+      });
       return {
         agentName: agent.firstName + " " + agent.lastName,
         bookings: bookings,
@@ -284,7 +290,13 @@ export const getAgentPerformanceReport = async () => {
   try {
     const agents = await Agent.find({ email: { $ne: 'admin@yesgobus.com' }, status: true });
     const allBookings = await Promise.all(agents.map(async (agent) => {
-      const bookings = await BusBooking.find({ userId: agent.id, bookingStatus: "paid" });
+      const bookings = await BusBooking.find({
+        $or: [
+          { userId: agent.id },
+          { agentCode: agent.agentCode },
+        ],
+        bookingStatus: "paid",
+      });
       const totalRevenue = bookings.reduce((sum, booking) => sum + booking.totalAmount, 0);
       return {
         agentName: agent.firstName + " " + agent.lastName,
@@ -292,6 +304,8 @@ export const getAgentPerformanceReport = async () => {
         revenue: totalRevenue,
         agentId: agent._id,
         userId: agent.userId,
+        email: agent.email,
+        phone: agent.phNum,
       };
     }));
 
