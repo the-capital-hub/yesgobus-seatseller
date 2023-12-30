@@ -322,3 +322,26 @@ export const getAgentPerformanceReport = async () => {
     };
   }
 }
+
+export const verifyAgentCode = async (agentCode) => {
+  try {
+    const existingAgent = await Agent.findOne({ agentCode: agentCode });
+    if (existingAgent) {
+      return {
+        status: 200,
+        message: "Agent code verified successfully",
+      };
+    } else {
+      return {
+        status: 404,
+        message: "Agent code not found",
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      message: error.message || "Internal Server Error",
+    };
+  }
+};
