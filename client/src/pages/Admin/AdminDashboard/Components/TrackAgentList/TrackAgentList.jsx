@@ -128,6 +128,7 @@ export default function TrackAgentList() {
             spinning:
               !agentPerformanceReport || !agentPerformanceReport.length === 0,
           }}
+          scroll={{ x: true }}
         />
       </ConfigProvider>
       {/* </Spin> */}
