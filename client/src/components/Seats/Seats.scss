@@ -135,7 +135,7 @@
     }
 
     .bus {
-      margin-top: 0px;
+      margin-top: 20px;
       min-height: 250px;
       height: fit-content;
       display: flex;
@@ -353,9 +353,17 @@
     .seatMobileRight {
       width: 100%;
 
+      .bus-container {
+        margin-inline: 20px;
+        @media (min-width: 400px) {
+          margin-inline: 40px;
+        }
+      }
+
       .bus {
         overflow-x: auto;
         min-height: 250px;
+        margin-top: 10px;
       }
     }
 
