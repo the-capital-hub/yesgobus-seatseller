@@ -21,14 +21,13 @@ export default function AdminAccountDetails() {
     if (incomingData) {
       setLoading(false);
     }
-    console.log(incomingData);
+    // console.log(incomingData);
   }, [incomingData]);
 
   async function handleDetailsSubmit(values) {
     let { confirmAccountNumber, ...formData } = {
       ...values,
       password: incomingData.password,
-      userId: incomingData.userId,
     };
 
     // console.log("formData", formData);
@@ -41,10 +40,11 @@ export default function AdminAccountDetails() {
       // console.log("register response", response);
       messageApi.open({
         type: "success",
-        content: "Your account request has been sent. Please wait for admin approval.",
+        content:
+          "Your account request has been sent. Please wait for admin approval.",
         duration: 2,
       });
-      
+
       setTimeout(() => {
         navigate("/admin/login");
       }, 2000);
@@ -53,7 +53,7 @@ export default function AdminAccountDetails() {
       if (error.response.data.message === "Yesgobus account doesnot exists") {
         messageApi.open({
           type: "error",
-          content: "Yesgobus account user id doesnot exists.",
+          content: "Yesgobus account user id does not exists.",
           duration: 3,
         });
       } else if (error.response.data.message === "Agent already exists") {
@@ -104,12 +104,13 @@ export default function AdminAccountDetails() {
                 lastName: incomingData?.lastName || "",
                 phNum: incomingData?.phNum || "",
                 email: incomingData?.email || "",
+                userId: incomingData?.userId || "",
               }}
             >
               {/* Personal Details */}
               <PersonalDetails />
               {/* Banking details */}
-              <BankingDetails />
+              {/* <BankingDetails /> */}
               <div className="action-btn self-end">
                 <Button
                   htmlType="submit"

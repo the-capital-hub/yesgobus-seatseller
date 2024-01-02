@@ -370,6 +370,8 @@ const Payment = () => {
 
   //handle payment
   const handlePayment = async () => {
+    console.log(doj);
+
     //validate agent code
     if (!agentCodeVerified && userData.agentCode) {
       alert("Agent Code is invalid");
@@ -392,7 +394,6 @@ const Payment = () => {
     //seats data
     if (isVrl) {
       try {
-        console.log(userData.agentCode);
         const totalPassenger = bookingDetails?.selectedSeats?.length;
 
         const seatAndGenderArray = bookingDetails?.selectedSeats?.map(
@@ -416,7 +417,7 @@ const Payment = () => {
           payableAmount: bookingDetails?.totalFare,
           totalPassengers: totalPassenger,
         };
-
+        console.log(blockSeatRequestBody);
         let { data: vrlBlockSeatResponse } = await vrlBlockSeat(
           blockSeatRequestBody
         );

@@ -4,4 +4,8 @@
   @media (min-width: 768px) {
     padding: 1rem;
   }
+
+  .ant-table-cell:not(:last-of-type) {
+    border-right: 1px solid #53535342;
+  }
 }
