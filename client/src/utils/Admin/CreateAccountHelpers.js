@@ -16,7 +16,7 @@ export function validateCreateAccountData(formData) {
 
   //userId
   if (!userId.value || userId.value === " ") {
-    error.userId = "User ID is Required";
+    error.userId = "Please enter User ID";
     hasError = true;
   }
 

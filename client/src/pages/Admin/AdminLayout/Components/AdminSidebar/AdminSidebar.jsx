@@ -88,7 +88,7 @@ export default function AdminSidebar({ admin }) {
         >
           <MdMenu size={30} />
         </button>
-        <img src={logo} alt="YesGoBus" className="h-12 md:h-auto md:w-1/2" />
+        <img src={logo} alt="YesGoBus" className="h-12 lg:h-auto lg:w-1/2" />
       </div>
 
       <div className={`navigation py-10 h-full`} ref={navigationRef}>
