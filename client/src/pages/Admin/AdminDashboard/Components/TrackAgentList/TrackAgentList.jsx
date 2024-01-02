@@ -106,7 +106,7 @@ export default function TrackAgentList() {
           pageSize: 5,
           hideOnSinglePage: true,
         }}
-        loading={{ indicator: <div><Spin /></div>, spinning: !agentPerformanceReport }}
+        loading={{ indicator: <div><Spin /></div>, spinning: !agentPerformanceReport || agentPerformanceReport === 0 }}
       />
       {/* </Spin> */}
     </div>

@@ -151,7 +151,7 @@ function AdminTrackAgent() {
             pageSize: 5,
             hideOnSinglePage: true,
           }}
-          loading={{ indicator: <div><Spin /></div>, spinning: !agentPerformanceReport }}
+          loading={{ indicator: <div><Spin /></div>, spinning: !agentPerformanceReport || agentPerformanceReport === 0 }}
         />
       </div>
 
@@ -168,7 +168,10 @@ function AdminTrackAgent() {
             pageSize: 5,
             hideOnSinglePage: true,
           }}
-          loading={{ indicator: <div><Spin /></div>, spinning: !pendingAgents }}
+          loading={{
+            indicator: <div><Spin /></div>,
+            spinning: !pendingAgents || pendingAgents.length === 0,
+          }}
         />
       </div>
     </div>

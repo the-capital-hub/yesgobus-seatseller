@@ -162,7 +162,7 @@ const AdminWallet = () => {
             pageSize: 5,
             hideOnSinglePage: true,
           }}
-          loading={{ indicator: <div><Spin /></div>, spinning: !bookings }}
+          loading={{ indicator: <div><Spin /></div>, spinning: !bookings || bookings.length === 0 }}
         />
       </section>
       {/* History Transferred*/}
@@ -181,7 +181,7 @@ const AdminWallet = () => {
             pageSize: 5,
             hideOnSinglePage: true,
           }}
-          loading={{ indicator: <div><Spin /></div>, spinning: !refunds }}
+          loading={{ indicator: <div><Spin /></div>, spinning: !refunds || refunds.length === 0 }}
 
         />
       </section>

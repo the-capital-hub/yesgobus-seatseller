@@ -171,7 +171,7 @@ export default function AdminRecords() {
                 pageSize: 5,
                 hideOnSinglePage: true,
               }}
-              loading={{ indicator: <div><Spin /></div>, spinning: !bookings }}
+              loading={{ indicator: <div><Spin /></div>, spinning: !bookings || bookings.length === 0 }}
             />
           </ConfigProvider>
         </div>
