@@ -72,9 +72,8 @@ const BusBooking = () => {
   for (let i = 0; i <= 6; i++) {
     const nextDate = new Date(date);
     nextDate.setDate(date.getDate() + i);
-    const formattedDate = `${daysOfWeek[nextDate.getDay()]},${
-      months[nextDate.getMonth()]
-    }-${nextDate.getDate()}`;
+    const formattedDate = `${daysOfWeek[nextDate.getDay()]},${months[nextDate.getMonth()]
+      }-${nextDate.getDate()}`;
     dates.push(formattedDate);
   }
 
@@ -568,7 +567,7 @@ const BusBooking = () => {
               {sortedBusList?.map((bus) => {
                 const isVrl = bus.type === "vrl" ? true : false;
 
-                const busProps = getBusBookingCardProps(bus);
+                const busProps = getBusBookingCardProps(bus, fromLocation, toLocation, selectedDate);
 
                 return (
                   <div
