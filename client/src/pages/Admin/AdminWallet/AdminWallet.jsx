@@ -134,24 +134,24 @@ const AdminWallet = () => {
                 color="#fd5901"
                 className="rounded-full p-3 bg-gray-200"
               />
-              <h4 className="m-0">Transfer</h4>
+              <h4 className="m-0">Sales</h4>
             </div>
             <div className="flex flex-col gap-4 items-center">
               <HiArrowSmDown
                 size={40}
                 className="rounded-full p-3 bg-gray-200"
               />
-              <h4 className="m-0">Receive</h4>
+              <h4 className="m-0">Refund</h4>
             </div>
           </div>
         </Card>
       </div>
-      {/* History Received */}
+      {/* History Refunded */}
       <section className="history-wrapper flex flex-col gap-4">
         <h2 className="m-0 flex gap-2">
           History -{" "}
           <span className="flex items-center">
-            <HiArrowSmDown /> Received
+            <HiArrowSmDown /> Refunded
           </span>
         </h2>
         <Table
@@ -165,12 +165,12 @@ const AdminWallet = () => {
           loading={{ indicator: <div><Spin /></div>, spinning: !bookings || bookings.length === 0 }}
         />
       </section>
-      {/* History Transferred*/}
+      {/* History Sales*/}
       <section className="history-wrapper flex flex-col gap-4">
         <h2 className="m-0 flex gap-2">
           History -{" "}
           <span className="flex items-center">
-            <HiArrowSmUp color="#fd5901" /> Transferred
+            <HiArrowSmUp color="#fd5901" /> Sales
           </span>
         </h2>
         <Table
