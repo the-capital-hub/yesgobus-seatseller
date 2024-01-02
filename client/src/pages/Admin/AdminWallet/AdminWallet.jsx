@@ -9,7 +9,7 @@ import {
   getAllBookings,
   getAllBookingRefund,
 } from "../../../api/admin";
-import TransactionArrow from "../AdminDashboard/Components/TransactionArrow/TransactionArrow";
+import TransactionArrow from "../../../components/Admin/TransactionArrow/TransactionArrow";
 
 const columns = [
   {

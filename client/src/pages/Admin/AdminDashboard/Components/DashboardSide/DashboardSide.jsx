@@ -1,5 +1,5 @@
 import "./DashboardSide.scss";
-import TransactionArrow from "../TransactionArrow/TransactionArrow";
+import TransactionArrow from "../../../../../components/Admin/TransactionArrow/TransactionArrow";
 import SideHistory from "../SideHistory/SideHistory";
 import { WatermarkIcon } from "../../../../../assets/contact";
 import { useOutletContext } from "react-router-dom";
@@ -26,7 +26,9 @@ export default function DashboardSide() {
 
         {/* Name */}
         <p className="m-0 mx-auto text-lg">{fullName}</p>
-        <p className="m-0 mx-auto text-lg">{agentCode && <span>Agent Code: {agentCode}</span>}</p>
+        <p className="m-0 mx-auto text-lg">
+          {agentCode && <span>Agent Code: {agentCode}</span>}
+        </p>
 
         {/* Icons */}
         <div className="flex items-center gap-4 mx-auto">

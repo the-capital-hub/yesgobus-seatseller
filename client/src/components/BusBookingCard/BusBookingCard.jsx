@@ -529,7 +529,8 @@ const BusBookingCard = ({
     let seatData = [];
     try {
       const response = await axiosInstance.get(
-        `${import.meta.env.VITE_BASE_URL
+        `${
+          import.meta.env.VITE_BASE_URL
         }/api/busBooking/getSeatLayout/${tripId}`
       );
       seatData = response.data?.seats;
@@ -686,11 +687,13 @@ const BusBookingCard = ({
           <img src={livelocation} alt="" />
           <span>Live tracking</span>
         </div> */}
-        <Spin
-          spinning={seatLoading}
-          // colorText="#fd5901"
-          className="loading_seats"
-        />
+        {seatLoading && (
+          <Spin
+            spinning={seatLoading}
+            // colorText="#fd5901"
+            className="loading_seats"
+          />
+        )}
         {/* <hr /> */}
         {/* <div className="dropDowns">
           <DropDown title="Policy" text="Lorem" />
@@ -718,10 +721,10 @@ const BusBookingCard = ({
             isVrl
               ? vrlPickupLocations
               : isSrs
-                ? seatDetails.boardingPointlocationsAndTimes
-                : Array.isArray(pickUpLocationOne)
-                  ? pickUpLocationOne
-                  : [pickUpLocationOne]
+              ? seatDetails.boardingPointlocationsAndTimes
+              : Array.isArray(pickUpLocationOne)
+              ? pickUpLocationOne
+              : [pickUpLocationOne]
           }
           // pickUpLocationTwo={pickUpLocationTwo}
           // dropTimes={dropTimes}
@@ -729,10 +732,10 @@ const BusBookingCard = ({
             isVrl
               ? vrlDropLocations
               : isSrs
-                ? seatDetails.droppingPointlocationsAndTimes
-                : Array.isArray(dropLocationOne)
-                  ? dropLocationOne
-                  : [dropLocationOne]
+              ? seatDetails.droppingPointlocationsAndTimes
+              : Array.isArray(dropLocationOne)
+              ? dropLocationOne
+              : [dropLocationOne]
           }
           // dropLocationTwo={dropLocationTwo}
           backSeat={backSeat}

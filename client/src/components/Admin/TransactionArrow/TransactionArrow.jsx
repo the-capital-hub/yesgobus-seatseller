@@ -1,4 +1,4 @@
-import { IconCustomArrow } from "../../../../../components/Admin/SvgIcons";
+import { IconCustomArrow } from "../SvgIcons";
 
 export default function TransactionArrow({
   backgroundClass = "bg-gray-200",
