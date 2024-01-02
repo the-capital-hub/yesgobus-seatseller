@@ -6,69 +6,6 @@ import { useState, useEffect } from "react";
 import { getAgentBookings } from "../../../api/admin";
 import { ADMIN_KEY } from "../AdminLogin/AdminLogin";
 
-const dataSource = [
-  {
-    key: "1",
-    name: "Mike",
-    timeOfBooking: "16:57 PM",
-    operator: "Operator",
-    from: "Bangalore",
-    to: "Mysore",
-    cost: "300",
-    agent: "Agent",
-  },
-  {
-    key: "2",
-    name: "John",
-    timeOfBooking: "12:37 PM",
-    operator: "Operator",
-    from: "Bangalore",
-    to: "Hyderabad",
-    cost: "1031",
-    agent: "Agent",
-  },
-  {
-    key: "3",
-    name: "Mike",
-    timeOfBooking: "16:57 PM",
-    operator: "Operator",
-    from: "Bangalore",
-    to: "Mysore",
-    cost: "300",
-    agent: "Agent",
-  },
-  {
-    key: "4",
-    name: "John",
-    timeOfBooking: "12:37 PM",
-    operator: "Operator",
-    from: "Bangalore",
-    to: "Hyderabad",
-    cost: "1031",
-    agent: "Agent",
-  },
-  {
-    key: "5",
-    name: "Mike",
-    timeOfBooking: "16:57 PM",
-    operator: "Operator",
-    from: "Bangalore",
-    to: "Mysore",
-    cost: "300",
-    agent: "Agent",
-  },
-  {
-    key: "6",
-    name: "John",
-    timeOfBooking: "12:37 PM",
-    operator: "Operator",
-    from: "Bangalore",
-    to: "Hyderabad",
-    cost: "1031",
-    agent: "Agent",
-  },
-];
-
 const columns = [
   {
     title: "Name",
@@ -179,7 +116,7 @@ export default function AdminRecords() {
                     <Spin />
                   </div>
                 ),
-                spinning: !bookings,
+                spinning: !bookings || bookings.length === 0,
               }}
             />
           </ConfigProvider>

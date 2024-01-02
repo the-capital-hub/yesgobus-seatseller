@@ -26,7 +26,7 @@ export default function DashboardSide() {
 
         {/* Name */}
         <p className="m-0 mx-auto text-lg">{fullName}</p>
-        <p className="m-0 mx-auto text-lg">Agent Code : {agentCode}</p>
+        <p className="m-0 mx-auto text-lg">{agentCode && <span>Agent Code: {agentCode}</span>}</p>
 
         {/* Icons */}
         <div className="flex items-center gap-4 mx-auto">

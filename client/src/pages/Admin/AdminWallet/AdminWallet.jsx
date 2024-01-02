@@ -179,9 +179,8 @@ const AdminWallet = () => {
                 <Spin />
               </div>
             ),
-            spinning: !bookings,
+            spinning: !bookings || bookings.length === 0,
           }}
-          scroll={{ x: true }}
         />
       </section>
       {/* History Sales*/}
@@ -212,9 +211,8 @@ const AdminWallet = () => {
                 <Spin />
               </div>
             ),
-            spinning: !refunds,
+            spinning: !refunds || refunds.length === 0,
           }}
-          scroll={{ x: true }}
         />
       </section>
     </div>

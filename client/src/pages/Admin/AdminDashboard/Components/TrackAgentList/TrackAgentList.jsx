@@ -123,7 +123,7 @@ export default function TrackAgentList() {
                 <Spin />
               </div>
             ),
-            spinning: !agentPerformanceReport,
+            spinning: !agentPerformanceReport || agentPerformanceReport === 0,
           }}
           scroll={{ x: true }}
         />
