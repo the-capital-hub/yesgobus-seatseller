@@ -2,7 +2,7 @@ import React from "react";
 
 import "./AdminTrackAgent.scss";
 import HeaderWithSort from "../../../components/Admin/HeaderWithSort/HeaderWithSort";
-import { Table, Space, Spin } from "antd";
+import { Table, Space, Spin, Modal } from "antd";
 import { getAgentPerfomanceReport, getAllPendingAgents, approveAgent, rejectAgent } from "../../../api/admin";
 import { useState, useEffect } from "react";
 
@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 function AdminTrackAgent() {
   const [pendingAgents, setPendingAgents] = useState(null);
   const [agentPerformanceReport, setAgentPerformanceReport] = useState(null);
+  const [modal, contextHolder] = Modal.useModal();
 
   const performanceColumn = [
     {
@@ -61,13 +62,13 @@ function AdminTrackAgent() {
       render: (_, record) => (
         <Space size="middle">
           <a
-            onClick={() => handleAccept(record._id)}
+            onClick={() => acceptModel(record._id)}
             style={{ color: 'green', cursor: 'pointer' }}
           >
             Accept
           </a>
           <a
-            onClick={() => handleReject(record._id)}
+            onClick={() => rejectModel(record._id)}
             style={{ color: 'red', cursor: 'pointer' }}
           >
             Reject
@@ -102,11 +103,36 @@ function AdminTrackAgent() {
     getPendingAgents();
   }, [])
 
+
+  function acceptModel(agentId) {
+    modal.confirm({
+      title: "Accept agent",
+      content: "Are you sure you want to accept this agent account?",
+      okText: "Accept",
+      cancelText: "Cancel",
+      centered: true,
+      maskClosable: true,
+      onOk() {
+        handleAccept(agentId);
+      },
+    });
+  }
+
+  function rejectModel(agentId) {
+    modal.confirm({
+      title: "Reject Agent",
+      content: "Are you sure you want to reject this agent account?",
+      okText: "Reject",
+      cancelText: "Cancel",
+      centered: true,
+      maskClosable: true,
+      onOk() {
+        handleReject(agentId);
+      },
+    });
+  }
+
   const handleAccept = async (agentId) => {
-    const isConfirmed = window.confirm(`Are you sure you want to accept this agent account?`);
-    if (!isConfirmed) {
-      return;
-    }
     try {
       await approveAgent(agentId);
       alert("Agent account accepted");
@@ -118,10 +144,6 @@ function AdminTrackAgent() {
   };
 
   const handleReject = async (agentId) => {
-    const isConfirmed = window.confirm(`Are you sure you want to reject this agent account?`);
-    if (!isConfirmed) {
-      return;
-    }
     try {
       await rejectAgent(agentId);
       alert("Agent account rejected");
@@ -174,6 +196,7 @@ function AdminTrackAgent() {
           }}
         />
       </div>
+      {contextHolder}
     </div>
   );
 }
