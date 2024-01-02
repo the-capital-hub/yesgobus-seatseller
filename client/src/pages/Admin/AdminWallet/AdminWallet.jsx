@@ -151,7 +151,7 @@ const AdminWallet = () => {
         <h2 className="m-0 flex gap-2">
           History -{" "}
           <span className="flex items-center">
-            <HiArrowSmDown /> Refunded
+            <HiArrowSmUp color="#fd5901" /> Sales
           </span>
         </h2>
         <Table
@@ -162,7 +162,7 @@ const AdminWallet = () => {
             pageSize: 5,
             hideOnSinglePage: true,
           }}
-          loading={{ indicator: <div><Spin /></div>, spinning: !bookings }}
+          loading={{ indicator: <div><Spin /></div>, spinning: !bookings || bookings.length === 0 }}
         />
       </section>
       {/* History Sales*/}
@@ -170,7 +170,7 @@ const AdminWallet = () => {
         <h2 className="m-0 flex gap-2">
           History -{" "}
           <span className="flex items-center">
-            <HiArrowSmUp color="#fd5901" /> Sales
+            <HiArrowSmDown /> Refunded
           </span>
         </h2>
         <Table
@@ -181,7 +181,7 @@ const AdminWallet = () => {
             pageSize: 5,
             hideOnSinglePage: true,
           }}
-          loading={{ indicator: <div><Spin /></div>, spinning: !refunds }}
+          loading={{ indicator: <div><Spin /></div>, spinning: !refunds || refunds.length === 0 }}
 
         />
       </section>
