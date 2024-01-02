@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import TransactionArrow from "../TransactionArrow/TransactionArrow";
+import TransactionArrow from "../../../../../components/Admin/TransactionArrow/TransactionArrow";
 import { GoKebabHorizontal } from "react-icons/go";
 
 export default function SideHistory() {
