@@ -98,26 +98,38 @@ export default function TrackAgentList() {
         );
       })} */}
       {/* <Spin spinning={loading}> */}
-      <Table
-        dataSource={agentPerformanceReport}
-        columns={performanceColumn}
-        bordered={false}
-        footer={() => ""}
-        className="w-full rounded-lg border border-solid border-gray-300 bg-white shadow-xl"
-        pagination={{
-          pageSize: 5,
-          hideOnSinglePage: true,
+      <ConfigProvider
+        theme={{
+          token: {},
+          components: {
+            Table: {
+              borderColor: "#53535342",
+              rowHoverBg: "#fd590122",
+            },
+          },
         }}
-        loading={{
-          indicator: (
-            <div>
-              <Spin />
-            </div>
-          ),
-          spinning:
-            !agentPerformanceReport || !agentPerformanceReport.length === 0,
-        }}
-      />
+      >
+        <Table
+          dataSource={agentPerformanceReport}
+          columns={performanceColumn}
+          bordered={false}
+          footer={() => ""}
+          className="w-full rounded-lg border border-solid border-gray-300 bg-white shadow-xl overflow-hidden"
+          pagination={{
+            pageSize: 5,
+            hideOnSinglePage: true,
+          }}
+          loading={{
+            indicator: (
+              <div>
+                <Spin />
+              </div>
+            ),
+            spinning:
+              !agentPerformanceReport || !agentPerformanceReport.length === 0,
+          }}
+        />
+      </ConfigProvider>
       {/* </Spin> */}
     </div>
   );
