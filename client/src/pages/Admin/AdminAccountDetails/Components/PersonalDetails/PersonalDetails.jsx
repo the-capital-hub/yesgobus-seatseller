@@ -46,6 +46,24 @@ export default function PersonalDetails() {
           >
             <Input />
           </Form.Item>
+          {/* User Id */}
+          <Form.Item
+            label={"User Id"}
+            name="userId"
+            className="custom-form-item"
+            rules={[
+              {
+                required: true,
+              },
+              {
+                whitespace: true,
+              },
+              { min: 3 },
+            ]}
+            hasFeedback
+          >
+            <Input />
+          </Form.Item>
           {/* Mobile */}
           <Form.Item
             label={"Mobile"}
