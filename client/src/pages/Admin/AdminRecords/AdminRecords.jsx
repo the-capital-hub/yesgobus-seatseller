@@ -109,31 +109,34 @@ const columns = [
 
 const tableStyles = {
   boxShadow: "4px 4px 30px 0px #00000026",
-  borderRadius: "1rem",
+  borderRadius: "10px",
+  border: "1px solid #53535342",
 };
 
 export default function AdminRecords() {
-  const loggedInAdmin = JSON.parse(localStorage.getItem(`${ADMIN_KEY}-loggedInAdmin`));
+  const loggedInAdmin = JSON.parse(
+    localStorage.getItem(`${ADMIN_KEY}-loggedInAdmin`)
+  );
 
   const [bookings, setBookings] = useState(null);
 
-  const getAllAgentBookings = async () => {
-    try {
-      const response = await getAgentBookings(loggedInAdmin._id);
-      const bookingsData = response.data.map((booking) => {
-        booking.doj = new Date(booking.doj).toISOString().split('T')[0];
-        booking.customerName = booking.customerName + " " + (booking.customerLastName || "");
-        return booking;
-      })
-      setBookings(bookingsData);
-    } catch (error) {
-      console.error("Error :", error);
-    }
-  }
-
   useEffect(() => {
+    const getAllAgentBookings = async () => {
+      try {
+        const response = await getAgentBookings(loggedInAdmin._id);
+        const bookingsData = response.data.map((booking) => {
+          booking.doj = new Date(booking.doj).toISOString().split("T")[0];
+          booking.customerName =
+            booking.customerName + " " + (booking.customerLastName || "");
+          return booking;
+        });
+        setBookings(bookingsData);
+      } catch (error) {
+        console.error("Error :", error);
+      }
+    };
     getAllAgentBookings();
-  }, [])
+  }, []);
 
   return (
     <div className="admin-records-wrapper">
@@ -165,13 +168,19 @@ export default function AdminRecords() {
               dataSource={bookings}
               columns={columns}
               scroll={{ x: true }}
-              bordered
               style={tableStyles}
               pagination={{
                 pageSize: 5,
                 hideOnSinglePage: true,
               }}
-              loading={{ indicator: <div><Spin /></div>, spinning: !bookings }}
+              loading={{
+                indicator: (
+                  <div>
+                    <Spin />
+                  </div>
+                ),
+                spinning: !bookings,
+              }}
             />
           </ConfigProvider>
         </div>
