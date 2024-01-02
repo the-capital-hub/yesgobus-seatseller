@@ -135,7 +135,7 @@
     }
 
     .bus {
-      margin-top: 30px;
+      margin-top: 0px;
       min-height: 250px;
       height: fit-content;
       display: flex;
@@ -262,7 +262,7 @@
     .seatMobileRight {
       .bus-container {
         transform: rotate(90deg);
-        margin-bottom: 20px;
+        margin-block: 20px;
       }
 
       .bus {

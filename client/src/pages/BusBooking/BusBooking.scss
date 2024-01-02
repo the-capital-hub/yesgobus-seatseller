@@ -144,7 +144,7 @@
 @media (max-width: 1024px) {
   .busBooking {
     .busBooking-container {
-      padding: 10px;
+      padding: 0px;
       .left {
         display: none;
       }
@@ -163,6 +163,10 @@
               }
             }
           }
+        }
+
+        .wrapper {
+          padding: 0px;
         }
 
         .dates {
