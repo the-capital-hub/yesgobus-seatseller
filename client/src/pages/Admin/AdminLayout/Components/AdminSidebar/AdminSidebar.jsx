@@ -12,6 +12,7 @@ import "./AdminSidebar.scss";
 import { useRef } from "react";
 import { Button, Modal } from "antd";
 import { ADMIN_KEY } from "../../../AdminLogin/AdminLogin";
+import { logo } from "../../../../../assets/index";
 
 const NAVLINKS = [
   {
@@ -87,17 +88,17 @@ export default function AdminSidebar({ admin }) {
         >
           <MdMenu size={30} />
         </button>
-        <h1 className="m-0 text-center">YesGoBus</h1>
+        <img src={logo} alt="YesGoBus" className="h-12 md:h-auto md:w-1/2" />
       </div>
 
       <div className={`navigation py-10 h-full`} ref={navigationRef}>
         <nav className="flex flex-col gap-5 h-full">
           {NAVLINKS.map(({ label, icon, link }, index) => {
-             if (label === "Track Agent" && admin.role !== "YSB_ADMIN") {
-              return null; 
+            if (label === "Track Agent" && admin.role !== "YSB_ADMIN") {
+              return null;
             }
             if (label === "Records" && admin.role === "YSB_ADMIN") {
-              return null; 
+              return null;
             }
             return (
               <NavLink
