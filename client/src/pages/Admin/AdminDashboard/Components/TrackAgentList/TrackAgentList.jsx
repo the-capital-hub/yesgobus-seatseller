@@ -3,7 +3,8 @@
 // import { WatermarkIcon } from "../../../../../assets/contact";
 import { getAgentPerfomanceReport } from "../../../../../api/admin";
 import { useEffect, useState } from "react";
-import { Table, Spin } from "antd";
+import { Table, Spin, ConfigProvider } from "antd";
+
 const performanceColumn = [
   {
     title: "Agent Name",
@@ -41,21 +42,20 @@ const performanceColumn = [
 export default function TrackAgentList() {
   const [agentPerformanceReport, setAgentPerformanceReport] = useState(null);
 
-  const getPerfomanceReport = async () => {
-    try {
-      const response = await getAgentPerfomanceReport();
-      setAgentPerformanceReport(response.data);
-    } catch (error) {
-      console.error("Error", error.message);
-    }
-  }
-
   useEffect(() => {
+    const getPerfomanceReport = async () => {
+      try {
+        const response = await getAgentPerfomanceReport();
+        setAgentPerformanceReport(response.data);
+      } catch (error) {
+        console.error("Error", error.message);
+      }
+    };
     getPerfomanceReport();
-  }, [])
+  }, []);
 
   return (
-    <div className="list-container flex flex-col rounded-lg border border-solid border-gray-300 bg-white shadow-lg">
+    <div className="list-container">
       {/* <header className="list-bar grid grid-cols-1 min-[350px]:grid-cols-2 md:grid-cols-4 place-items-center gap-4 py-4 px-8">
         <p className="m-0 text-lg md:justify-self-start">Agent Name</p>
         <p className="m-0 text-lg">Email</p>
@@ -98,18 +98,39 @@ export default function TrackAgentList() {
         );
       })} */}
       {/* <Spin spinning={loading}> */}
-      <Table
-        dataSource={agentPerformanceReport}
-        columns={performanceColumn}
-        bordered={false}
-        footer={() => ""}
-        className="w-full rounded-lg border border-solid border-gray-300 bg-white shadow-xl"
-        pagination={{
-          pageSize: 5,
-          hideOnSinglePage: true,
+      <ConfigProvider
+        theme={{
+          token: {},
+          components: {
+            Table: {
+              borderColor: "#53535342",
+              rowHoverBg: "#fd590122",
+            },
+          },
         }}
-        loading={{ indicator: <div><Spin /></div>, spinning: !agentPerformanceReport || !agentPerformanceReport.length === 0 }}
-      />
+      >
+        <Table
+          dataSource={agentPerformanceReport}
+          columns={performanceColumn}
+          bordered={false}
+          footer={() => ""}
+          className="w-full rounded-lg border border-solid border-gray-300 bg-white shadow-xl overflow-hidden"
+          pagination={{
+            pageSize: 5,
+            hideOnSinglePage: true,
+          }}
+          loading={{
+            indicator: (
+              <div>
+                <Spin />
+              </div>
+            ),
+            spinning:
+              !agentPerformanceReport || !agentPerformanceReport.length === 0,
+          }}
+          scroll={{ x: true }}
+        />
+      </ConfigProvider>
       {/* </Spin> */}
     </div>
   );

@@ -1,0 +1,7 @@
+.cards-container {
+  .flex-container {
+    > * {
+      flex: 0 0 16rem;
+    }
+  }
+}

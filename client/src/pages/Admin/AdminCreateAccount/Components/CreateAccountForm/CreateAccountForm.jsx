@@ -28,7 +28,8 @@ export default function CreateAccountForm() {
   async function handleCreateAccountSubmit(e) {
     e.preventDefault();
 
-    const { fullName, email_phone, password, confirmPassword, userId } = e.target;
+    const { fullName, email_phone, password, confirmPassword, userId } =
+      e.target;
     const { error, hasError } = validateCreateAccountData({
       userId,
       fullName,
@@ -79,7 +80,6 @@ export default function CreateAccountForm() {
       noValidate
     >
       <div className="flex flex-col gap-1">
-
         <input
           type="text"
           name="userId"
@@ -91,10 +91,12 @@ export default function CreateAccountForm() {
           autoComplete="one-time-code"
           autoFocus
         />
+        {error.userId && (
+          <em className="text-error text-xs ps-4 slide-down">{error.userId}</em>
+        )}
       </div>
+
       <div className="flex flex-col gap-1">
-
-
         <input
           type="text"
           name="fullName"
