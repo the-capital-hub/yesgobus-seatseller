@@ -2,6 +2,7 @@ import User from "../modals/user.modal.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { generateRandomNumber } from "../utils/generateRandomNumber.js";
+import Agent from "../modals/agents.modal.js";
 
 export const signUp = async (userData) => {
   try {
@@ -40,9 +41,21 @@ export const signUp = async (userData) => {
 
 export const signIn = async (emailMobile, password) => {
   try {
-    const existingUser = await User.findOne({
-      $or: [{ email: emailMobile }, { phoneNumber: emailMobile }],
+    const existingAgent = await Agent.findOne({
+      $or: [{ email: emailMobile }, { phNum: emailMobile }],
+      status: true,
     });
+    let existingUser = "";
+
+    if (existingAgent) {
+      existingUser = await User.findOne({
+        _id: existingAgent.id
+      });
+    } else {
+      existingUser = await User.findOne({
+        $or: [{ email: emailMobile }, { phoneNumber: emailMobile }],
+      });
+    }
 
     if (!existingUser) {
       return {

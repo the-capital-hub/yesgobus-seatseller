@@ -110,7 +110,7 @@ export default function AdminAccountDetails() {
               {/* Personal Details */}
               <PersonalDetails />
               {/* Banking details */}
-              <BankingDetails />
+              {/* <BankingDetails /> */}
               <div className="action-btn self-end">
                 <Button
                   htmlType="submit"
