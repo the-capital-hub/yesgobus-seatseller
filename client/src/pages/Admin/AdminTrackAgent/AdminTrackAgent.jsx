@@ -22,11 +22,14 @@ function AdminTrackAgent() {
       title: "No of Bookings Made",
       dataIndex: "bookingsMade",
       key: "bookingsMade",
+      sorter: (a, b) => a.bookingsMade - b.bookingsMade,
+
     },
     {
       title: "Revenue",
       dataIndex: "revenue",
       key: "revenue",
+      sorter: (a, b) => a.revenue - b.revenue,
     },
     {
       title: "UserId",
@@ -173,7 +176,7 @@ function AdminTrackAgent() {
             pageSize: 5,
             hideOnSinglePage: true,
           }}
-          loading={{ indicator: <div><Spin /></div>, spinning: !agentPerformanceReport || agentPerformanceReport === 0 }}
+          loading={{ indicator: <div><Spin /></div>, spinning: !agentPerformanceReport || !agentPerformanceReport.length === 0 }}
         />
       </div>
 
@@ -192,7 +195,7 @@ function AdminTrackAgent() {
           }}
           loading={{
             indicator: <div><Spin /></div>,
-            spinning: !pendingAgents || pendingAgents.length === 0,
+            spinning: !pendingAgents || !pendingAgents.length === 0,
           }}
         />
       </div>

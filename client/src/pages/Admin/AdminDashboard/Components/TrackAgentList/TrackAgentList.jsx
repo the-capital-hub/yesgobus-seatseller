@@ -24,11 +24,13 @@ const performanceColumn = [
     title: "No of Bookings Made",
     dataIndex: "bookingsMade",
     key: "bookingsMade",
+    sorter: (a, b) => a.bookingsMade - b.bookingsMade,
   },
   {
     title: "Revenue",
     dataIndex: "revenue",
     key: "revenue",
+    sorter: (a, b) => a.revenue - b.revenue,
   },
   {
     title: "UserId",
@@ -106,7 +108,7 @@ export default function TrackAgentList() {
           pageSize: 5,
           hideOnSinglePage: true,
         }}
-        loading={{ indicator: <div><Spin /></div>, spinning: !agentPerformanceReport || agentPerformanceReport === 0 }}
+        loading={{ indicator: <div><Spin /></div>, spinning: !agentPerformanceReport || !agentPerformanceReport.length === 0 }}
       />
       {/* </Spin> */}
     </div>
