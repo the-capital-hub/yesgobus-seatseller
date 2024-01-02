@@ -42,6 +42,7 @@ const columns = [
     title: "Amount",
     dataIndex: "totalAmount",
     key: "totalAmount",
+    sorter: (a, b) => a.totalAmount - b.totalAmount,
   },
   {
     title: "Actions",
@@ -179,7 +180,7 @@ const AdminWallet = () => {
                 <Spin />
               </div>
             ),
-            spinning: !bookings || bookings.length === 0,
+            spinning: !bookings || !bookings.length === 0,
           }}
         />
       </section>
@@ -211,7 +212,7 @@ const AdminWallet = () => {
                 <Spin />
               </div>
             ),
-            spinning: !refunds || refunds.length === 0,
+            spinning: !refunds || !refunds.length === 0,
           }}
         />
       </section>

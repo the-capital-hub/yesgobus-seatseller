@@ -36,6 +36,7 @@ const columns = [
     title: "Cost (Rs)",
     dataIndex: "totalAmount",
     key: "totalAmount",
+    sorter: (a, b) => a.totalAmount - b.totalAmount,
   },
   // {
   //   title: "Agent",
@@ -116,7 +117,7 @@ export default function AdminRecords() {
                     <Spin />
                   </div>
                 ),
-                spinning: !bookings || bookings.length === 0,
+                spinning: !bookings || !bookings.length === 0,
               }}
             />
           </ConfigProvider>

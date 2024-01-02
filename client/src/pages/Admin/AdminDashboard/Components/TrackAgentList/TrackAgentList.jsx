@@ -25,11 +25,13 @@ const performanceColumn = [
     title: "No of Bookings Made",
     dataIndex: "bookingsMade",
     key: "bookingsMade",
+    sorter: (a, b) => a.bookingsMade - b.bookingsMade,
   },
   {
     title: "Revenue",
     dataIndex: "revenue",
     key: "revenue",
+    sorter: (a, b) => a.revenue - b.revenue,
   },
   {
     title: "UserId",
@@ -96,38 +98,26 @@ export default function TrackAgentList() {
         );
       })} */}
       {/* <Spin spinning={loading}> */}
-      <ConfigProvider
-        theme={{
-          token: {},
-          components: {
-            Table: {
-              borderColor: "#53535342",
-              rowHoverBg: "#fd590122",
-            },
-          },
+      <Table
+        dataSource={agentPerformanceReport}
+        columns={performanceColumn}
+        bordered={false}
+        footer={() => ""}
+        className="w-full rounded-lg border border-solid border-gray-300 bg-white shadow-xl"
+        pagination={{
+          pageSize: 5,
+          hideOnSinglePage: true,
         }}
-      >
-        <Table
-          dataSource={agentPerformanceReport}
-          columns={performanceColumn}
-          bordered={false}
-          footer={() => ""}
-          className="w-full rounded-lg border border-solid border-gray-300 bg-white shadow-xl overflow-hidden"
-          pagination={{
-            pageSize: 5,
-            hideOnSinglePage: true,
-          }}
-          loading={{
-            indicator: (
-              <div>
-                <Spin />
-              </div>
-            ),
-            spinning: !agentPerformanceReport || agentPerformanceReport === 0,
-          }}
-          scroll={{ x: true }}
-        />
-      </ConfigProvider>
+        loading={{
+          indicator: (
+            <div>
+              <Spin />
+            </div>
+          ),
+          spinning:
+            !agentPerformanceReport || !agentPerformanceReport.length === 0,
+        }}
+      />
       {/* </Spin> */}
     </div>
   );
