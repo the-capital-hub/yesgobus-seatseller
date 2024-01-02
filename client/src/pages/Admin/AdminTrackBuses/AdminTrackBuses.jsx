@@ -54,7 +54,7 @@ function AdminTrackBuses() {
   const data = Array(4).fill({});
 
   return (
-    <div className="track-buses-wrapper bg-white lg:rounded-xl my-4 mx-8 border border-solid border-gray-300">
+    <div className="track-buses-wrapper bg-white lg:rounded-xl my-4 lg:mx-8 border border-solid border-gray-300">
       <HeaderWithSort />
       <div className="trackAgent-container flex flex-col gap-5 py-5">
         <h2 className="m-0">Tracking All Buses Booked</h2>
