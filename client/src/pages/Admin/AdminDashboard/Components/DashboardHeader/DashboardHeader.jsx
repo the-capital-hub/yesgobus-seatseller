@@ -2,9 +2,9 @@ import { RiSearch2Line } from "react-icons/ri";
 import "./DashboardHeader.scss";
 import UserIcon from "../../../../../components/SvgIcons/UserIcon";
 import NotificationIcon from "../../../../../components/SvgIcons/NotificationIcon";
-import VirtualCard from "../VirtualCard/VirtualCard";
 import { useState, useEffect } from "react";
 import { getBalanceAPI } from "../../../../../api/admin";
+import WalletCard from "../../../../../components/Admin/WalletCard/WalletCard";
 
 export default function DashboardHeader() {
   const [balance, setBalance] = useState(null);
@@ -55,13 +55,13 @@ export default function DashboardHeader() {
         className="cards-container p-3 rounded-lg bg-white
           border border-solid border-gray-300 shadow-lg md:p-10"
       >
-        <div className="flex items-center gap-3 md:gap-10 overflow-x-auto pb-2">
-          <VirtualCard
+        <div className="flex items-center gap-3 md:gap-10 overflow-x-auto pb-2 flex-container">
+          <WalletCard
             color={"#3f3f3f"}
             name={"VRL Wallet"}
             balance={balance?.vrl}
           />
-          <VirtualCard
+          <WalletCard
             color={"#fd5901"}
             name={"Bitlasoft Wallet"}
             balance={balance?.ticketSimply}
