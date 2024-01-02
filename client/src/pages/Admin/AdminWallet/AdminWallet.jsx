@@ -151,7 +151,7 @@ const AdminWallet = () => {
         <h2 className="m-0 flex gap-2">
           History -{" "}
           <span className="flex items-center">
-            <HiArrowSmDown /> Refunded
+            <HiArrowSmUp color="#fd5901" /> Sales
           </span>
         </h2>
         <Table
@@ -170,7 +170,7 @@ const AdminWallet = () => {
         <h2 className="m-0 flex gap-2">
           History -{" "}
           <span className="flex items-center">
-            <HiArrowSmUp color="#fd5901" /> Sales
+            <HiArrowSmDown /> Refunded
           </span>
         </h2>
         <Table
