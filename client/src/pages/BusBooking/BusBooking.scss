@@ -125,17 +125,17 @@
         padding: 50px;
         display: flex;
         flex-direction: column;
-        gap: 40px;
+        gap: 10px;
 
-        .bus-card-container {
-          margin-bottom: -30px;
-        }
+        // .bus-card-container {
+        //   margin-bottom: -30px;
+        // }
 
-        @media (max-width: 768px) {
-          .bus-card-container {
-            margin-bottom: -30px;
-          }
-        }
+        // @media (max-width: 768px) {
+        //   .bus-card-container {
+        //     margin-bottom: -30px;
+        //   }
+        // }
       }
     }
   }
@@ -163,10 +163,6 @@
               }
             }
           }
-        }
-
-        .wrapper {
-          padding: 0px;
         }
 
         .dates {
