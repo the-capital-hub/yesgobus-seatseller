@@ -9,18 +9,17 @@ import { getBalanceAPI } from "../../../../../api/admin";
 export default function DashboardHeader() {
   const [balance, setBalance] = useState(null);
 
-  const getBalance = async () => {
-    try {
-      const response = await getBalanceAPI();
-      setBalance(response);
-    } catch (error) {
-      console.error("Error :", error);
-    }
-  }
-
   useEffect(() => {
+    const getBalance = async () => {
+      try {
+        const response = await getBalanceAPI();
+        setBalance(response);
+      } catch (error) {
+        console.error("Error :", error);
+      }
+    };
     getBalance();
-  }, [])
+  }, []);
 
   return (
     <div className="flex flex-col gap-5">
@@ -57,10 +56,16 @@ export default function DashboardHeader() {
           border border-solid border-gray-300 shadow-lg md:p-10"
       >
         <div className="flex items-center gap-3 md:gap-10 overflow-x-auto pb-2">
-          {/* {["#3f3f3f", "#fd5901"].map((color, index) => { */}
-          <VirtualCard color={"#3f3f3f"} name={"VRL Wallet"} balance={balance?.vrl} />
-          <VirtualCard color={"#fd5901"} name={"Bitlasoft Wallet"} balance={balance?.ticketSimply} />
-          {/* })} */}
+          <VirtualCard
+            color={"#3f3f3f"}
+            name={"VRL Wallet"}
+            balance={balance?.vrl}
+          />
+          <VirtualCard
+            color={"#fd5901"}
+            name={"Bitlasoft Wallet"}
+            balance={balance?.ticketSimply}
+          />
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import "./AdminLayout.scss";
 import { useEffect, useState } from "react";
 import { ADMIN_KEY } from "../AdminLogin/AdminLogin";
@@ -19,24 +19,16 @@ export default function AdminLayout() {
       localStorage.removeItem(`${ADMIN_KEY}-token`);
       navigate("/admin/login");
     }
-  }, []);
 
-  // Read admin data
-  useEffect(() => {
-    const loggedInAdmin = localStorage.getItem(`${ADMIN_KEY}-loggedInAdmin`);
     if (loggedInAdmin) {
       setAdmin(JSON.parse(loggedInAdmin));
-    } else {
-      localStorage.removeItem(`${ADMIN_KEY}-loggedInAdmin`);
-      localStorage.removeItem(`${ADMIN_KEY}-token`);
-      navigate("/admin/login");
     }
   }, []);
 
   return (
     <div className="admin-layout-wrapper">
       {/* Sidebar */}
-      <AdminSidebar admin={admin}/>
+      <AdminSidebar admin={admin} />
       <div className="" id="main">
         <div className="main-content" id="main-content">
           <Outlet context={{ admin }} />
