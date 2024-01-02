@@ -120,7 +120,17 @@ export const getAgentBookings = async (agentId) => {
     }
     const bookings = await BusBooking.find({
       $or: [
-        { userId: agent.id },
+        {
+          $and: [
+            { userId: agent.id },
+            {
+              $or: [
+                { agentCode: agent.agentCode },
+                { agentCode: null }
+              ]
+            }
+          ]
+        },
         { agentCode: agent.agentCode },
       ],
       bookingStatus: "paid",
@@ -146,7 +156,17 @@ export const getAllAgentsBookings = async () => {
     const allBookings = await Promise.all(agents.map(async (agent) => {
       const bookings = await BusBooking.find({
         $or: [
-          { userId: agent.id },
+          {
+            $and: [
+              { userId: agent.id },
+              {
+                $or: [
+                  { agentCode: agent.agentCode },
+                  { agentCode: null }
+                ]
+              }
+            ]
+          },
           { agentCode: agent.agentCode },
         ],
         bookingStatus: "paid",
@@ -292,7 +312,17 @@ export const getAgentPerformanceReport = async () => {
     const allBookings = await Promise.all(agents.map(async (agent) => {
       const bookings = await BusBooking.find({
         $or: [
-          { userId: agent.id },
+          {
+            $and: [
+              { userId: agent.id },
+              {
+                $or: [
+                  { agentCode: agent.agentCode },
+                  { agentCode: null }
+                ]
+              }
+            ]
+          },
           { agentCode: agent.agentCode },
         ],
         bookingStatus: "paid",

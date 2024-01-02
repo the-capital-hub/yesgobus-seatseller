@@ -37,6 +37,7 @@ const columns = [
     title: "Amount",
     dataIndex: "totalAmount",
     key: "totalAmount",
+    sorter: (a, b) => a.totalAmount - b.totalAmount,
   },
   //   {
   //     title: "Actions",
@@ -162,7 +163,7 @@ const AdminWallet = () => {
             pageSize: 5,
             hideOnSinglePage: true,
           }}
-          loading={{ indicator: <div><Spin /></div>, spinning: !bookings || bookings.length === 0 }}
+          loading={{ indicator: <div><Spin /></div>, spinning: !bookings || !bookings.length === 0 }}
         />
       </section>
       {/* History Sales*/}
@@ -181,7 +182,7 @@ const AdminWallet = () => {
             pageSize: 5,
             hideOnSinglePage: true,
           }}
-          loading={{ indicator: <div><Spin /></div>, spinning: !refunds || refunds.length === 0 }}
+          loading={{ indicator: <div><Spin /></div>, spinning: !refunds || !refunds.length === 0 }}
 
         />
       </section>
