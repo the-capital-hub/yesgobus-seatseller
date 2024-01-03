@@ -8,4 +8,12 @@
   .ant-table-cell:not(:last-of-type) {
     border-right: 1px solid #53535342;
   }
+
+  tbody {
+    tr:last-of-type {
+      .ant-table-cell {
+        border-bottom: 0;
+      }
+    }
+  }
 }
