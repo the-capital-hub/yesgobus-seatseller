@@ -49,6 +49,7 @@ const tableStyles = {
   boxShadow: "4px 4px 30px 0px #00000026",
   borderRadius: "10px",
   border: "1px solid #53535342",
+  overflow: "hidden",
 };
 
 export default function AdminRecords() {

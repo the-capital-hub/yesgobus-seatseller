@@ -5,6 +5,7 @@ import { cancelTicket } from "../../../../api/authentication";
 import { Modal, Button, Spin } from "antd";
 import { vrlCancelDetails, vrlConfirmCancel } from "../../../../api/vrlBusesApis";
 import { getSrsCanCancelDetails, srsCancelBooking } from "../../../../api/srsBusesApis";
+import axiosInstance from "../../../../utils/service";
 
 export default function BookingsList({ bookingData, selectedTab, setCancelled, cancelled }) {
   const [loading, setLoading] = useState(false);
@@ -12,6 +13,7 @@ export default function BookingsList({ bookingData, selectedTab, setCancelled, c
   const [ticketToCancel, setTicketToCancel] = useState(null);
   const [vrlTicketCancelData, setVrlTickerCancelData] = useState(null);
   const [srsTicketCancelData, setSrsTickerCancelData] = useState(null);
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
 
   function formatDate(dateString) {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
@@ -68,6 +70,7 @@ export default function BookingsList({ bookingData, selectedTab, setCancelled, c
   const confirmCancelTicket = async () => {
     setLoading(true);
     try {
+      const checkAgent = await axiosInstance.get(`${import.meta.env.VITE_BASE_URL}/api/agent/isAgent/${loggedInUser.userId}`,);
       if (ticketToCancel.isVrl) {
         const refundData = {
           merchantTransactionId: ticketToCancel.merchantTransactionId,
@@ -75,7 +78,7 @@ export default function BookingsList({ bookingData, selectedTab, setCancelled, c
         const cancelData = {
           pnrNo: parseInt(ticketToCancel.opPNR)
         };
-        let { data: vrlCancelDetailsResponse } = await vrlConfirmCancel(cancelData, refundData, ticketToCancel._id);
+        let { data: vrlCancelDetailsResponse } = await vrlConfirmCancel(cancelData, refundData, ticketToCancel._id, checkAgent.data.isAgent);
         if (vrlCancelDetailsResponse.Status === 2) {
           alert("Booking Cancelled. Refund will be processed soon");
           setCancelled(!cancelled);
@@ -84,7 +87,7 @@ export default function BookingsList({ bookingData, selectedTab, setCancelled, c
         const refundData = {
           merchantTransactionId: ticketToCancel.merchantTransactionId,
         };
-        const srsCancelBookingResponse = await srsCancelBooking(ticketToCancel._id, ticketToCancel.blockKey, ticketToCancel.selectedSeats, refundData);
+        const srsCancelBookingResponse = await srsCancelBooking(ticketToCancel._id, ticketToCancel.blockKey, ticketToCancel.selectedSeats, refundData, checkAgent.data.isAgent);
         if (srsCancelBookingResponse) {
           alert("Booking Cancelled. Refund will be processed soon");
           setCancelled(!cancelled);

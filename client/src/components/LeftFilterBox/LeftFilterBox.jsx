@@ -5,20 +5,20 @@ import "./LeftFilterBox.scss";
 const LeftFilterBox = ({
   title,
   points,
-  count,
   name,
   onFilterChange,
   filters,
   sourceCity,
   destinationCity,
+  doj
 }) => {
   const [showPoints, setShowPoints] = useState(false);
   const [selectedPoints, setSelectedPoints] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    setSelectedPoints(filters || []);
-  }, [filters, sourceCity, destinationCity]);
+    setSelectedPoints([]);
+  }, [filters, sourceCity, destinationCity, doj]);
 
   const displayLocation = (location) => {
     const maxLength = 30;

@@ -375,3 +375,19 @@ export const verifyAgentCode = async (agentCode) => {
     };
   }
 };
+
+export const isAgent = async (userId) => {
+  try {
+    const existingAgent = await Agent.findOne({userId : userId, status: true});
+    return {
+      status: 200,
+      isAgent: existingAgent ? true : false
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      message: error.message || "Internal Server Error",
+    };
+  }
+}

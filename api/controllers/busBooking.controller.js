@@ -524,6 +524,12 @@ export const getVrlBusDetailsController = async (req, res) => {
     if (req.body.busPartners !== null && req.body.busPartners?.length > 0) {
       filters.busPartners = req.body.busPartners;
     }
+    if (req.body.minPrice !== null && req.body.minPrice !== undefined) {
+      filters.minPrice = req.body.minPrice;
+    }
+    if (req.body.maxPrice !== null && req.body.maxPrice !== undefined) {
+      filters.maxPrice = req.body.maxPrice;
+    }
     const response = await getVrlBusDetails(searchArgs, filters);
     res.status(response.status).send(response);
   } catch (error) {

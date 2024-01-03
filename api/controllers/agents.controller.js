@@ -11,6 +11,7 @@ import {
   getAllBookingRefund,
   getAgentPerformanceReport,
   verifyAgentCode,
+  isAgent,
 } from '../service/agents.service.js';
 
 export const registerAgentController = async (req, res) => {
@@ -143,5 +144,16 @@ export const verifyAgentCodeController = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(err.status || 500).json({ message: "Error getting all agents performance report" });
+  }
+};
+
+export const isAgentController = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const result = await isAgent(userId);
+    res.status(200).send(result);
+  } catch (err) {
+    console.log(err);
+    res.status(err.status || 500).json({ message: "Error checking is agent" });
   }
 };
