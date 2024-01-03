@@ -488,10 +488,10 @@ export const getVrlBusDetails = async (searchArgs, filters) => {
         route.NonAcSeatRate,
         route.NonAcSleeperRate,
         route.NonAcSlumberRate,
-      ];    
+      ];
       const validPrices = prices.filter(price => price > 0);
       const lowestPrice = validPrices.length > 0 ? Math.min(...validPrices) : 0;
-    
+
       route.lowestPrice = lowestPrice;
       route.allPrices = [...new Set(validPrices)];
       return route;
@@ -517,15 +517,35 @@ export const getVrlBusDetails = async (searchArgs, filters) => {
         return filters.droppingPoints?.some(filterPoint => filterPoint === location);
       })
         : true;
+
       return hasMatchingBoardingPoint && hasMatchingDroppingPoint;
     });
 
-    return {
-      status: 200,
-      data: filteredBuses,
-      sourceCity: vrlSourceCity.CityID,
-      destinationCity: vrlDesctinationCity.CityID,
-    };
+    if (filters.maxPrice || filters.minPrice) {
+      const filteredByPrice = filteredBuses.filter(route => {
+        const routePrices = route.allPrices || [];
+        const validPricesInRange = routePrices.filter(price =>
+          (!filters.minPrice || price >= filters.minPrice) &&
+          (!filters.maxPrice || price <= filters.maxPrice)
+        );
+
+        return validPricesInRange.length > 0;
+      });
+
+      return {
+        status: 200,
+        data: filteredByPrice,
+        sourceCity: vrlSourceCity.CityID,
+        destinationCity: vrlDesctinationCity.CityID,
+      };
+    } else {
+      return {
+        status: 200,
+        data: filteredBuses,
+        sourceCity: vrlSourceCity.CityID,
+        destinationCity: vrlDesctinationCity.CityID,
+      };
+    }
   } catch (error) {
     throw error.message;
   }
@@ -554,7 +574,7 @@ export const sendSrsRequest = async (url, method, data) => {
       headers: headers,
       data: data,
     });
-    
+
     return response;
   } catch (error) {
     throw error.message;

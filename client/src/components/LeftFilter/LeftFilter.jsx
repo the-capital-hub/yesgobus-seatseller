@@ -191,6 +191,7 @@ const LeftFilter = ({
           sourceCity={sourceCity}
           destinationCity={destinationCity}
           key={"Boarding-Points"}
+          doj={doj}
         />
         <LeftFilterBox
           title={"Drop Points"}
@@ -202,6 +203,8 @@ const LeftFilter = ({
           sourceCity={sourceCity}
           destinationCity={destinationCity}
           key={"Drop-Points"}
+          doj={doj}
+
         />
         <LeftFilterBox
           title={"Bus Partner"}
@@ -212,6 +215,8 @@ const LeftFilter = ({
           sourceCity={sourceCity}
           destinationCity={destinationCity}
           key={"Bus-Partner"}
+          doj={doj}
+
         />
         {/* <LeftFilterBox
           title={"Bus Type"}
