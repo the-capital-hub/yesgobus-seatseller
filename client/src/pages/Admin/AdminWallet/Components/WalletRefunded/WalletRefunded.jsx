@@ -2,6 +2,7 @@ import { Popover, Space, Spin, Table } from "antd";
 import TransactionArrow from "../../../../../components/Admin/TransactionArrow/TransactionArrow";
 import { useEffect, useState } from "react";
 import { getAllBookingRefund } from "../../../../../api/admin";
+import { formatBusTravelTime } from "../../../../../utils/Admin/AdminHelpers";
 
 const columns = [
   {
@@ -21,9 +22,16 @@ const columns = [
     key: "destinationCity",
   },
   {
-    title: "Date & Time",
+    title: "Date of Journey",
     dataIndex: "doj",
     key: "doj",
+  },
+  {
+    title: "Departure",
+    key: "pickUpTime",
+    render: (_, record) => {
+      return formatBusTravelTime(record);
+    },
   },
   {
     title: "Operator",
@@ -54,12 +62,12 @@ const columns = [
 ];
 
 const Content = ({ record }) => {
-  const bookingTime = new Date(record?.createdAt);
+  const refundedTime = new Date(record?.updatedAt);
 
   return (
     <div className="px-4">
-      <p className="font-semibold">Date and Time Of Booking</p>
-      <p>{bookingTime?.toLocaleString([], {})}</p>
+      <p className="font-semibold">Date and Time Of Refund</p>
+      <p>{refundedTime?.toLocaleString([], {})}</p>
     </div>
   );
 };

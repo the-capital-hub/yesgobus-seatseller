@@ -5,6 +5,7 @@ import "./AdminRecords.scss";
 import { useState, useEffect } from "react";
 import { getAgentBookings } from "../../../api/admin";
 import { ADMIN_KEY } from "../AdminLogin/AdminLogin";
+import { formatBusTravelTime } from "../../../utils/Admin/AdminHelpers";
 
 const columns = [
   {
@@ -12,11 +13,7 @@ const columns = [
     dataIndex: "customerName",
     key: "customerName",
   },
-  {
-    title: "Time of Booking",
-    dataIndex: "doj",
-    key: "doj",
-  },
+
   {
     title: "Operator",
     dataIndex: "busOperator",
@@ -31,6 +28,18 @@ const columns = [
     title: "To",
     dataIndex: "destinationCity",
     key: "destinationCity",
+  },
+  {
+    title: "Date of Journey",
+    dataIndex: "doj",
+    key: "doj",
+  },
+  {
+    title: "Departure",
+    key: "pickUpTime",
+    render: (_, record) => {
+      return formatBusTravelTime(record);
+    },
   },
   {
     title: "Cost (Rs)",

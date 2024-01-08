@@ -2,6 +2,7 @@ import { Popover, Space, Spin, Table } from "antd";
 import TransactionArrow from "../../../../../components/Admin/TransactionArrow/TransactionArrow";
 import { useEffect, useState } from "react";
 import { getAllBookings } from "../../../../../api/admin";
+import { formatBusTravelTime } from "../../../../../utils/Admin/AdminHelpers";
 
 const columns = [
   {
@@ -21,9 +22,16 @@ const columns = [
     key: "destinationCity",
   },
   {
-    title: "Date & Time",
+    title: "Date of Journey",
     dataIndex: "doj",
     key: "doj",
+  },
+  {
+    title: "Departure",
+    key: "pickUpTime",
+    render: (_, record) => {
+      return formatBusTravelTime(record);
+    },
   },
   {
     title: "Operator",
