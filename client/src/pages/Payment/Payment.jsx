@@ -491,6 +491,96 @@ const Payment = () => {
             }
           );
 
+
+          const checkAgent = await axiosInstance.get(`${import.meta.env.VITE_BASE_URL}/api/agent/isAgent/${loggedInUser.userId}`,);
+
+          if (checkAgent.data.isAgent) {
+            setLoadingModalVisible(false);
+            setStartCountdown(false);
+            setCountdown(10);
+            const isConfirmed = window.confirm("Do you want to confirm the booking?");
+            if (!isConfirmed) {
+              return;
+            }
+            setLoading(true);
+            // get bookings
+            const getBookingDetails = await axiosInstance.get(
+              `${import.meta.env.VITE_BASE_URL
+              }/api/busBooking/getBookingById/${bookResponse.data._id}`
+            );
+            if (getBookingDetails?.data?.data.isVrl) {
+              const requestbody = {
+                ...getBookingDetails?.data?.data.reservationSchema[0],
+              };
+              let { data: vrlBookSeatResponse } = await vrlBookSeat(
+                requestbody
+              );
+              vrlBookSeatResponse = vrlBookSeatResponse[0];
+              if (vrlBookSeatResponse.Status === 1) {
+                const { data: updatePaymentDetails } =
+                  await axiosInstance.patch(
+                    `${import.meta.env.VITE_BASE_URL
+                    }/api/busBooking/updateBooking/${bookResponse.data._id}`,
+                    {
+                      bookingStatus: "paid",
+                      opPNR: vrlBookSeatResponse?.PNRNO,
+                      buspnr: vrlBookSeatResponse?.PNRNO,
+                    }
+                  );
+                if (updatePaymentDetails) {
+                  const mailBody = {
+                    fullName: updatePaymentDetails?.data.customerName,
+                    sourceCity: updatePaymentDetails?.data.sourceCity,
+                    destinationCity: updatePaymentDetails?.data.destinationCity,
+                    seats: updatePaymentDetails?.data.selectedSeats,
+                    amount: updatePaymentDetails?.data.totalAmount,
+                    pickUpLocation: updatePaymentDetails?.data.boardingPoint,
+                    opPNR: updatePaymentDetails?.data.opPNR,
+                    doj:
+                      formatDate(updatePaymentDetails?.data.doj) +
+                      " " +
+                      updatePaymentDetails?.data.pickUpTime,
+                    to: updatePaymentDetails?.data.customerEmail,
+                    contact: updatePaymentDetails?.data?.driverNumber,
+                  };
+                  const sendMail = await axiosInstance.post(
+                    `${import.meta.env.VITE_BASE_URL
+                    }/api/busBooking/sendBookingConfirmationEmail`,
+                    mailBody
+                  );
+
+                  //send sms
+                  const messageBody = {
+                    fullName: updatePaymentDetails?.data.customerName,
+                    sourceCity: updatePaymentDetails?.data.sourceCity,
+                    destinationCity: updatePaymentDetails?.data.destinationCity,
+                    seats: updatePaymentDetails?.data.selectedSeats,
+                    amount: updatePaymentDetails?.data.totalAmount,
+                    pickUpLocation: updatePaymentDetails?.data.boardingPoint,
+                    opPNR: updatePaymentDetails?.data.opPNR,
+                    doj:
+                      formatDate(updatePaymentDetails?.data.doj) +
+                      " " +
+                      updatePaymentDetails?.data.pickUpTime,
+                    to: updatePaymentDetails?.data.customerPhone,
+                    contact: updatePaymentDetails?.data?.driverNumber,
+                  };
+                  const sendMessage = await axiosInstance.post(
+                    `${import.meta.env.VITE_BASE_URL
+                    }/api/busBooking/sendBookingConfirmationMessage`,
+                    messageBody
+                  );
+                }
+                setLoading(false);
+                navigate(`/busbooking/payment/success?bookingId=${bookResponse.data._id}`);
+              } else {
+                setLoading(false);
+                navigate("/busbooking/payment/failure");
+              }
+            }
+            return;
+          }
+
           const response = await axiosInstance.post(
             `${import.meta.env.VITE_BASE_URL}/api/payment/initiatePayment`,
             {
@@ -619,6 +709,95 @@ const Payment = () => {
               agentCode: userData.agentCode,
             }
           );
+          const checkAgent = await axiosInstance.get(`${import.meta.env.VITE_BASE_URL}/api/agent/isAgent/${loggedInUser.userId}`,);
+
+          if (checkAgent.data.isAgent) {
+            setLoadingModalVisible(false);
+            setStartCountdown(false);
+            setCountdown(10);
+            const isConfirmed = window.confirm("Do you want to confirm the booking?");
+            if (!isConfirmed) {
+              return;
+            }
+            setLoading(true);
+            // get bookings
+            const getBookingDetails = await axiosInstance.get(
+              `${import.meta.env.VITE_BASE_URL
+              }/api/busBooking/getBookingById/${bookResponse.data._id}`
+            );
+            if (getBookingDetails?.data?.data.isSrs) {
+              let srsBookSeatResponse = await srsConfirmBooking(srsResponse.pnr_number);
+
+              if (srsBookSeatResponse.result) {
+                const { data: updatePaymentDetails } =
+                  await axiosInstance.patch(
+                    `${import.meta.env.VITE_BASE_URL
+                    }/api/busBooking/updateBooking/${bookResponse.data._id}`,
+                    {
+                      bookingStatus: "paid",
+                      opPNR:
+                        srsBookSeatResponse?.result.ticket_details.operator_pnr,
+                      buspnr:
+                        srsBookSeatResponse?.result.ticket_details
+                          .travel_operator_pnr,
+                      cancellationPolicy:
+                        srsBookSeatResponse?.result.ticket_details
+                          .ts_cancellation_policies,
+                    }
+                  );
+                if (updatePaymentDetails) {
+                  const mailBody = {
+                    fullName: updatePaymentDetails?.data.customerName,
+                    sourceCity: updatePaymentDetails?.data.sourceCity,
+                    destinationCity: updatePaymentDetails?.data.destinationCity,
+                    seats: updatePaymentDetails?.data.selectedSeats,
+                    amount: updatePaymentDetails?.data.totalAmount,
+                    pickUpLocation: updatePaymentDetails?.data.boardingPoint,
+                    opPNR: updatePaymentDetails?.data.opPNR,
+                    doj:
+                      formatDate(updatePaymentDetails?.data.doj) +
+                      " " +
+                      updatePaymentDetails?.data.pickUpTime,
+                    to: updatePaymentDetails?.data.customerEmail,
+                    contact: updatePaymentDetails?.data?.driverNumber,
+                  };
+                  const sendMail = await axiosInstance.post(
+                    `${import.meta.env.VITE_BASE_URL
+                    }/api/busBooking/sendBookingConfirmationEmail`,
+                    mailBody
+                  );
+
+                  //send sms
+                  const messageBody = {
+                    fullName: updatePaymentDetails?.data.customerName,
+                    sourceCity: updatePaymentDetails?.data.sourceCity,
+                    destinationCity: updatePaymentDetails?.data.destinationCity,
+                    seats: updatePaymentDetails?.data.selectedSeats,
+                    amount: updatePaymentDetails?.data.totalAmount,
+                    pickUpLocation: updatePaymentDetails?.data.boardingPoint,
+                    opPNR: updatePaymentDetails?.data.opPNR,
+                    doj:
+                      formatDate(updatePaymentDetails?.data.doj) +
+                      " " +
+                      updatePaymentDetails?.data.pickUpTime,
+                    to: updatePaymentDetails?.data.customerPhone,
+                    contact: updatePaymentDetails?.data?.driverNumber,
+                  };
+                  const sendMessage = await axiosInstance.post(
+                    `${import.meta.env.VITE_BASE_URL
+                    }/api/busBooking/sendBookingConfirmationMessage`,
+                    messageBody
+                  );
+                }
+                setLoading(false);
+                navigate(`/busbooking/payment/success?bookingId=${bookResponse.data._id}`);
+              } else {
+                setLoading(false);
+                navigate("/busbooking/payment/failure");
+              }
+            }
+            return;
+          }
 
           const response = await axiosInstance.post(
             `${import.meta.env.VITE_BASE_URL}/api/payment/initiatePayment`,
