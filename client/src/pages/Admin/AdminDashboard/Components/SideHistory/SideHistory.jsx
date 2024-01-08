@@ -7,9 +7,9 @@ export default function SideHistory() {
     <div className="transactions">
       <div className="flex items-center justify-between py-2 px-5">
         <p className="m-0 text-xl">History</p>
-        <span className="flex items-center">
+        {/* <span className="flex items-center">
           <GoKebabHorizontal size={30} color="#878787" />
-        </span>
+        </span> */}
       </div>
       {[
         { isDebit: true, text: "Transfer" },
@@ -44,7 +44,7 @@ export default function SideHistory() {
         );
       })}
       {/* View All */}
-      <span className="flex items-center justify-center py-2 px-5 border-0 border-t border-solid border-gray-300">
+      {/* <span className="flex items-center justify-center py-2 px-5 border-0 border-t border-solid border-gray-300">
         <Button
           htmlType="button"
           type="primary"
@@ -56,7 +56,7 @@ export default function SideHistory() {
         >
           View all
         </Button>
-      </span>
+      </span> */}
     </div>
   );
 }

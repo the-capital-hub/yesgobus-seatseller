@@ -85,7 +85,7 @@ export default function CreateAccountForm() {
           name="userId"
           id="admin-userId"
           className="create-input"
-          placeholder="Yesgobus User Id"
+          placeholder="YesGoBus User ID"
           required
           onChange={handleChange}
           autoComplete="one-time-code"
