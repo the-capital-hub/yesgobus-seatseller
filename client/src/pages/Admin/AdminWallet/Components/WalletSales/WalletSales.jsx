@@ -67,7 +67,12 @@ const Content = ({ record }) => {
   return (
     <div className="px-4">
       <p className="font-semibold">Date and Time Of Booking</p>
-      <p>{bookingTime?.toLocaleString([], {})}</p>
+      <p className="uppercase">
+        {new Intl.DateTimeFormat("en-IN", {
+          dateStyle: "short",
+          timeStyle: "short",
+        }).format(bookingTime)}
+      </p>
     </div>
   );
 };
@@ -125,6 +130,7 @@ export default function WalletSales() {
           spinning: !bookings || !bookings.length === 0,
         }}
         rowKey={(record) => record._id}
+        scroll={{ x: true }}
       />
     </section>
   );

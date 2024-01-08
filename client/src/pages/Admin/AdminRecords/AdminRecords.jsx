@@ -66,7 +66,12 @@ const content = (data) => {
   return (
     <div className="px-4">
       <p className="font-semibold">Date and Time Of Booking</p>
-      <p>{bookingTime?.toLocaleString([], {})}</p>
+      <p className="uppercase">
+        {new Intl.DateTimeFormat("en-IN", {
+          dateStyle: "short",
+          timeStyle: "short",
+        }).format(bookingTime)}
+      </p>
     </div>
   );
 };
