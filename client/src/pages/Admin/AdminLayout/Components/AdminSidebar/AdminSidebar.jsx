@@ -35,11 +35,11 @@ const NAVLINKS = [
     icon: <IconAgents />,
     link: "/admin/track-agents",
   },
-  {
-    label: "Track Buses",
-    icon: <IconTrack />,
-    link: "/admin/track-buses",
-  },
+  // {
+  //   label: "Track Buses",
+  //   icon: <IconTrack />,
+  //   link: "/admin/track-buses",
+  // },
 ];
 
 export default function AdminSidebar({ admin }) {
