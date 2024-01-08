@@ -149,6 +149,7 @@ const AdminWallet = () => {
           </div>
         </Card>
       </div>
+
       {/* History Refunded */}
       <section className="history-wrapper flex flex-col gap-4">
         <div className="flex justify-between items-center">
@@ -182,8 +183,10 @@ const AdminWallet = () => {
             ),
             spinning: !bookings || !bookings.length === 0,
           }}
+          rowKey={(bookings) => bookings._id}
         />
       </section>
+
       {/* History Sales*/}
       <section className="history-wrapper flex flex-col gap-4">
         <div className="flex justify-between items-center">
@@ -214,6 +217,7 @@ const AdminWallet = () => {
             ),
             spinning: !refunds || !refunds.length === 0,
           }}
+          rowKey={(refunds) => refunds._id}
         />
       </section>
     </div>

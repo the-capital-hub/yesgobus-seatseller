@@ -75,7 +75,7 @@ export default function AdminRecords() {
       }
     };
     getAllAgentBookings();
-  }, []);
+  }, [loggedInAdmin._id]);
 
   return (
     <div className="admin-records-wrapper">
@@ -120,6 +120,7 @@ export default function AdminRecords() {
                 ),
                 spinning: !bookings || !bookings.length === 0,
               }}
+              rowKey={(bookings) => bookings._id}
             />
           </ConfigProvider>
         </div>
