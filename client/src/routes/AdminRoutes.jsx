@@ -17,7 +17,7 @@ export default function AdminRoutes() {
         <Route path="wallet" element={<AdminWallet />} />
         <Route path="records" element={<AdminRecords />} />
         <Route path="track-agents" element={<AdminTrackAgent />} />
-        <Route path="track-buses" element={<AdminTrackBuses />} />
+        {/* <Route path="track-buses" element={<AdminTrackBuses />} /> */}
       </Route>
     </Routes>
   );
