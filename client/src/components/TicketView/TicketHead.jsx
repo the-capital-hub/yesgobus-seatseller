@@ -15,7 +15,7 @@ export default function TicketHead({ contactNumber }) {
             style={{ width: "40px", height: "40px" }}
           />
           <div className="helpline__number">
-            <p>Yesgobus Helpline</p>
+            <p>YesGoBus Helpline</p>
             <p>{contactNumber}</p>
           </div>
         </div>

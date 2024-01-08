@@ -31,9 +31,6 @@ import {
 
 const BusBooking = () => {
   const loggedInUser = localStorage.getItem("loggedInUser");
-  if (!loggedInUser) {
-    return <Navigate to="/login" replace />;
-  }
 
   const location = useLocation();
   const [noOfBuses, setNoOfBuses] = useState(0);
@@ -72,8 +69,9 @@ const BusBooking = () => {
   for (let i = 0; i <= 6; i++) {
     const nextDate = new Date(date);
     nextDate.setDate(date.getDate() + i);
-    const formattedDate = `${daysOfWeek[nextDate.getDay()]},${months[nextDate.getMonth()]
-      }-${nextDate.getDate()}`;
+    const formattedDate = `${daysOfWeek[nextDate.getDay()]},${
+      months[nextDate.getMonth()]
+    }-${nextDate.getDate()}`;
     dates.push(formattedDate);
   }
 
@@ -452,6 +450,11 @@ const BusBooking = () => {
   const busList = [...vrlBuses, ...srsBuses]; // vrlbuses always go first
   const sortedBusList = sortBuses(busList, sortBy);
 
+  // Check if user is logged in
+  if (!loggedInUser) {
+    return <Navigate to="/login" replace />;
+  }
+
   return (
     <div className="busBooking">
       <Navbar />
@@ -567,7 +570,12 @@ const BusBooking = () => {
               {sortedBusList?.map((bus) => {
                 const isVrl = bus.type === "vrl" ? true : false;
 
-                const busProps = getBusBookingCardProps(bus, fromLocation, toLocation, selectedDate);
+                const busProps = getBusBookingCardProps(
+                  bus,
+                  fromLocation,
+                  toLocation,
+                  selectedDate
+                );
 
                 return (
                   <div

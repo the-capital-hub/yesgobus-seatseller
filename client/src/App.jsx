@@ -1,8 +1,8 @@
 import {
   BusBooking,
-  ComingSoon,
+  // ComingSoon,
   ContactUs,
-  KYC,
+  // KYC,
   LandingPage,
   Login,
   Payment,
@@ -12,8 +12,8 @@ import {
   Profile,
 } from "./pages";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import KycLandingPage from "./pages/KYC/KycLandingPage/KycLandingPage";
-import KycPayments from "./pages/KYC/KycPayment/KycPayment";
+// import KycLandingPage from "./pages/KYC/KycLandingPage/KycLandingPage";
+// import KycPayments from "./pages/KYC/KycPayment/KycPayment";
 import MobileNavbar from "./components/Mobile/Busresultsnavbar/busresultsnavbar";
 import { useEffect } from "react";
 import { Capacitor } from "@capacitor/core";
@@ -49,7 +49,7 @@ function App() {
     //       caches.delete(name);
     //     });
     //   });
-  }, []);
+  }, [dispatch]);
 
   CapacitorApp.addListener("backButton", ({ canGoBack }) => {
     if (!canGoBack) {

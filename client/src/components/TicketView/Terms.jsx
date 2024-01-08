@@ -11,7 +11,6 @@ export default function Terms({ cancellationPolicy, isVrl, isSrs }) {
     }
   }, [isVrl, cancellationPolicy]);
 
-
   const decodeCancellationPolicy = () => {
     if (isVrl) {
       return cancellationPolicy?.map((policy, index) => {
@@ -20,7 +19,7 @@ export default function Terms({ cancellationPolicy, isVrl, isSrs }) {
           ToMinutes,
           DeductPercent,
           RefundPercent,
-          Remarks
+          Remarks,
         } = policy;
 
         const from = FromMinutes / 60;
@@ -29,21 +28,26 @@ export default function Terms({ cancellationPolicy, isVrl, isSrs }) {
         return (
           <li key={index}>
             <p>
-              {fromTime} {from} hour {ToMinutes !== 0 && `- ${to} hour`}: Cancellation Rate: {DeductPercent}%, Refund Percent: {RefundPercent}%,
+              {fromTime} {from} hour {ToMinutes !== 0 && `- ${to} hour`}:
+              Cancellation Rate: {DeductPercent}%, Refund Percent:{" "}
+              {RefundPercent}%,
             </p>
           </li>
         );
       });
     } else {
-      const policyParts = cancellationPolicy?.split(';');
-      return policyParts?.map(part => {
-        const [fromTime, toTime, cancellationRate, percentageOrAbsolute] = part.split(':');
+      const policyParts = cancellationPolicy?.split(";");
+      return policyParts?.map((part) => {
+        const [fromTime, toTime, cancellationRate, percentageOrAbsolute] =
+          part.split(":");
         // console.log("fff", typeof (fromTime));
         return (
           <li key={part}>
             <p>
-              {fromTime.trim() === '0' ? 'Within' : 'Before'} {toTime === '-1' ? `${fromTime} hours` : `${toTime} hours`}:
-              Cancellation Rate: {cancellationRate}%, Type: {percentageOrAbsolute === '0' ? 'Percentage' : 'Absolute'}
+              {fromTime.trim() === "0" ? "Within" : "Before"}{" "}
+              {toTime === "-1" ? `${fromTime} hours` : `${toTime} hours`}:
+              Cancellation Rate: {cancellationRate}%, Type:{" "}
+              {percentageOrAbsolute === "0" ? "Percentage" : "Absolute"}
             </p>
           </li>
         );
@@ -57,7 +61,7 @@ export default function Terms({ cancellationPolicy, isVrl, isSrs }) {
       <ul>
         <li>
           <p>
-            Yesgobus Travellers can book bus tickets online at the lowest ticket
+            YesGoBus Travellers can book bus tickets online at the lowest ticket
             fares. Travellers prefer to choose their favorite bus to reserve
             online bus booking. You’re at the right place to find a wide range
             of Private buses and SRTC (State Road Transport Corporation) buses
@@ -72,16 +76,17 @@ export default function Terms({ cancellationPolicy, isVrl, isSrs }) {
         </li>
         <li>
           <p>
-            Yesgobus is not responsible for any accident or any passenger
+            YesGoBus is not responsible for any accident or any passenger
             losses.
           </p>
         </li>
         <li>
           <p>
-            Cancellation charges are applicable on the original fare but not available on discount.
+            Cancellation charges are applicable on the original fare but not
+            available on discount.
           </p>
         </li>
-        {!isSrs &&
+        {!isSrs && (
           <li>
             <h3>{"Cancellation Policy:"}</h3>
             <ul>
@@ -89,8 +94,7 @@ export default function Terms({ cancellationPolicy, isVrl, isSrs }) {
               <li>{remarks}</li>
             </ul>
           </li>
-        }
-
+        )}
       </ul>
     </div>
   );
