@@ -120,7 +120,8 @@ const Payment = () => {
         setLoading(true);
         // get bookings
         const getBookingDetails = await axiosInstance.get(
-          `${import.meta.env.VITE_BASE_URL
+          `${
+            import.meta.env.VITE_BASE_URL
           }/api/busBooking/getBookingById/${bookingId}`
         );
         if (getBookingDetails.status === 200) {
@@ -129,7 +130,8 @@ const Payment = () => {
 
           // check payment status
           const checkPaymentStatus = await axiosInstance.get(
-            `${import.meta.env.VITE_BASE_URL
+            `${
+              import.meta.env.VITE_BASE_URL
             }/api/payment/checkPaymentStatus/${merchantTransactionId}`
           );
 
@@ -147,7 +149,8 @@ const Payment = () => {
               if (vrlBookSeatResponse.Status === 1) {
                 const { data: updatePaymentDetails } =
                   await axiosInstance.patch(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/updateBooking/${bookingId}`,
                     {
                       bookingStatus: "paid",
@@ -172,7 +175,8 @@ const Payment = () => {
                     contact: updatePaymentDetails?.data?.driverNumber,
                   };
                   const sendMail = await axiosInstance.post(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationEmail`,
                     mailBody
                   );
@@ -194,7 +198,8 @@ const Payment = () => {
                     contact: updatePaymentDetails?.data?.driverNumber,
                   };
                   const sendMessage = await axiosInstance.post(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationMessage`,
                     messageBody
                   );
@@ -211,7 +216,8 @@ const Payment = () => {
               if (srsBookSeatResponse.result) {
                 const { data: updatePaymentDetails } =
                   await axiosInstance.patch(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/updateBooking/${bookingId}`,
                     {
                       bookingStatus: "paid",
@@ -242,7 +248,8 @@ const Payment = () => {
                     contact: updatePaymentDetails?.data?.driverNumber,
                   };
                   const sendMail = await axiosInstance.post(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationEmail`,
                     mailBody
                   );
@@ -264,7 +271,8 @@ const Payment = () => {
                     contact: updatePaymentDetails?.data?.driverNumber,
                   };
                   const sendMessage = await axiosInstance.post(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationMessage`,
                     messageBody
                   );
@@ -402,7 +410,8 @@ const Payment = () => {
         const resultSeatString = seatAndGenderArray.join("|");
         const seatDetailsWithName = bookingDetails?.selectedSeats?.map(
           (seat, index) =>
-            `${seat},${userData[`firstName_${index}`]},${userData.mobile},${userData[`age_${index}`]
+            `${seat},${userData[`firstName_${index}`]},${userData.mobile},${
+              userData[`age_${index}`]
             }`
         );
         const resultseatDetailsWithNameString = seatDetailsWithName.join("|");
@@ -491,22 +500,28 @@ const Payment = () => {
             }
           );
 
-
-          const checkAgent = await axiosInstance.get(`${import.meta.env.VITE_BASE_URL}/api/agent/isAgent/${loggedInUser.userId}`,);
+          const checkAgent = await axiosInstance.get(
+            `${import.meta.env.VITE_BASE_URL}/api/agent/isAgent/${
+              loggedInUser.userId
+            }`
+          );
 
           if (checkAgent.data.isAgent) {
             setLoadingModalVisible(false);
             setStartCountdown(false);
             setCountdown(10);
-            const isConfirmed = window.confirm("Do you want to confirm the booking?");
+            const isConfirmed = window.confirm(
+              "Do you want to confirm the booking?"
+            );
             if (!isConfirmed) {
               return;
             }
             setLoading(true);
             // get bookings
             const getBookingDetails = await axiosInstance.get(
-              `${import.meta.env.VITE_BASE_URL
-              }/api/busBooking/getBookingById/${bookResponse.data._id}`
+              `${import.meta.env.VITE_BASE_URL}/api/busBooking/getBookingById/${
+                bookResponse.data._id
+              }`
             );
             if (getBookingDetails?.data?.data.isVrl) {
               const requestbody = {
@@ -519,7 +534,8 @@ const Payment = () => {
               if (vrlBookSeatResponse.Status === 1) {
                 const { data: updatePaymentDetails } =
                   await axiosInstance.patch(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/updateBooking/${bookResponse.data._id}`,
                     {
                       bookingStatus: "paid",
@@ -544,7 +560,8 @@ const Payment = () => {
                     contact: updatePaymentDetails?.data?.driverNumber,
                   };
                   const sendMail = await axiosInstance.post(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationEmail`,
                     mailBody
                   );
@@ -566,13 +583,16 @@ const Payment = () => {
                     contact: updatePaymentDetails?.data?.driverNumber,
                   };
                   const sendMessage = await axiosInstance.post(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationMessage`,
                     messageBody
                   );
                 }
                 setLoading(false);
-                navigate(`/busbooking/payment/success?bookingId=${bookResponse.data._id}`);
+                navigate(
+                  `/busbooking/payment/success?bookingId=${bookResponse.data._id}`
+                );
               } else {
                 setLoading(false);
                 navigate("/busbooking/payment/failure");
@@ -592,7 +612,8 @@ const Payment = () => {
           if (response.status === 200) {
             // update merchantTransactionId
             const updatePaymentDetails = await axiosInstance.patch(
-              `${import.meta.env.VITE_BASE_URL}/api/busBooking/updateBooking/${bookResponse.data._id
+              `${import.meta.env.VITE_BASE_URL}/api/busBooking/updateBooking/${
+                bookResponse.data._id
               }`,
               {
                 merchantTransactionId: response.data.data.merchantTransactionId,
@@ -709,29 +730,39 @@ const Payment = () => {
               agentCode: userData.agentCode,
             }
           );
-          const checkAgent = await axiosInstance.get(`${import.meta.env.VITE_BASE_URL}/api/agent/isAgent/${loggedInUser.userId}`,);
+          const checkAgent = await axiosInstance.get(
+            `${import.meta.env.VITE_BASE_URL}/api/agent/isAgent/${
+              loggedInUser.userId
+            }`
+          );
 
           if (checkAgent.data.isAgent) {
             setLoadingModalVisible(false);
             setStartCountdown(false);
             setCountdown(10);
-            const isConfirmed = window.confirm("Do you want to confirm the booking?");
+            const isConfirmed = window.confirm(
+              "Do you want to confirm the booking?"
+            );
             if (!isConfirmed) {
               return;
             }
             setLoading(true);
             // get bookings
             const getBookingDetails = await axiosInstance.get(
-              `${import.meta.env.VITE_BASE_URL
-              }/api/busBooking/getBookingById/${bookResponse.data._id}`
+              `${import.meta.env.VITE_BASE_URL}/api/busBooking/getBookingById/${
+                bookResponse.data._id
+              }`
             );
             if (getBookingDetails?.data?.data.isSrs) {
-              let srsBookSeatResponse = await srsConfirmBooking(srsResponse.pnr_number);
+              let srsBookSeatResponse = await srsConfirmBooking(
+                srsResponse.pnr_number
+              );
 
               if (srsBookSeatResponse.result) {
                 const { data: updatePaymentDetails } =
                   await axiosInstance.patch(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/updateBooking/${bookResponse.data._id}`,
                     {
                       bookingStatus: "paid",
@@ -762,7 +793,8 @@ const Payment = () => {
                     contact: updatePaymentDetails?.data?.driverNumber,
                   };
                   const sendMail = await axiosInstance.post(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationEmail`,
                     mailBody
                   );
@@ -784,13 +816,16 @@ const Payment = () => {
                     contact: updatePaymentDetails?.data?.driverNumber,
                   };
                   const sendMessage = await axiosInstance.post(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationMessage`,
                     messageBody
                   );
                 }
                 setLoading(false);
-                navigate(`/busbooking/payment/success?bookingId=${bookResponse.data._id}`);
+                navigate(
+                  `/busbooking/payment/success?bookingId=${bookResponse.data._id}`
+                );
               } else {
                 setLoading(false);
                 navigate("/busbooking/payment/failure");
@@ -810,7 +845,8 @@ const Payment = () => {
           if (response.status === 200) {
             // update merchantTransactionId
             const updatePaymentDetails = await axiosInstance.patch(
-              `${import.meta.env.VITE_BASE_URL}/api/busBooking/updateBooking/${bookResponse.data._id
+              `${import.meta.env.VITE_BASE_URL}/api/busBooking/updateBooking/${
+                bookResponse.data._id
               }`,
               {
                 merchantTransactionId: response.data.data.merchantTransactionId,
@@ -974,8 +1010,9 @@ const Payment = () => {
       const genderKey = `gender_${index}`;
 
       if (!userData[firstNameKey]?.trim()) {
-        errors[firstNameKey] = `First name for Traveler ${index + 1
-          } is required`;
+        errors[firstNameKey] = `First name for Traveler ${
+          index + 1
+        } is required`;
       }
       if (!userData[lastNameKey]?.trim()) {
         errors[lastNameKey] = `Last name for Traveler ${index + 1} is required`;
@@ -1020,12 +1057,12 @@ const Payment = () => {
         alert("Agent code Verified");
       } else {
         setAgentCodeVerified(false);
-        alert("Agent Code not found")
+        alert("Agent Code not found");
       }
     } catch (error) {
       console.error("Error", error);
     }
-  }
+  };
 
   return (
     <div className="Payment">
@@ -1081,8 +1118,8 @@ const Payment = () => {
                 isVrl
                   ? bookingDetails?.boardingPoint?.time
                   : isSrs
-                    ? bookingDetails?.boardingPoint?.time
-                    : convertMinutesToTime(bookingDetails?.boardingPoint?.time)
+                  ? bookingDetails?.boardingPoint?.time
+                  : convertMinutesToTime(bookingDetails?.boardingPoint?.time)
               }
               // locationOne={bookingDetails.boardingPoint.location}
               locationTwo={bookingDetails?.boardingPoint?.bpName}
@@ -1093,8 +1130,8 @@ const Payment = () => {
                 isVrl
                   ? bookingDetails?.droppingPoint?.time
                   : isSrs
-                    ? bookingDetails?.droppingPoint?.time
-                    : convertMinutesToTime(bookingDetails?.droppingPoint?.time)
+                  ? bookingDetails?.droppingPoint?.time
+                  : convertMinutesToTime(bookingDetails?.droppingPoint?.time)
               }
               // locationOne={bookingDetails.droppingPoint.location}
               locationTwo={bookingDetails?.droppingPoint?.bpName}
@@ -1295,6 +1332,13 @@ const Payment = () => {
                   <hr />
                 </>
               )}
+
+              {/* GST */}
+              <div className="price">
+                <p>GST 18%</p>
+                <p>{bookingDetails?.gst}</p>
+              </div>
+              <hr />
 
               <div className="price">
                 <p>Total</p>
