@@ -1,10 +1,11 @@
-import { ConfigProvider, Table, Spin } from "antd";
+import { ConfigProvider, Table, Spin, Space, Popover } from "antd";
 import NotificationIcon from "../../../components/SvgIcons/NotificationIcon";
 import UserIcon from "../../../components/SvgIcons/UserIcon";
 import "./AdminRecords.scss";
 import { useState, useEffect } from "react";
 import { getAgentBookings } from "../../../api/admin";
 import { ADMIN_KEY } from "../AdminLogin/AdminLogin";
+import { formatBusTravelTime } from "../../../utils/Admin/AdminHelpers";
 
 const columns = [
   {
@@ -12,11 +13,7 @@ const columns = [
     dataIndex: "customerName",
     key: "customerName",
   },
-  {
-    title: "Time of Booking",
-    dataIndex: "doj",
-    key: "doj",
-  },
+
   {
     title: "Operator",
     dataIndex: "busOperator",
@@ -33,17 +30,51 @@ const columns = [
     key: "destinationCity",
   },
   {
+    title: "Date of Journey",
+    dataIndex: "doj",
+    key: "doj",
+  },
+  {
+    title: "Departure",
+    key: "pickUpTime",
+    render: (_, record) => {
+      return formatBusTravelTime(record);
+    },
+  },
+  {
     title: "Cost (Rs)",
     dataIndex: "totalAmount",
     key: "totalAmount",
     sorter: (a, b) => a.totalAmount - b.totalAmount,
   },
-  // {
-  //   title: "Agent",
-  //   dataIndex: "agent",
-  //   key: "agent",
-  // },
+  {
+    title: "Actions",
+    key: "actions",
+    render: (_, record) => (
+      <Space size="middle">
+        <Popover content={content(record)} title="Details" trigger="click">
+          <a>View</a>
+        </Popover>
+      </Space>
+    ),
+  },
 ];
+
+const content = (data) => {
+  const bookingTime = new Date(data?.createdAt);
+
+  return (
+    <div className="px-4">
+      <p className="font-semibold">Date and Time Of Booking</p>
+      <p className="uppercase">
+        {new Intl.DateTimeFormat("en-IN", {
+          dateStyle: "short",
+          timeStyle: "short",
+        }).format(bookingTime)}
+      </p>
+    </div>
+  );
+};
 
 const tableStyles = {
   boxShadow: "4px 4px 30px 0px #00000026",
@@ -75,7 +106,7 @@ export default function AdminRecords() {
       }
     };
     getAllAgentBookings();
-  }, []);
+  }, [loggedInAdmin._id]);
 
   return (
     <div className="admin-records-wrapper">
@@ -120,6 +151,7 @@ export default function AdminRecords() {
                 ),
                 spinning: !bookings || !bookings.length === 0,
               }}
+              rowKey={(record) => record._id}
             />
           </ConfigProvider>
         </div>

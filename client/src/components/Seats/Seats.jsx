@@ -101,6 +101,7 @@ const Seats = ({
     serviceTax: 0,
     operatorTax: 0,
     totalFare: 0,
+    gst: 0,
   });
 
   // seat select handler
@@ -162,6 +163,10 @@ const Seats = ({
         newLadiesSeat.splice(seatIndex, 1);
       }
 
+      // Add GST to newTotalFare
+      let newGst = (parseFloat(newFare) * 18) / 100;
+      newTotalFare = parseFloat(newTotalFare) + newGst;
+
       return {
         ...prev,
         selectedSeats: newSelected,
@@ -169,6 +174,7 @@ const Seats = ({
         serviceTax: roundToDecimal(parseFloat(newTax), 2),
         operatorTax: roundToDecimal(parseFloat(newOperatorTax), 2),
         totalFare: roundToDecimal(parseFloat(newTotalFare), 2),
+        gst: roundToDecimal(parseFloat(newGst), 2),
         seatFares: newSeatFares,
         seatTaxes: newSeatTaxes,
         seatTotalFares: newSeatTotalFares,

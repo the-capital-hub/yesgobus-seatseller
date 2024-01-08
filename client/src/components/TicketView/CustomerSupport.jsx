@@ -9,7 +9,7 @@ export default function CustomerSupport({ contactNumber }) {
       <div className="support__contact">
         <img src={telephoneIconFill} alt="" />
         <div className="support__number">
-          <h3 className="">Yesgobus</h3>
+          <h3 className="">YesGoBus</h3>
           <p>{contactNumber}</p>
         </div>
       </div>

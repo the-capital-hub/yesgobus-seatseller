@@ -24,7 +24,7 @@ export default function DashboardHeader() {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-col justify-between gap-4 md:flex-row">
-        <div
+        {/* <div
           className="flex items-center gap-4 bg-white border border-solid border-gray-200 shadow-lg rounded-lg p-4 lg:w-full"
           style={{ maxWidth: 450, minHeight: 38 }}
         >
@@ -44,7 +44,7 @@ export default function DashboardHeader() {
           <div className="bg-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg">
             <NotificationIcon />
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Heading */}
