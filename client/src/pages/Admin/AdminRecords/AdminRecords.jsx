@@ -1,4 +1,4 @@
-import { ConfigProvider, Table, Spin } from "antd";
+import { ConfigProvider, Table, Spin, Space, Popover } from "antd";
 import NotificationIcon from "../../../components/SvgIcons/NotificationIcon";
 import UserIcon from "../../../components/SvgIcons/UserIcon";
 import "./AdminRecords.scss";
@@ -38,12 +38,29 @@ const columns = [
     key: "totalAmount",
     sorter: (a, b) => a.totalAmount - b.totalAmount,
   },
-  // {
-  //   title: "Agent",
-  //   dataIndex: "agent",
-  //   key: "agent",
-  // },
+  {
+    title: "Actions",
+    key: "actions",
+    render: (_, record) => (
+      <Space size="middle">
+        <Popover content={content(record)} title="Details" trigger="click">
+          <a>View</a>
+        </Popover>
+      </Space>
+    ),
+  },
 ];
+
+const content = (data) => {
+  const bookingTime = new Date(data?.createdAt);
+
+  return (
+    <div className="px-4">
+      <p className="font-semibold">Date and Time Of Booking</p>
+      <p>{bookingTime?.toLocaleString([], {})}</p>
+    </div>
+  );
+};
 
 const tableStyles = {
   boxShadow: "4px 4px 30px 0px #00000026",
@@ -120,7 +137,7 @@ export default function AdminRecords() {
                 ),
                 spinning: !bookings || !bookings.length === 0,
               }}
-              rowKey={(bookings) => bookings._id}
+              rowKey={(record) => record._id}
             />
           </ConfigProvider>
         </div>

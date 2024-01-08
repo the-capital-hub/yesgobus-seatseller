@@ -1,4 +1,4 @@
-import { Space, Spin, Table } from "antd";
+import { Popover, Space, Spin, Table } from "antd";
 import TransactionArrow from "../../../../../components/Admin/TransactionArrow/TransactionArrow";
 import { useEffect, useState } from "react";
 import { getAllBookingRefund } from "../../../../../api/admin";
@@ -39,13 +39,30 @@ const columns = [
   {
     title: "Actions",
     key: "actions",
-    render: () => (
+    render: (_, record) => (
       <Space size="middle">
-        <a>View</a>
+        <Popover
+          content={<Content record={record} />}
+          title="Details"
+          trigger="click"
+        >
+          <a>View</a>
+        </Popover>
       </Space>
     ),
   },
 ];
+
+const Content = ({ record }) => {
+  const bookingTime = new Date(record?.createdAt);
+
+  return (
+    <div className="px-4">
+      <p className="font-semibold">Date and Time Of Booking</p>
+      <p>{bookingTime?.toLocaleString([], {})}</p>
+    </div>
+  );
+};
 
 export default function WalletRefunded() {
   const [refunds, setRefunds] = useState(null);
@@ -75,12 +92,15 @@ export default function WalletRefunded() {
         <h2 className="m-0 flex gap-2">
           History
           {/* <span className="flex items-center">
-        <HiArrowSmUp color="#fd5901" /> Sales
-      </span> */}
+              <HiArrowSmDown /> Refunded
+            </span> */}
         </h2>
         <div className="flex items-center gap-2">
-          <TransactionArrow rotateClass="rotate-[30deg]" />
-          <p className="m-0 text-2xl font-semibold">Sales</p>
+          <TransactionArrow
+            rotateClass="rotate-[210deg]"
+            colorClass="text-black"
+          />
+          <p className="m-0 text-2xl font-semibold">Refunded</p>
         </div>
       </div>
       <Table
@@ -99,7 +119,7 @@ export default function WalletRefunded() {
           ),
           spinning: !refunds || !refunds.length === 0,
         }}
-        rowKey={(refunds) => refunds._id}
+        rowKey={(record) => record._id}
       />
     </section>
   );
