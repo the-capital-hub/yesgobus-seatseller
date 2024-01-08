@@ -1317,7 +1317,7 @@ const Payment = () => {
                 <>
                   <div className="price">
                     <p>Service Tax</p>
-                    <p>{bookingDetails?.serviceTax}</p>
+                    <p>₹{bookingDetails?.serviceTax}</p>
                   </div>
                   <hr />
                 </>
@@ -1327,7 +1327,7 @@ const Payment = () => {
                 <>
                   <div className="price">
                     <p>Operator Tax</p>
-                    <p>{bookingDetails?.operatorTax}</p>
+                    <p>₹{bookingDetails?.operatorTax}</p>
                   </div>
                   <hr />
                 </>
@@ -1336,13 +1336,13 @@ const Payment = () => {
               {/* GST */}
               <div className="price">
                 <p>GST 18%</p>
-                <p>{bookingDetails?.gst}</p>
+                <p>₹{bookingDetails?.gst}</p>
               </div>
               <hr />
 
               <div className="price">
                 <p>Total</p>
-                <p>{bookingDetails?.totalFare}</p>
+                <p>₹{bookingDetails?.totalFare}</p>
               </div>
               <hr />
             </div>
