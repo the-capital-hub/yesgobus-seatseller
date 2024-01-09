@@ -1310,14 +1310,14 @@ const Payment = () => {
             <div className="prices">
               <div className="price">
                 <p>Total Basefare</p>
-                <p>{"₹" + bookingDetails?.fare}</p>
+                <p>{"₹" + parseFloat(bookingDetails?.fare).toFixed(2)}</p>
               </div>
               <hr />
               {bookingDetails?.serviceTax !== 0 && (
                 <>
                   <div className="price">
                     <p>Service Tax</p>
-                    <p>₹{bookingDetails?.serviceTax}</p>
+                    <p>₹{parseFloat(bookingDetails?.serviceTax).toFixed(2)}</p>
                   </div>
                   <hr />
                 </>
@@ -1327,7 +1327,7 @@ const Payment = () => {
                 <>
                   <div className="price">
                     <p>Operator Tax</p>
-                    <p>₹{bookingDetails?.operatorTax}</p>
+                    <p>₹{parseFloat(bookingDetails?.operatorTax).toFixed(2)}</p>
                   </div>
                   <hr />
                 </>
@@ -1335,14 +1335,14 @@ const Payment = () => {
 
               {/* GST */}
               <div className="price">
-                <p>GST 18%</p>
-                <p>₹{bookingDetails?.gst}</p>
+                <p>GST 5%</p>
+                <p>₹{parseFloat(bookingDetails?.gst).toFixed(2)}</p>
               </div>
               <hr />
 
               <div className="price">
                 <p>Total</p>
-                <p>₹{bookingDetails?.totalFare}</p>
+                <p>₹{parseFloat(bookingDetails?.totalFare).toFixed(2)}</p>
               </div>
               <hr />
             </div>
@@ -1360,7 +1360,9 @@ const Payment = () => {
             </div>
           </div> */}
           <Button
-            text={`Pay Amount ₹${bookingDetails?.totalFare}`}
+            text={`Pay Amount ₹${parseFloat(bookingDetails?.totalFare).toFixed(
+              2
+            )}`}
             onClicked={handlePayment}
           />
         </div>
