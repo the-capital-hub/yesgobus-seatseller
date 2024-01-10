@@ -101,7 +101,6 @@ const Seats = ({
     serviceTax: 0,
     operatorTax: 0,
     totalFare: 0,
-    gst: 0,
   });
 
   // seat select handler
@@ -163,10 +162,6 @@ const Seats = ({
         newLadiesSeat.splice(seatIndex, 1);
       }
 
-      // Add GST to newTotalFare
-      let newGst = (parseFloat(newFare) * 18) / 100;
-      newTotalFare = parseFloat(newTotalFare) + newGst;
-
       return {
         ...prev,
         selectedSeats: newSelected,
@@ -174,7 +169,6 @@ const Seats = ({
         serviceTax: roundToDecimal(parseFloat(newTax), 2),
         operatorTax: roundToDecimal(parseFloat(newOperatorTax), 2),
         totalFare: roundToDecimal(parseFloat(newTotalFare), 2),
-        gst: roundToDecimal(parseFloat(newGst), 2),
         seatFares: newSeatFares,
         seatTaxes: newSeatTaxes,
         seatTotalFares: newSeatTotalFares,
@@ -425,8 +419,8 @@ const Seats = ({
                             seatDetails.available[seat.seatName],
                             seatDetails.available_gst[seat.seatName] || 0,
                             0,
-                            parseInt(seatDetails.available[seat.seatName]) +
-                              parseInt(
+                            parseFloat(seatDetails.available[seat.seatName]) +
+                              parseFloat(
                                 seatDetails.available_gst[seat.seatName] || 0
                               ),
                             seatDetails.ladies_seats?.includes(seat.seatName)
@@ -460,8 +454,8 @@ const Seats = ({
                               seatDetails.available[seat.seatName],
                               seatDetails.available_gst[seat.seatName] || 0,
                               0,
-                              parseInt(seatDetails.available[seat.seatName]) +
-                                parseInt(
+                              parseFloat(seatDetails.available[seat.seatName]) +
+                                parseFloat(
                                   seatDetails.available_gst[seat.seatName] || 0
                                 ),
                               seatDetails.ladies_seats?.includes(seat.seatName)
@@ -498,8 +492,8 @@ const Seats = ({
                               seatDetails.available[seat.seatName],
                               seatDetails.available_gst[seat.seatName] || 0,
                               0,
-                              parseInt(seatDetails.available[seat.seatName]) +
-                                parseInt(
+                              parseFloat(seatDetails.available[seat.seatName]) +
+                                parseFloat(
                                   seatDetails.available_gst[seat.seatName] || 0
                                 ),
                               seatDetails.ladies_seats?.includes(seat.seatName)
@@ -794,6 +788,11 @@ const Seats = ({
       bookingDetails.droppingPoint.bpId &&
       bookingDetails.selectedSeats.length !== 0
     ) {
+      // Add GST 5 %
+      let newGst = parseFloat(bookingDetails.fare) * (5 / 100);
+      bookingDetails.gst = newGst;
+      bookingDetails.totalFare = bookingDetails.totalFare + newGst;
+
       navigate("/busbooking/payment", {
         state: {
           tripId,
