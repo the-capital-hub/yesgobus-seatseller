@@ -408,18 +408,18 @@ const Login = () => {
               <>
                 <h1>Log In</h1>
 
-                {isMobileApp && (
-                  <p>
-                    Dont have an account?
-                    <span
-                      style={{ cursor: "pointer" }}
-                      onClick={handleLoginChange}
-                    >
-                      {" "}
-                      Create an account
-                    </span>
-                  </p>
-                )}
+
+                <p>
+                  Dont have an account?
+                  <span
+                    style={{ cursor: "pointer" }}
+                    onClick={handleLoginChange}
+                  >
+                    {" "}
+                    Create an account
+                  </span>
+                </p>
+
               </>
             ) : (
               <>
