@@ -56,8 +56,8 @@ const Seats = ({
   // const [droppingPoints, setDroppingPoint] = useState([]);
   const [selectedPriceFilter, setSelectedPriceFilter] = useState(null);
   const [selectedTab, setSelectedTab] = useState("seats");
-
   const [prices, setPrices] = useState([]);
+
   useEffect(() => {
     const fareArray = Array.isArray(fare) ? fare : [fare];
     setPrices(fareArray);
@@ -226,7 +226,7 @@ const Seats = ({
                     <div
                       className={`seat_____container ${
                         isHighlighted ? "highlighted_____seat" : ""
-                      }`}
+                      } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
                         onClick={() =>
@@ -260,7 +260,7 @@ const Seats = ({
                       <div
                         className={`seat_____container ${
                           isHighlighted ? "highlighted_____seat" : ""
-                        }`}
+                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                       >
                         <img
                           onClick={() =>
@@ -293,7 +293,7 @@ const Seats = ({
                       <div
                         className={`seat_____container ${
                           isHighlighted ? "highlighted_____seat" : ""
-                        }`}
+                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                       >
                         <img
                           onClick={() =>
@@ -410,7 +410,7 @@ const Seats = ({
                     <div
                       className={`seat_____container ${
                         isHighlighted ? "highlighted_____seat" : ""
-                      }`}
+                      } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
                         onClick={() =>
@@ -445,7 +445,7 @@ const Seats = ({
                       <div
                         className={`seat_____container ${
                           isHighlighted ? "highlighted_____seat" : ""
-                        }`}
+                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                       >
                         <img
                           onClick={() =>
@@ -483,7 +483,7 @@ const Seats = ({
                       <div
                         className={`seat_____container ${
                           isHighlighted ? "highlighted_____seat" : ""
-                        }`}
+                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                       >
                         <img
                           onClick={() =>
@@ -520,7 +520,7 @@ const Seats = ({
                     <div
                       className={`seat_____container ${
                         isHighlighted ? "highlighted_____seat" : ""
-                      }`}
+                      } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
                         title={`ID: ${seat.seatName}`}
@@ -539,7 +539,7 @@ const Seats = ({
                     <div
                       className={`seat_____container ${
                         isHighlighted ? "highlighted_____seat" : ""
-                      }`}
+                      } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
                         title={`ID: ${seat.seatName}`}
@@ -598,7 +598,7 @@ const Seats = ({
                     <div
                       className={`seat_____container ${
                         isHighlighted ? "highlighted_____seat" : ""
-                      }`}
+                      } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
                         onClick={() =>
@@ -632,7 +632,7 @@ const Seats = ({
                       <div
                         className={`seat_____container ${
                           isHighlighted ? "highlighted_____seat" : ""
-                        }`}
+                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                       >
                         <img
                           onClick={() =>
@@ -665,7 +665,7 @@ const Seats = ({
                       <div
                         className={`seat_____container ${
                           isHighlighted ? "highlighted_____seat" : ""
-                        }`}
+                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                       >
                         <img
                           onClick={() =>
@@ -701,7 +701,7 @@ const Seats = ({
                     <div
                       className={`seat_____container ${
                         isHighlighted ? "highlighted_____seat" : ""
-                      }`}
+                      } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
                         title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
@@ -722,7 +722,7 @@ const Seats = ({
                     <div
                       className={`seat_____container ${
                         isHighlighted ? "highlighted_____seat" : ""
-                      }`}
+                      } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
                         title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
@@ -903,16 +903,16 @@ const Seats = ({
           {prices.length > 1 && (
             <div className="filters">
               {/* <p className="tag">Seat Price:</p> */}
-              <p
+              <button
                 className={`filter ${
                   selectedPriceFilter === null ? "highlighted" : ""
                 }`}
                 onClick={() => setSelectedPriceFilter(null)}
               >
                 All
-              </p>
+              </button>
               {prices.map((price) => (
-                <p
+                <button
                   key={price}
                   className={`filter ${
                     selectedPriceFilter === price ? "highlighted" : ""
@@ -920,8 +920,11 @@ const Seats = ({
                   onClick={() => setSelectedPriceFilter(price)}
                 >
                   ₹{price}
-                </p>
+                </button>
               ))}
+              <p className="" id="noSeatsMessage">
+                {"No seats available"}
+              </p>
             </div>
           )}
           <div
@@ -1161,16 +1164,16 @@ const Seats = ({
 
           {prices.length > 1 && (
             <div className="filters">
-              <p
+              <button
                 className={`filter ${
                   selectedPriceFilter === null ? "highlighted" : ""
                 }`}
                 onClick={() => setSelectedPriceFilter(null)}
               >
                 All
-              </p>
+              </button>
               {prices.map((price) => (
-                <p
+                <button
                   key={price}
                   className={`filter ${
                     selectedPriceFilter === price ? "highlighted" : ""
@@ -1178,8 +1181,11 @@ const Seats = ({
                   onClick={() => setSelectedPriceFilter(price)}
                 >
                   ₹{price}
-                </p>
+                </button>
               ))}
+              <p className="" id="noSeatsMessage">
+                {"No seats available"}
+              </p>
             </div>
           )}
 

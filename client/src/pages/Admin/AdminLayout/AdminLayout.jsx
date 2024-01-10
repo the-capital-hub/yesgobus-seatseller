@@ -23,7 +23,7 @@ export default function AdminLayout() {
     if (loggedInAdmin) {
       setAdmin(JSON.parse(loggedInAdmin));
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="admin-layout-wrapper">

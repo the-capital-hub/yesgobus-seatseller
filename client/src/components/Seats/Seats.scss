@@ -103,6 +103,7 @@
         padding: 5px 20px;
         background: rgba(225, 225, 225, 0.59);
         border-radius: 5px;
+        border: none;
 
         &:hover {
           cursor: pointer;
@@ -385,5 +386,49 @@
 }
 
 .highlighted_____seat {
-  box-shadow: 0 0 10px orange;
+  & > :first-child {
+    box-shadow: 0 0 10px orange;
+  }
+}
+
+// CSS to disable seat selection when highlighted class is present
+#noSeatsMessage {
+  min-width: 50px;
+  margin: 0;
+
+  display: grid;
+  place-items: center;
+  visibility: hidden;
+}
+
+.gridContainer {
+  &:has(.priceOptionSelected) {
+    &:has(.highlighted_____seat) {
+      .seat_____container {
+        pointer-events: none;
+      }
+
+      .seat_____container.highlighted_____seat {
+        pointer-events: all;
+      }
+    }
+
+    &:not(:has(.highlighted_____seat)) {
+      .seat_____container {
+        pointer-events: none;
+      }
+    }
+  }
+}
+
+// Display message when price option is selected and no seats are available
+.seatsRight,
+.seatMobileRight {
+  &:has(.priceOptionSelected) {
+    &:not(:has(.highlighted_____seat)) {
+      #noSeatsMessage {
+        visibility: visible;
+      }
+    }
+  }
 }

@@ -1,11 +1,12 @@
 import { ConfigProvider, Table, Spin, Space, Popover } from "antd";
-import NotificationIcon from "../../../components/SvgIcons/NotificationIcon";
-import UserIcon from "../../../components/SvgIcons/UserIcon";
+// import NotificationIcon from "../../../components/SvgIcons/NotificationIcon";
+// import UserIcon from "../../../components/SvgIcons/UserIcon";
 import "./AdminRecords.scss";
 import { useState, useEffect } from "react";
 import { getAgentBookings } from "../../../api/admin";
-import { ADMIN_KEY } from "../AdminLogin/AdminLogin";
+// import { ADMIN_KEY } from "../AdminLogin/AdminLogin";
 import { formatBusTravelTime } from "../../../utils/Admin/AdminHelpers";
+import { Navigate, useOutletContext } from "react-router-dom";
 
 const columns = [
   {
@@ -84,16 +85,14 @@ const tableStyles = {
 };
 
 export default function AdminRecords() {
-  const loggedInAdmin = JSON.parse(
-    localStorage.getItem(`${ADMIN_KEY}-loggedInAdmin`)
-  );
+  const { admin } = useOutletContext();
 
   const [bookings, setBookings] = useState(null);
 
   useEffect(() => {
     const getAllAgentBookings = async () => {
       try {
-        const response = await getAgentBookings(loggedInAdmin._id);
+        const response = await getAgentBookings(admin._id);
         const bookingsData = response.data.map((booking) => {
           booking.doj = new Date(booking.doj).toISOString().split("T")[0];
           booking.customerName =
@@ -106,20 +105,24 @@ export default function AdminRecords() {
       }
     };
     getAllAgentBookings();
-  }, [loggedInAdmin._id]);
+  }, [admin._id]);
+
+  if (admin.role === "YSB_ADMIN") {
+    return <Navigate to={"/admin"} replace></Navigate>;
+  }
 
   return (
     <div className="admin-records-wrapper">
       <div className="bg-white rounded-lg border border-solid border-gray-300 flex flex-col gap-4 p-3 lg:px-8 lg:py-8">
         {/* Icons */}
-        <div className="icons self-end flex justify-center items-center gap-4 xl:gap-8">
+        {/* <div className="icons self-end flex justify-center items-center gap-4 xl:gap-8">
           <div className="bg-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg">
             <UserIcon />
           </div>
           <div className="bg-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg">
             <NotificationIcon />
           </div>
-        </div>
+        </div> */}
         {/* Table */}
         <div className="flex flex-col gap-4">
           <h2 className="m-0">Records</h2>
