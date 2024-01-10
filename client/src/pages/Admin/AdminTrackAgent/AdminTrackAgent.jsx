@@ -1,16 +1,20 @@
-import React from "react";
-
 import "./AdminTrackAgent.scss";
-import HeaderWithSort from "../../../components/Admin/HeaderWithSort/HeaderWithSort";
+// import HeaderWithSort from "../../../components/Admin/HeaderWithSort/HeaderWithSort";
 import { Table, Space, Spin, Modal } from "antd";
-import { getAgentPerfomanceReport, getAllPendingAgents, approveAgent, rejectAgent } from "../../../api/admin";
+import {
+  getAgentPerfomanceReport,
+  getAllPendingAgents,
+  approveAgent,
+  rejectAgent,
+} from "../../../api/admin";
 import { useState, useEffect } from "react";
-
+import { Navigate, useOutletContext } from "react-router-dom";
 
 function AdminTrackAgent() {
   const [pendingAgents, setPendingAgents] = useState(null);
   const [agentPerformanceReport, setAgentPerformanceReport] = useState(null);
   const [modal, contextHolder] = Modal.useModal();
+  const { admin } = useOutletContext();
 
   const performanceColumn = [
     {
@@ -23,7 +27,6 @@ function AdminTrackAgent() {
       dataIndex: "bookingsMade",
       key: "bookingsMade",
       sorter: (a, b) => a.bookingsMade - b.bookingsMade,
-
     },
     {
       title: "Revenue",
@@ -66,20 +69,19 @@ function AdminTrackAgent() {
         <Space size="middle">
           <a
             onClick={() => acceptModel(record._id)}
-            style={{ color: 'green', cursor: 'pointer' }}
+            style={{ color: "green", cursor: "pointer" }}
           >
             Accept
           </a>
           <a
             onClick={() => rejectModel(record._id)}
-            style={{ color: 'red', cursor: 'pointer' }}
+            style={{ color: "red", cursor: "pointer" }}
           >
             Reject
           </a>
         </Space>
       ),
-    }
-
+    },
   ];
 
   const getPendingAgents = async () => {
@@ -90,7 +92,7 @@ function AdminTrackAgent() {
     } catch (error) {
       console.error("Error", error.message);
     }
-  }
+  };
 
   const getPerfomanceReport = async () => {
     try {
@@ -99,13 +101,12 @@ function AdminTrackAgent() {
     } catch (error) {
       console.error("Error", error.message);
     }
-  }
+  };
 
   useEffect(() => {
     getPerfomanceReport();
     getPendingAgents();
-  }, [])
-
+  }, []);
 
   function acceptModel(agentId) {
     modal.confirm({
@@ -157,12 +158,13 @@ function AdminTrackAgent() {
     }
   };
 
-
-  const data = Array(4).fill({});
+  if (admin.role !== "YSB_ADMIN") {
+    return <Navigate to={"/admin"} replace></Navigate>;
+  }
 
   return (
     <div className="track-agent-wrapper bg-white lg:rounded-xl my-4 mx-8 border border-solid border-gray-300">
-      <HeaderWithSort />
+      {/* <HeaderWithSort /> */}
 
       <div className="trackAgent-container flex flex-col gap-5 py-5">
         <h2 className="m-0">Track Agent Performance</h2>
@@ -176,7 +178,15 @@ function AdminTrackAgent() {
             pageSize: 5,
             hideOnSinglePage: true,
           }}
-          loading={{ indicator: <div><Spin /></div>, spinning: !agentPerformanceReport || !agentPerformanceReport.length === 0 }}
+          loading={{
+            indicator: (
+              <div>
+                <Spin />
+              </div>
+            ),
+            spinning:
+              !agentPerformanceReport || !agentPerformanceReport.length === 0,
+          }}
         />
       </div>
 
@@ -194,7 +204,11 @@ function AdminTrackAgent() {
             hideOnSinglePage: true,
           }}
           loading={{
-            indicator: <div><Spin /></div>,
+            indicator: (
+              <div>
+                <Spin />
+              </div>
+            ),
             spinning: !pendingAgents || !pendingAgents.length === 0,
           }}
         />
