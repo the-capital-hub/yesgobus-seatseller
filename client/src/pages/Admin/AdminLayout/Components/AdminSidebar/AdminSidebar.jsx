@@ -3,14 +3,14 @@ import {
   IconAgents,
   IconDashboard,
   IconRecords,
-  IconTrack,
+  // IconTrack,
   IconWallet,
 } from "../../../../../components/Admin/SvgIcons";
 import { LuLogOut } from "react-icons/lu";
 import { MdMenu } from "react-icons/md";
 import "./AdminSidebar.scss";
 import { useRef } from "react";
-import { Button, Modal } from "antd";
+import { Modal } from "antd";
 import { ADMIN_KEY } from "../../../AdminLogin/AdminLogin";
 import { logo } from "../../../../../assets/index";
 
@@ -18,7 +18,7 @@ const NAVLINKS = [
   {
     label: "Dashboard",
     icon: <IconDashboard />,
-    link: "/admin/dashboard",
+    link: "/admin",
   },
   {
     label: "Wallet",
@@ -93,7 +93,7 @@ export default function AdminSidebar({ admin }) {
 
       <div className={`navigation py-10 h-full`} ref={navigationRef}>
         <nav className="flex flex-col gap-5 h-full">
-          {NAVLINKS.map(({ label, icon, link }, index) => {
+          {NAVLINKS.map(({ label, icon, link }) => {
             if (label === "Track Agent" && admin.role !== "YSB_ADMIN") {
               return null;
             }
@@ -106,6 +106,7 @@ export default function AdminSidebar({ admin }) {
                 className={"nav-item"}
                 key={label}
                 onClick={handleLinkClick}
+                end
               >
                 <span className="sidebar-link p-5">
                   <span style={{ flex: "0 0 20px" }}>{icon}</span>{" "}
