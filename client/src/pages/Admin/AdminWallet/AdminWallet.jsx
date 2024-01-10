@@ -1,5 +1,5 @@
 import { Card } from "antd";
-import HeaderWithSort from "../../../components/Admin/HeaderWithSort/HeaderWithSort";
+// import HeaderWithSort from "../../../components/Admin/HeaderWithSort/HeaderWithSort";
 import WalletCard from "../../../components/Admin/WalletCard/WalletCard";
 import "./AdminWallet.scss";
 import { useState, useEffect } from "react";
@@ -25,7 +25,7 @@ const AdminWallet = () => {
 
   return (
     <div className="admin-wallet-wrapper">
-      <HeaderWithSort />
+      {/* <HeaderWithSort /> */}
       <h2 className="m-0">Wallet</h2>
       {/* Wallet Cards */}
       <div className="wallet-cards flex flex-col md:flex-row gap-3 items-center md:items-stretch flex-wrap">
@@ -39,7 +39,10 @@ const AdminWallet = () => {
           name={"Bitlasoft Wallet"}
           balance={balance?.ticketSimply}
         />
-        <Card className="border border-solid border-gray-300 shadow-lg">
+        <Card
+          className="border border-solid border-gray-300 shadow-lg"
+          hoverable
+        >
           <div className="w-48 flex justify-around items-center">
             <div className="flex flex-col gap-4 items-center">
               {/* <HiArrowSmUp
