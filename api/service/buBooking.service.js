@@ -482,12 +482,12 @@ export const getVrlBusDetails = async (searchArgs, filters) => {
     searchResponse = searchResponse.map((route) => {
       route.type = "vrl";
       const prices = [
-        route.AcSeatRate,
-        route.AcSleeperRate,
-        route.AcSlumberRate,
-        route.NonAcSeatRate,
-        route.NonAcSleeperRate,
-        route.NonAcSlumberRate,
+        route.AcSeatRate - route.AcSeatServiceTax - route.AcSeatSurcharges,
+        route.AcSleeperRate - route.AcSlpServiceTax - route.AcSlpSurcharges,
+        route.AcSlumberRate - route.AcSlmbServiceTax - route.AcSlmbSurcharges,
+        route.NonAcSeatRate - route.NonAcSeatServiceTax - route.NonAcSeatSurcharges,
+        route.NonAcSleeperRate - route.NonAcSlpServiceTax - route.NonAcSlpSurcharges,
+        route.NonAcSlumberRate - route.NonAcSlmbServiceTax - route.NonAcSlmbSurcharges,
       ];
       const validPrices = prices.filter(price => price > 0);
       const lowestPrice = validPrices.length > 0 ? Math.min(...validPrices) : 0;
