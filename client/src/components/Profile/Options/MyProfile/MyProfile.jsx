@@ -69,7 +69,7 @@ export default function MyProfile() {
           type="Name"
           id="userId"
           name="userId"
-          className="profile__input"
+          className={`profile__input ${loggedInUser.isAgent ? 'agent' : ''}`}
           value={loggedInUser.userId}
           disabled
         />
