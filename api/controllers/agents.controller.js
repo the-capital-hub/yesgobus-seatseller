@@ -12,6 +12,7 @@ import {
   getAgentPerformanceReport,
   verifyAgentCode,
   isAgent,
+  getAgentStats,
 } from '../service/agents.service.js';
 
 export const registerAgentController = async (req, res) => {
@@ -157,3 +158,15 @@ export const isAgentController = async (req, res) => {
     res.status(err.status || 500).json({ message: "Error checking is agent" });
   }
 };
+
+export const getAgentStatsController = async (req, res) => {
+  try {
+    const { agentId } = req.params;
+    const result = await getAgentStats(agentId);
+    res.status(200).send(result);
+  } catch (err) {
+    console.log(err);
+    res.status(err.status || 500).json({ message: "Error getting agent stats" });
+  }
+};
+

@@ -12,24 +12,24 @@ const Navbar = ({ page }) => {
 
   const isMobileApp = useSelector(selectIsMobileApp);
 
-  // let translateElement;
+  let translateElement;
 
-  // const googleTranslateElementInit = () => {
-  //   translateElement = new window.google.translate.TranslateElement(
-  //     {
-  //       pageLanguage: 'en',
-  //       includedLanguages: 'en,kn',
-  //       layout: window.google.translate.TranslateElement.InlineLayout.TOP_RIGHT,
-  //     },
-  //     "google_translate_element"
-  //   );
+  const googleTranslateElementInit = () => {
+    translateElement = new window.google.translate.TranslateElement(
+      {
+        pageLanguage: 'en',
+        includedLanguages: 'en,kn',
+        layout: window.google.translate.TranslateElement.InlineLayout.TOP_RIGHT,
+      },
+      "google_translate_element"
+    );
 
-  // };
+  };
 
-  // function changeLanguage(languageCode) {
-  //   translateElement.showInvisible();
-  //   translateElement.selectLanguage(languageCode);
-  // }
+  function changeLanguage(languageCode) {
+    translateElement.showInvisible();
+    translateElement.selectLanguage(languageCode);
+  }
 
   // useEffect(() => {
   //   const translateElement = document.getElementById("google_translate_element");
@@ -44,7 +44,38 @@ const Navbar = ({ page }) => {
   //   window.googleTranslateElementInit = googleTranslateElementInit;
   // }, []);
 
-
+  useEffect(() => {
+    const translateElement = document.getElementById("google_translate_element");
+    if (translateElement) {
+      translateElement.innerHTML = "";
+    }
+  
+    const buttonElement = document.getElementById("your_button_id");
+    if (buttonElement) {
+      // Check if the button element is already present
+      return;
+    }
+  
+    // Your existing script loading logic
+  
+    window.googleTranslateElementInit = googleTranslateElementInit;
+  
+    // Additional logic to prevent multiple renderings of the button
+    const yourButton = document.createElement("button");
+    yourButton.id = "your_button_id"; // Replace with the actual ID for your button
+    yourButton.style.display = "none"; 
+    document.querySelector(".right").appendChild(yourButton);
+  
+    // Clean up the button on component unmount
+    return () => {
+      const buttonToRemove = document.getElementById("your_button_id");
+      if (buttonToRemove) {
+        buttonToRemove.remove();
+      }
+    };
+  }, []);
+  
+  
   const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
 
@@ -117,23 +148,23 @@ const Navbar = ({ page }) => {
             <Button text="Login / Signup" />
           </a>
         )}
-        {/* <div id="google_translate_element"></div> */}
+        <div id="google_translate_element"></div>
       </div>
-      {/* {page === "home" ? (
+      {page === "home" ? (
         <img
           className="hamburger"
           onClick={() => setShowMenu(!showMenu)}
           src={hamburger}
           alt=""
         />
-      ) : ( */}
+      ) : (
       <>
-        {/* <img
+        <img
           className="hamburger"
           onClick={() => setShowMenu(!showMenu)}
           src={blackhamburger}
           alt=""
-        /> */}
+        />
         <div className={`select_vehicle`}>
           {!isMobileApp && <button className="btn"><Link to={"/"} className="link">Home</Link></button>}
           <button className="btn"><Link to={"/busbooking"} className="link">Bus</Link></button>
@@ -143,7 +174,7 @@ const Navbar = ({ page }) => {
           <button className="btn"><Link to={"/contactus"} className="link">Contact Us</Link></button>
         </div>
       </>
-      {/* )} */}
+      )} 
       {showMenu && menu}
     </nav>
   );

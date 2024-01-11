@@ -6,7 +6,7 @@ import City from "../modals/cities.modal.js";
 import VrlCity from "../modals/vrlcities.modal.js";
 import Tickets from "../modals/ticket.modal.js";
 import SrsCity from "../modals/srscities.modal.js";
-import { stages } from "../utils/stages.js";
+// import { stages } from "../utils/stages.js";
 
 const sendRequest = async (url, method, data) => {
   try {

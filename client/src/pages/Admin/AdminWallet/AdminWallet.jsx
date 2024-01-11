@@ -7,9 +7,11 @@ import { getBalanceAPI } from "../../../api/admin";
 import TransactionArrow from "../../../components/Admin/TransactionArrow/TransactionArrow";
 import WalletRefunded from "./Components/WalletRefunded/WalletRefunded";
 import WalletSales from "./Components/WalletSales/WalletSales";
+import { ADMIN_KEY } from "../AdminLogin/AdminLogin";
 
 const AdminWallet = () => {
   const [balance, setBalance] = useState(null);
+  const loggedInAdmin = JSON.parse(localStorage.getItem(`${ADMIN_KEY}-loggedInAdmin`));
 
   useEffect(() => {
     const getBalance = async () => {
@@ -29,16 +31,21 @@ const AdminWallet = () => {
       <h2 className="m-0">Wallet</h2>
       {/* Wallet Cards */}
       <div className="wallet-cards flex flex-col md:flex-row gap-3 items-center md:items-stretch flex-wrap">
-        <WalletCard
-          color="#fd5901"
-          name={"VRL Wallet"}
-          balance={balance?.vrl}
-        />
-        <WalletCard
-          color="#3f3f3f"
-          name={"Bitlasoft Wallet"}
-          balance={balance?.ticketSimply}
-        />
+        {loggedInAdmin.role === "YSB_ADMIN" &&
+          <>
+            <WalletCard
+              color="#fd5901"
+              name={"VRL Wallet"}
+              balance={balance?.vrl}
+            />
+            <WalletCard
+              color="#3f3f3f"
+              name={"Bitlasoft Wallet"}
+              balance={balance?.ticketSimply}
+            />
+          </>
+        }
+
         <Card
           className="border border-solid border-gray-300 shadow-lg"
           hoverable
