@@ -1,33 +1,40 @@
-import { Popover, Space, Spin, Table } from "antd";
+import { Popover, Space, Spin, Table, Button } from "antd";
 import TransactionArrow from "../../../../../components/Admin/TransactionArrow/TransactionArrow";
 import { useEffect, useState } from "react";
 import { getAllBookingRefund } from "../../../../../api/admin";
 import { formatBusTravelTime } from "../../../../../utils/Admin/AdminHelpers";
+import { CSVLink } from "react-csv";
+import { DownloadOutlined } from '@ant-design/icons';
 
 const columns = [
   {
     title: "Name",
+    label: "Name",
     dataIndex: "customerName",
     key: "customerName",
     render: (text) => <a>{text}</a>,
   },
   {
     title: "Source City",
+    label: "Source City",
     dataIndex: "sourceCity",
     key: "sourceCity",
   },
   {
     title: "Destination City",
+    label: "Destination City",
     dataIndex: "destinationCity",
     key: "destinationCity",
   },
   {
     title: "Date of Journey",
+    label: "Date of Journey",
     dataIndex: "doj",
     key: "doj",
   },
   {
     title: "Departure",
+    label: "Departure",
     key: "pickUpTime",
     render: (_, record) => {
       return formatBusTravelTime(record);
@@ -35,11 +42,13 @@ const columns = [
   },
   {
     title: "Operator",
+    label: "Operator",
     dataIndex: "busOperator",
     key: "busOperator",
   },
   {
     title: "Amount",
+    label: "Amount",
     dataIndex: "totalAmount",
     key: "totalAmount",
     sorter: (a, b) => a.totalAmount - b.totalAmount,
@@ -118,6 +127,13 @@ export default function WalletRefunded() {
           <p className="m-0 text-2xl font-semibold">Refunded</p>
         </div>
       </div>
+      {refunds?.length > 0 &&
+        <div className="flex flex-end pb-2 flex-container">
+          <Button type="primary" icon={<DownloadOutlined />} >
+            <CSVLink data={refunds} headers={columns} filename={"Refunds.csv"}>Export to CSV</CSVLink>
+          </Button>
+        </div>
+      }
       <Table
         columns={columns}
         dataSource={refunds}

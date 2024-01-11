@@ -1,6 +1,6 @@
 import "./AdminTrackAgent.scss";
 // import HeaderWithSort from "../../../components/Admin/HeaderWithSort/HeaderWithSort";
-import { Table, Space, Spin, Modal } from "antd";
+import { Table, Space, Spin, Modal, Button } from "antd";
 import {
   getAgentPerfomanceReport,
   getAllPendingAgents,
@@ -9,6 +9,8 @@ import {
 } from "../../../api/admin";
 import { useState, useEffect } from "react";
 import { Navigate, useOutletContext } from "react-router-dom";
+import { DownloadOutlined } from '@ant-design/icons';
+import { CSVLink } from "react-csv";
 
 function AdminTrackAgent() {
   const [pendingAgents, setPendingAgents] = useState(null);
@@ -19,23 +21,27 @@ function AdminTrackAgent() {
   const performanceColumn = [
     {
       title: "Agent Name",
+      label: "Agent Name",
       dataIndex: "agentName",
       key: "agentName",
     },
     {
       title: "No of Bookings Made",
+      label: "No of Bookings Made",
       dataIndex: "bookingsMade",
       key: "bookingsMade",
       sorter: (a, b) => a.bookingsMade - b.bookingsMade,
     },
     {
       title: "Revenue",
+      label: "Revenue",
       dataIndex: "revenue",
       key: "revenue",
       sorter: (a, b) => a.revenue - b.revenue,
     },
     {
       title: "UserId",
+      label: "UserId",
       dataIndex: "userId",
       key: "userId",
     },
@@ -168,6 +174,13 @@ function AdminTrackAgent() {
 
       <div className="trackAgent-container flex flex-col gap-5 py-5">
         <h2 className="m-0">Track Agent Performance</h2>
+        {agentPerformanceReport?.length > 0 &&
+          <div className="flex flex-end pb-2 flex-container">
+            <Button type="primary" icon={<DownloadOutlined />} >
+              <CSVLink data={agentPerformanceReport} headers={performanceColumn} filename={"AgentReport.csv"}>Export to CSV</CSVLink>
+            </Button>
+          </div>
+        }
         <Table
           dataSource={agentPerformanceReport}
           columns={performanceColumn}
