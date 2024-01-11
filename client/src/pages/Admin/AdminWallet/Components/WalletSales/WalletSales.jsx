@@ -53,6 +53,7 @@ const columns = [
           content={<Content record={record} />}
           title="Details"
           trigger="click"
+          getPopupContainer={(triggerNode) => triggerNode.parentNode}
         >
           <a>View</a>
         </Popover>
