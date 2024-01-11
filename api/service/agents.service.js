@@ -378,10 +378,88 @@ export const verifyAgentCode = async (agentCode) => {
 
 export const isAgent = async (userId) => {
   try {
-    const existingAgent = await Agent.findOne({userId : userId, status: true});
+    const existingAgent = await Agent.findOne({ userId: userId, status: true });
     return {
       status: 200,
       isAgent: existingAgent ? true : false
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      message: error.message || "Internal Server Error",
+    };
+  }
+}
+
+export const getAgentStats = async (agentId) => {
+  try {
+    const agent = await Agent.findById(agentId);
+    if (!agent) {
+      return {
+        status: 404,
+        message: "Agent not found",
+      }
+    }
+    const bookings = await BusBooking.find({
+      $or: [
+        {
+          $and: [
+            { userId: agent.id },
+            {
+              $or: [
+                { agentCode: agent.agentCode },
+                { agentCode: null }
+              ]
+            }
+          ]
+        },
+        { agentCode: agent.agentCode },
+      ],
+      bookingStatus: "paid",
+    });
+    const totalRevenue = bookings.reduce((sum, booking) => sum + booking.totalAmount, 0);
+
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1;
+    const lastMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+    const lastYear = currentMonth === 1 ? currentYear - 1 : currentYear;
+
+    const bookingsThisMonth = bookings.filter((booking) => {
+      const bookingDate = new Date(booking.createdAt);
+      const bookingMonth = bookingDate.getMonth() + 1;
+      const bookingYear = bookingDate.getFullYear();
+      return bookingMonth === currentMonth && bookingYear === currentYear;
+    });
+
+    const bookingsLastMonth = bookings.filter((booking) => {
+      const bookingDate = new Date(booking.createdAt);
+      const bookingMonth = bookingDate.getMonth() + 1;
+      const bookingYear = bookingDate.getFullYear();
+      return (
+        (bookingMonth === lastMonth && bookingYear === currentYear) ||
+        (bookingMonth === 12 && bookingYear === lastYear)
+      );
+    });
+
+
+    const salesThisMonth = bookingsThisMonth.reduce((sum, booking) => sum + booking.totalAmount, 0);
+    const salesLastMonth = bookingsLastMonth.reduce((sum, booking) => sum + booking.totalAmount, 0);
+
+
+    return {
+      status: 200,
+      message: "Agent stats retrived",
+      data: {
+        totalBookings: bookings.length,
+        bookingsThisMonth: bookingsThisMonth.length,
+        bookingsLastMonth: bookingsLastMonth.length,
+        salesThisMonth: salesThisMonth,
+        salesLastMonth: salesLastMonth,
+        totalAllTimeSales: totalRevenue,
+
+      },
     }
   } catch (error) {
     console.log(error);

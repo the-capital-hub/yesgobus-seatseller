@@ -14,6 +14,7 @@ const ADMIN_ENDPOINTS = {
   getAgentPerfomanceReport: "api/agent/getAgentPerformanceReport",
   getAgentBookings: "api/agent/getAgentBookings",
   verifyAgentCode: "api/agent/verifyAgentCode",
+  getAgentStats: "api/agent/agentStats",
 };
 
 // Register Agent
@@ -165,3 +166,15 @@ export const verifyAgentCode = async (agentCode) => {
   }
 };
 
+//get agent stats
+export const getAgentStats = async (agentId) => {
+  try {
+    const response = await axiosInstance.get(
+      `${baseUrl}/${ADMIN_ENDPOINTS.getAgentStats}/${agentId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error getting agent stats", error);
+    throw error;
+  }
+};
