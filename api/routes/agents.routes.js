@@ -13,6 +13,7 @@ import {
   getAgentPerformanceReportController,
   verifyAgentCodeController,
   isAgentController,
+  getAgentStatsController,
 } from "../controllers/agents.controller.js";
 
 const router = express.Router();
@@ -30,5 +31,6 @@ router.get("/getAllBookingRefunds", getAllBookingRefundsController);
 router.get("/getAgentPerformanceReport", getAgentPerformanceReportController);
 router.get("/verifyAgentCode/:agentCode", verifyAgentCodeController);
 router.get("/isAgent/:userId", isAgentController);
+router.get("/agentStats/:agentId", getAgentStatsController);
 
 export default router;
