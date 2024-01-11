@@ -1335,7 +1335,7 @@ const Payment = () => {
 
               {/* GST */}
               <div className="price">
-                <p>GST 5%</p>
+                <p>GST</p>
                 <p>₹{parseFloat(bookingDetails?.gst).toFixed(2)}</p>
               </div>
               <hr />

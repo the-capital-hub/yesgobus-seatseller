@@ -286,7 +286,7 @@ export default function TicketView() {
           cancellationPolicy={
             bookingDetails?.isVrl
               ? vrlCancellationPolicy
-              : ticketDetails?.cancellationPolicy
+              : bookingDetails?.cancellationPolicy
           }
           isVrl={bookingDetails?.isVrl}
           isSrs={bookingDetails?.isSrs}
