@@ -4,13 +4,12 @@ import BusBooking from "../modals/busBooking.modal.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { sendSrsRequest, sendVrlRequest } from "./buBooking.service.js";
-import { generateId } from "../utils/generateRandomNumber.js";
 
 export const registerAgent = async (agentData) => {
   try {
     const existingUserAccount = await User.findOne({
       userId: agentData.userId,
-    })
+    });
     if (!existingUserAccount) {
       return {
         status: 404,
@@ -18,16 +17,23 @@ export const registerAgent = async (agentData) => {
       };
     }
     const existingAgent = await Agent.findOne({
-      $or: [{ email: agentData.email }, { phNum: agentData.phNum }, { userId: agentData.userId }],
+      $or: [
+        { email: agentData.email },
+        { phNum: agentData.phNum },
+        { userId: agentData.userId },
+      ],
     });
     if (!existingAgent) {
-      const agentCode = generateId(6);
+      const prevAgent = await Agent.findOne({}, { _id: -1 });
+      const agentCode = generateUserId(
+        prevAgent?.agentCode.length > 6 ? "BD0000" : prevAgent.agentCode
+      );
       const hashedPassword = bcrypt.hashSync(agentData.password, 5);
       const newAgent = new Agent({
         ...agentData,
         password: hashedPassword,
         id: existingUserAccount._id,
-        agentCode: agentCode,
+        agentCode,
       });
       await newAgent.save();
       return {
@@ -58,7 +64,8 @@ export const loginAgent = async (emailMobile, password) => {
     });
 
     // Check if the user is a master admin
-    const isMasterAdmin = existingAgent.email === process.env.MASTER_ADMIN_EMAIL;
+    const isMasterAdmin =
+      existingAgent.email === process.env.MASTER_ADMIN_EMAIL;
 
     if (!existingAgent && !isMasterAdmin) {
       return {
@@ -67,7 +74,10 @@ export const loginAgent = async (emailMobile, password) => {
       };
     }
 
-    const isPasswordValid = bcrypt.compareSync(password, existingAgent.password);
+    const isPasswordValid = bcrypt.compareSync(
+      password,
+      existingAgent.password
+    );
     if (!isPasswordValid) {
       return {
         status: 401,
@@ -77,7 +87,10 @@ export const loginAgent = async (emailMobile, password) => {
     existingAgent.password = "";
     if (existingAgent && !isMasterAdmin) {
       // For agent login
-      const token = jwt.sign({ userId: existingAgent._id }, process.env.JWT_KEY);
+      const token = jwt.sign(
+        { userId: existingAgent._id },
+        process.env.JWT_KEY
+      );
 
       return {
         status: 200,
@@ -88,7 +101,7 @@ export const loginAgent = async (emailMobile, password) => {
       };
     } else if (isMasterAdmin) {
       // For master admin login
-      const token = jwt.sign({ role: 'masterAdmin' }, process.env.JWT_KEY);
+      const token = jwt.sign({ role: "masterAdmin" }, process.env.JWT_KEY);
 
       return {
         status: 200,
@@ -98,7 +111,6 @@ export const loginAgent = async (emailMobile, password) => {
         data: existingAgent,
       };
     }
-
   } catch (err) {
     console.log(err);
     return {
@@ -108,7 +120,6 @@ export const loginAgent = async (emailMobile, password) => {
   }
 };
 
-
 export const getAgentBookings = async (agentId) => {
   try {
     const agent = await Agent.findById(agentId);
@@ -116,7 +127,7 @@ export const getAgentBookings = async (agentId) => {
       return {
         status: 404,
         message: "Agent not found",
-      }
+      };
     }
     const bookings = await BusBooking.find({
       $or: [
@@ -124,12 +135,9 @@ export const getAgentBookings = async (agentId) => {
           $and: [
             { userId: agent.id },
             {
-              $or: [
-                { agentCode: agent.agentCode },
-                { agentCode: null }
-              ]
-            }
-          ]
+              $or: [{ agentCode: agent.agentCode }, { agentCode: null }],
+            },
+          ],
         },
         { agentCode: agent.agentCode },
       ],
@@ -139,7 +147,7 @@ export const getAgentBookings = async (agentId) => {
       status: 200,
       message: "Booking records retrived",
       data: bookings,
-    }
+    };
   } catch (error) {
     console.log(error);
     return {
@@ -147,37 +155,35 @@ export const getAgentBookings = async (agentId) => {
       message: error.message || "Internal Server Error",
     };
   }
-}
-
+};
 
 export const getAllAgentsBookings = async () => {
   try {
-    const agents = await Agent.find({ email: { $ne: 'admin@yesgobus.com' } });
-    const allBookings = await Promise.all(agents.map(async (agent) => {
-      const bookings = await BusBooking.find({
-        $or: [
-          {
-            $and: [
-              { userId: agent.id },
-              {
-                $or: [
-                  { agentCode: agent.agentCode },
-                  { agentCode: null }
-                ]
-              }
-            ]
-          },
-          { agentCode: agent.agentCode },
-        ],
-        bookingStatus: "paid",
-      });
-      return {
-        agentName: agent.firstName + " " + agent.lastName,
-        bookings: bookings,
-        agentId: agent._id,
-        userId: agent.userId,
-      };
-    }));
+    const agents = await Agent.find({ email: { $ne: "admin@yesgobus.com" } });
+    const allBookings = await Promise.all(
+      agents.map(async (agent) => {
+        const bookings = await BusBooking.find({
+          $or: [
+            {
+              $and: [
+                { userId: agent.id },
+                {
+                  $or: [{ agentCode: agent.agentCode }, { agentCode: null }],
+                },
+              ],
+            },
+            { agentCode: agent.agentCode },
+          ],
+          bookingStatus: "paid",
+        });
+        return {
+          agentName: agent.firstName + " " + agent.lastName,
+          bookings: bookings,
+          agentId: agent._id,
+          userId: agent.userId,
+        };
+      })
+    );
 
     return {
       status: 200,
@@ -202,24 +208,26 @@ export const getBalanceAPI = async () => {
     ticketSimply: ticketSimplyResponse.data.result.balance_amount,
     vrl: vrlResponse.data.ITSCurrentAccountBAL[0].Balance,
   };
-}
+};
 
 export const adminApproveAgent = async (agentId) => {
   try {
-    const agent = await Agent.findByIdAndUpdate(agentId,
-      { status: true, },
-      { new: true })
+    const agent = await Agent.findByIdAndUpdate(
+      agentId,
+      { status: true },
+      { new: true }
+    );
     if (!agent) {
       return {
         status: 404,
         message: "Agent not found",
-      }
+      };
     }
     return {
       status: 200,
       message: "Agent account activated",
-      data: agent
-    }
+      data: agent,
+    };
   } catch (error) {
     console.log(error);
     return {
@@ -227,8 +235,7 @@ export const adminApproveAgent = async (agentId) => {
       message: error.message || "Internal Server Error",
     };
   }
-}
-
+};
 
 export const adminRejectAgent = async (agentId) => {
   try {
@@ -237,13 +244,13 @@ export const adminRejectAgent = async (agentId) => {
       return {
         status: 404,
         message: "Agent not found",
-      }
+      };
     }
     return {
       status: 200,
       message: "Agent rejected",
-      data: agent
-    }
+      data: agent,
+    };
   } catch (error) {
     console.log(error);
     return {
@@ -251,7 +258,7 @@ export const adminRejectAgent = async (agentId) => {
       message: error.message || "Internal Server Error",
     };
   }
-}
+};
 
 export const getAllPendingAgents = async () => {
   try {
@@ -259,8 +266,8 @@ export const getAllPendingAgents = async () => {
     return {
       status: 200,
       message: "Agent details retrived",
-      data: agents
-    }
+      data: agents,
+    };
   } catch (error) {
     console.log(error);
     return {
@@ -268,16 +275,18 @@ export const getAllPendingAgents = async () => {
       message: error.message || "Internal Server Error",
     };
   }
-}
+};
 
 export const getAllBookings = async () => {
   try {
-    const bookings = await BusBooking.find({ bookingStatus: "paid" }).sort({ createdAt: -1 });
+    const bookings = await BusBooking.find({ bookingStatus: "paid" }).sort({
+      createdAt: -1,
+    });
     return {
       status: 200,
       message: "Bookings details retrived",
-      data: bookings
-    }
+      data: bookings,
+    };
   } catch (error) {
     console.log(error);
     return {
@@ -285,18 +294,19 @@ export const getAllBookings = async () => {
       message: error.message || "Internal Server Error",
     };
   }
-}
+};
 
 export const getAllBookingRefund = async () => {
   try {
-    const bookings = await BusBooking.find({ bookingStatus: "cancelled" })
-      .sort({ createdAt: -1 });
+    const bookings = await BusBooking.find({ bookingStatus: "cancelled" }).sort(
+      { createdAt: -1 }
+    );
 
     return {
       status: 200,
       message: "Bookings details retrived",
-      data: bookings
-    }
+      data: bookings,
+    };
   } catch (error) {
     console.log(error);
     return {
@@ -304,40 +314,45 @@ export const getAllBookingRefund = async () => {
       message: error.message || "Internal Server Error",
     };
   }
-}
+};
 
 export const getAgentPerformanceReport = async () => {
   try {
-    const agents = await Agent.find({ email: { $ne: 'admin@yesgobus.com' }, status: true });
-    const allBookings = await Promise.all(agents.map(async (agent) => {
-      const bookings = await BusBooking.find({
-        $or: [
-          {
-            $and: [
-              { userId: agent.id },
-              {
-                $or: [
-                  { agentCode: agent.agentCode },
-                  { agentCode: null }
-                ]
-              }
-            ]
-          },
-          { agentCode: agent.agentCode },
-        ],
-        bookingStatus: "paid",
-      });
-      const totalRevenue = bookings.reduce((sum, booking) => sum + booking.totalAmount, 0);
-      return {
-        agentName: agent.firstName + " " + agent.lastName,
-        bookingsMade: bookings.length,
-        revenue: totalRevenue,
-        agentId: agent._id,
-        userId: agent.userId,
-        email: agent.email,
-        phone: agent.phNum,
-      };
-    }));
+    const agents = await Agent.find({
+      email: { $ne: "admin@yesgobus.com" },
+      status: true,
+    });
+    const allBookings = await Promise.all(
+      agents.map(async (agent) => {
+        const bookings = await BusBooking.find({
+          $or: [
+            {
+              $and: [
+                { userId: agent.id },
+                {
+                  $or: [{ agentCode: agent.agentCode }, { agentCode: null }],
+                },
+              ],
+            },
+            { agentCode: agent.agentCode },
+          ],
+          bookingStatus: "paid",
+        });
+        const totalRevenue = bookings.reduce(
+          (sum, booking) => sum + booking.totalAmount,
+          0
+        );
+        return {
+          agentName: agent.firstName + " " + agent.lastName,
+          bookingsMade: bookings.length,
+          revenue: totalRevenue,
+          agentId: agent._id,
+          userId: agent.userId,
+          email: agent.email,
+          phone: agent.phNum,
+        };
+      })
+    );
 
     return {
       status: 200,
@@ -351,7 +366,7 @@ export const getAgentPerformanceReport = async () => {
       message: error.message || "Internal Server Error",
     };
   }
-}
+};
 
 export const verifyAgentCode = async (agentCode) => {
   try {
@@ -381,8 +396,8 @@ export const isAgent = async (userId) => {
     const existingAgent = await Agent.findOne({ userId: userId, status: true });
     return {
       status: 200,
-      isAgent: existingAgent ? true : false
-    }
+      isAgent: existingAgent ? true : false,
+    };
   } catch (error) {
     console.log(error);
     return {
@@ -390,7 +405,7 @@ export const isAgent = async (userId) => {
       message: error.message || "Internal Server Error",
     };
   }
-}
+};
 
 export const getAgentStats = async (agentId) => {
   try {
@@ -399,7 +414,7 @@ export const getAgentStats = async (agentId) => {
       return {
         status: 404,
         message: "Agent not found",
-      }
+      };
     }
     const bookings = await BusBooking.find({
       $or: [
@@ -407,18 +422,18 @@ export const getAgentStats = async (agentId) => {
           $and: [
             { userId: agent.id },
             {
-              $or: [
-                { agentCode: agent.agentCode },
-                { agentCode: null }
-              ]
-            }
-          ]
+              $or: [{ agentCode: agent.agentCode }, { agentCode: null }],
+            },
+          ],
         },
         { agentCode: agent.agentCode },
       ],
       bookingStatus: "paid",
     });
-    const totalRevenue = bookings.reduce((sum, booking) => sum + booking.totalAmount, 0);
+    const totalRevenue = bookings.reduce(
+      (sum, booking) => sum + booking.totalAmount,
+      0
+    );
 
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
@@ -443,10 +458,14 @@ export const getAgentStats = async (agentId) => {
       );
     });
 
-
-    const salesThisMonth = bookingsThisMonth.reduce((sum, booking) => sum + booking.totalAmount, 0);
-    const salesLastMonth = bookingsLastMonth.reduce((sum, booking) => sum + booking.totalAmount, 0);
-
+    const salesThisMonth = bookingsThisMonth.reduce(
+      (sum, booking) => sum + booking.totalAmount,
+      0
+    );
+    const salesLastMonth = bookingsLastMonth.reduce(
+      (sum, booking) => sum + booking.totalAmount,
+      0
+    );
 
     return {
       status: 200,
@@ -458,9 +477,8 @@ export const getAgentStats = async (agentId) => {
         salesThisMonth: salesThisMonth,
         salesLastMonth: salesLastMonth,
         totalAllTimeSales: totalRevenue,
-
       },
-    }
+    };
   } catch (error) {
     console.log(error);
     return {
@@ -468,4 +486,4 @@ export const getAgentStats = async (agentId) => {
       message: error.message || "Internal Server Error",
     };
   }
-}
+};
