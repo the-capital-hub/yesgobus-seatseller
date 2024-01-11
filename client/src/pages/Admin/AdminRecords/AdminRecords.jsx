@@ -1,4 +1,4 @@
-import { ConfigProvider, Table, Spin, Space, Popover } from "antd";
+import { ConfigProvider, Table, Spin, Space, Popover, Button } from "antd";
 // import NotificationIcon from "../../../components/SvgIcons/NotificationIcon";
 // import UserIcon from "../../../components/SvgIcons/UserIcon";
 import "./AdminRecords.scss";
@@ -7,36 +7,44 @@ import { getAgentBookings } from "../../../api/admin";
 // import { ADMIN_KEY } from "../AdminLogin/AdminLogin";
 import { formatBusTravelTime } from "../../../utils/Admin/AdminHelpers";
 import { Navigate, useOutletContext } from "react-router-dom";
+import { DownloadOutlined } from '@ant-design/icons';
+import { CSVLink } from "react-csv";
 
 const columns = [
   {
     title: "Name",
+    label: "Name",
     dataIndex: "customerName",
     key: "customerName",
   },
 
   {
     title: "Operator",
+    label: "Operator",
     dataIndex: "busOperator",
     key: "busOperator",
   },
   {
     title: "From",
+    label: "From",
     dataIndex: "sourceCity",
     key: "sourceCity",
   },
   {
     title: "To",
+    label: "To",
     dataIndex: "destinationCity",
     key: "destinationCity",
   },
   {
     title: "Date of Journey",
+    label: "Date of Journey",
     dataIndex: "doj",
     key: "doj",
   },
   {
     title: "Departure",
+    label: "Departure",
     key: "pickUpTime",
     render: (_, record) => {
       return formatBusTravelTime(record);
@@ -44,6 +52,7 @@ const columns = [
   },
   {
     title: "Cost (Rs)",
+    label: "Cost (Rs)",
     dataIndex: "totalAmount",
     key: "totalAmount",
     sorter: (a, b) => a.totalAmount - b.totalAmount,
@@ -137,6 +146,13 @@ export default function AdminRecords() {
               },
             }}
           >
+            {bookings?.length > 0 &&
+              <div className="flex flex-end pb-2 flex-container">
+                <Button type="primary" icon={<DownloadOutlined />} >
+                  <CSVLink data={bookings} headers={columns} filename={"Records.csv"}>Export to CSV</CSVLink>
+                </Button>
+              </div>
+            }
             <Table
               dataSource={bookings}
               columns={columns}
