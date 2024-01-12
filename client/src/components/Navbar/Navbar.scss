@@ -44,7 +44,7 @@
   .right {
     // position: relative;
 
-
+// display: block;
 
     .user {
       color: inherit;
@@ -88,7 +88,11 @@
 
   .navbar {
     flex-direction: row-reverse;
-
+.right{
+  display: flex;
+  gap: 5px;
+  // padding-left: 10px;
+}
 
     // .left {
     //   display: none;
@@ -136,7 +140,8 @@
     }
 
     .hamburger {
-      display: block;
+      // display: block;
+      display: none;
       height: 30px;
     }
 
@@ -158,6 +163,8 @@
   .burger {
 
     .right {
+      display: contents;
+
       .user-name {
         display: none;
       }
