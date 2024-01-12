@@ -19,7 +19,7 @@ import SeatLegend from "../SeatLegend/SeatLegend";
 import "./Seats.scss";
 import Button from "../Button/Button";
 // import axiosInstance from "../../utils/service";
-import SingleSeat from "../SinlgeSeat/SingleSeat";
+// import SingleSeat from "../SinlgeSeat/SingleSeat";
 
 const Seats = ({
   // routeScheduleId,
@@ -49,6 +49,7 @@ const Seats = ({
   ReferenceNumber,
   isSrs,
   scheduleId,
+  isAcBus,
 }) => {
   //* states
   const navigate = useNavigate();
@@ -792,6 +793,14 @@ const Seats = ({
       let newGst = parseFloat(bookingDetails.fare) * (5 / 100);
       bookingDetails.gst = newGst;
       bookingDetails.totalFare = bookingDetails.totalFare + newGst;
+
+      // if AC bus, add platform charge
+      if (isAcBus) {
+        const newServiceTax =
+          import.meta.env.VITE_SERVICE_TAX * parseFloat(bookingDetails.fare);
+        bookingDetails.serviceTax += newServiceTax;
+        bookingDetails.totalFare += newServiceTax;
+      }
 
       navigate("/busbooking/payment", {
         state: {

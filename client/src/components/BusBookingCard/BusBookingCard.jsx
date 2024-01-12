@@ -456,8 +456,7 @@ const BusBookingCard = ({
       // });
       // const uniqueBaseFares = Array.from(uniqueBaseFaresSet);
       // setVrlPrices(uniqueBaseFares);
-
-      setSeatDetails(seatData);
+      setSeatDetails({ ...seatData, isAcBus: seatData?.BusType == "0" });
       setAvailableSeats(availableSeats.length);
       setSeatLoading(false);
       setShowSeats(!showSeats);
@@ -472,7 +471,6 @@ const BusBookingCard = ({
   const fetchSrsSeats = async () => {
     try {
       const seatsResponse = await getSrsSeatLayout(scheduleId);
-      console.log(seatsResponse);
       let coach_details = seatsResponse.result.bus_layout.coach_details;
       let available = seatsResponse.result.bus_layout.available;
       let available_gst = seatsResponse.result.bus_layout.available_gst;
@@ -515,6 +513,7 @@ const BusBookingCard = ({
         gents_booked_seats,
         boardingPointlocationsAndTimes,
         droppingPointlocationsAndTimes,
+        isAcBus: seatsResponse.result.is_ac_bus,
       });
       setSeatLoading(false);
       setShowSeats(!showSeats);
@@ -749,6 +748,7 @@ const BusBookingCard = ({
           ReferenceNumber={ReferenceNumber}
           scheduleId={scheduleId}
           isSrs={isSrs}
+          isAcBus={seatDetails.isAcBus}
         />
       )}
       <Toaster />
