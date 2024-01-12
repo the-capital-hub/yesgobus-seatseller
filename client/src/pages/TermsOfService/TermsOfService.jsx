@@ -9,7 +9,7 @@ export default function TermsOfService() {
       <Navbar />
       <main className="tos-container">
         <h1 className="text-primary">Terms of Service</h1>
-        <ul className="xl:max-w-[80dvw] ps-0">
+        <ul className="md:max-w-[80dvw] ps-0">
           {TOSContent.map(({ heading, text }, index) => {
             return (
               <li className="list-none mb-4 px-2" key={heading}>
