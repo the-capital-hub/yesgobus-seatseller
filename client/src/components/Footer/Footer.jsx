@@ -20,18 +20,18 @@ const Footer = () => {
       <div className="footer">
         <div className="footerContainer">
           <p>
-            Your go-to for easy and reliable bus bookings, linking travelers with
-            diverse routes seamlessly.
+            Your go-to for easy and reliable bus bookings, linking travelers
+            with diverse routes seamlessly.
           </p>
 
-          <FooterLinks title={"General"} links={["About Us", "Pricing"]} />
+          {/* <FooterLinks title={"General"} links={["About Us", "Pricing"]} /> */}
           <FooterLinks
             title={"Policies"}
             links={[
               "Security safeguards",
               "Terms of service",
               "Privacy",
-              "Accessibility",
+              // "Accessibility",
             ]}
           />
           <AboveFooterImages
@@ -59,6 +59,6 @@ const Footer = () => {
       </div>
     )
   );
-}
+};
 
 export default Footer;
