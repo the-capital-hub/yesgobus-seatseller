@@ -134,7 +134,7 @@ const Navbar = ({ page }) => {
         </a>
       </div>
 
-      <div className="right">
+      <div className="right  ">
         <div id="google_translate_element"></div>
         {loggedInUser ? (
           <Link to={`/profile`} className="user">
