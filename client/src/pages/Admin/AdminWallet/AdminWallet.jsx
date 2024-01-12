@@ -31,7 +31,7 @@ const AdminWallet = () => {
       <h2 className="m-0">Wallet</h2>
       {/* Wallet Cards */}
       <div className="wallet-cards flex flex-col md:flex-row gap-3 items-center md:items-stretch flex-wrap">
-        {loggedInAdmin.role === "YSB_ADMIN" &&
+        {loggedInAdmin?.role === "YSB_ADMIN" &&
           <>
             <WalletCard
               color="#fd5901"

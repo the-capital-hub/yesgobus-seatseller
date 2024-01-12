@@ -282,10 +282,18 @@ export const getAllBookings = async () => {
     const bookings = await BusBooking.find({ bookingStatus: "paid" }).sort({
       createdAt: -1,
     });
+    const agents = await Agent.find({ email: { $ne: "admin@yesgobus.com" } });
+    const allBookings = bookings.map((booking) => {
+      const bookedByAgent = agents.some((agent) => agent.userId === booking.userId) || booking.agentCode;
+      return {
+        ...booking._doc,
+        bookedByAgent: bookedByAgent ? "Y" : "N",
+      };
+    });
     return {
       status: 200,
       message: "Bookings details retrived",
-      data: bookings,
+      data: allBookings,
     };
   } catch (error) {
     console.log(error);
@@ -301,11 +309,18 @@ export const getAllBookingRefund = async () => {
     const bookings = await BusBooking.find({ bookingStatus: "cancelled" }).sort(
       { createdAt: -1 }
     );
-
+    const agents = await Agent.find({ email: { $ne: "admin@yesgobus.com" } });
+    const allBookings = bookings.map((booking) => {
+      const bookedByAgent = agents.some((agent) => agent.userId === booking.userId) || booking.agentCode;
+      return {
+        ...booking._doc,
+        bookedByAgent: bookedByAgent ? "Y" : "N",
+      };
+    });
     return {
       status: 200,
       message: "Bookings details retrived",
-      data: bookings,
+      data: allBookings,
     };
   } catch (error) {
     console.log(error);
