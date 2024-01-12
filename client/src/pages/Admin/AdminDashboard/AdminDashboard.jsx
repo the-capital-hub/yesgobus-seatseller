@@ -16,7 +16,7 @@ export default function AdminDashboard() {
       </header>
 
       {/* Track Agent */}
-      {loggedInAdmin.role === "YSB_ADMIN" &&
+      {loggedInAdmin?.role === "YSB_ADMIN" &&
         <div className="trackAgent-container flex flex-col gap-5 pt-5">
           <h2 className="m-0">Track Agent</h2>
           <TrackAgentList />

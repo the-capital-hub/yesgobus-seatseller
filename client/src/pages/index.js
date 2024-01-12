@@ -9,6 +9,9 @@ import ContactUs from "./ContactUs/ContactUs";
 import ComingSoon from "./ComingSoon/ComingSoon";
 import TicketView from "./TicketView/TicketView";
 import Profile from "./Profile/Profile";
+import SecuritySafeguards from "./SecuritySafeguards/SecuritySafeguards";
+import TermsOfService from "./TermsOfService/TermsOfService";
+import Privacy from "./Privacy/Privacy";
 
 export {
   LandingPage,
@@ -22,4 +25,7 @@ export {
   ComingSoon,
   TicketView,
   Profile,
+  SecuritySafeguards,
+  TermsOfService,
+  Privacy,
 };

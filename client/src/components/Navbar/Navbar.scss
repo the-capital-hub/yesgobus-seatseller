@@ -44,7 +44,9 @@
   .right {
     // position: relative;
 
-
+    // display: block;
+    display: flex;
+    gap: 1rem;
 
     .user {
       color: inherit;
@@ -85,10 +87,13 @@
 }
 
 @media (max-width: 1024px) {
-
   .navbar {
-    flex-direction: row-reverse;
-
+    flex-direction: row;
+    .right {
+      display: flex;
+      gap: 5px;
+      // padding-left: 10px;
+    }
 
     // .left {
     //   display: none;
@@ -136,14 +141,14 @@
     }
 
     .hamburger {
-      display: block;
+      // display: block;
+      display: none;
       height: 30px;
     }
 
     .select_vehicle {
       display: none;
     }
-
   }
 }
 
@@ -151,13 +156,13 @@
   .navbar {
     max-height: 80px;
     padding: 10px 10px;
+    flex-direction: row-reverse;
   }
 
-
-
   .burger {
-
     .right {
+      display: contents;
+
       .user-name {
         display: none;
       }
@@ -178,11 +183,9 @@
       margin-top: 35px;
     }
     .contactus-page {
-
     }
-    
+
     .select_vehicle {
-      
       padding-top: 10px;
       padding-bottom: 15px;
       position: absolute;
@@ -221,7 +224,6 @@
 // //   font-weight: bold;
 // // }
 
-
 // .goog-te-banner-frame {
 //   display: none;
 //   margin-top: -20px;
@@ -232,7 +234,7 @@
 // }
 
 // .goog-te-gadget {
-//   color: transparent !important;    
+//   color: transparent !important;
 // }
 
 // .VIpgJd-ZVi9od-l4eHX-hSRGPd {

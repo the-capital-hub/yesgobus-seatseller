@@ -3,14 +3,16 @@ import "./MyProfile.scss";
 import axiosInstance from "../../../../utils/service";
 
 export default function MyProfile() {
-
   useEffect(() => {
-    const translateElement = document.getElementById("google_translate_element");
+    const translateElement = document.getElementById(
+      "google_translate_element"
+    );
     if (translateElement) {
       translateElement.innerHTML = "";
     }
     const script = document.createElement("script");
-    script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    script.src =
+      "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
     script.async = true;
     document.body.appendChild(script);
 
@@ -18,11 +20,12 @@ export default function MyProfile() {
       window.googleTranslateElementInit = () => {
         new window.google.translate.TranslateElement(
           {
-            pageLanguage: 'en',
-            includedLanguages: 'en,kn',
-            layout: window.google.translate.TranslateElement.InlineLayout.TOP_RIGHT,
+            pageLanguage: "en",
+            includedLanguages: "en,kn",
+            layout:
+              window.google.translate.TranslateElement.InlineLayout.TOP_RIGHT,
           },
-          'google_translate_element'
+          "google_translate_element"
         );
       };
     };
@@ -49,8 +52,10 @@ export default function MyProfile() {
     e.preventDefault();
     try {
       const { data: updatedUser } = await axiosInstance.patch(
-        `${import.meta.env.VITE_BASE_URL
-        }/api/user/updateProfile/${loggedInUser._id}`, formData
+        `${import.meta.env.VITE_BASE_URL}/api/user/updateProfile/${
+          loggedInUser._id
+        }`,
+        formData
       );
       if (updatedUser.status === 200) {
         localStorage.setItem("loggedInUser", JSON.stringify(updatedUser.data));
@@ -59,7 +64,7 @@ export default function MyProfile() {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <div className="my__profile">
@@ -69,7 +74,7 @@ export default function MyProfile() {
           type="Name"
           id="userId"
           name="userId"
-          className={`profile__input ${loggedInUser.isAgent ? 'agent' : ''}`}
+          className={`profile__input ${loggedInUser.isAgent ? "agent" : ""}`}
           value={loggedInUser.userId}
           disabled
         />
@@ -141,7 +146,6 @@ export default function MyProfile() {
         <h1>Change Language:</h1>
         <div id="google_translate_element"></div>
       </div>
-
     </div>
   );
 }
