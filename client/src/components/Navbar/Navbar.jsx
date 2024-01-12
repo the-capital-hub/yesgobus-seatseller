@@ -135,7 +135,7 @@ const Navbar = ({ page }) => {
       </div>
 
       <div className="right  ">
-        <div id="google_translate_element"></div>
+        <div className="hidden md:block" id="google_translate_element"></div>
         {loggedInUser ? (
           <Link to={`/profile`} className="user">
             <span
@@ -153,49 +153,49 @@ const Navbar = ({ page }) => {
           </a>
         )}
       </div>
-      {page === "home" ? (
+      {/* {page === "home" ? (
         <img
           className="hamburger"
           onClick={() => setShowMenu(!showMenu)}
           src={hamburger}
           alt=""
         />
-      ) : (
-        <>
-          <img
+      ) : ( */}
+      <>
+        {/* <img
             className="hamburger"
             onClick={() => setShowMenu(!showMenu)}
             src={blackhamburger}
             alt=""
-          />
-          <div className={`select_vehicle`}>
-            {!isMobileApp && (
-              <button className="btn">
-                <Link to={"/"} className="link">
-                  Home
-                </Link>
-              </button>
-            )}
+          /> */}
+        <div className={`select_vehicle`}>
+          {!isMobileApp && (
             <button className="btn">
-              <Link to={"/busbooking"} className="link">
-                Bus
+              <Link to={"/"} className="link">
+                Home
               </Link>
             </button>
-            {isMobileApp && (
-              <button className="btn">
-                <Link to={"/cabs"} className="link">
-                  Cab
-                </Link>
-              </button>
-            )}
+          )}
+          <button className="btn">
+            <Link to={"/busbooking"} className="link">
+              Bus
+            </Link>
+          </button>
+          {isMobileApp && (
             <button className="btn">
-              <Link to={"/contactus"} className="link">
-                Contact Us
+              <Link to={"/cabs"} className="link">
+                Cab
               </Link>
             </button>
-          </div>
-        </>
-      )}
+          )}
+          <button className="btn">
+            <Link to={"/contactus"} className="link">
+              Contact Us
+            </Link>
+          </button>
+        </div>
+      </>
+      {/* )} */}
       {showMenu && menu}
     </nav>
   );
