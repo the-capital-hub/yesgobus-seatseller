@@ -36,7 +36,8 @@ export const sendMail = async (to, subject, message) => {
   try {
     const msg = {
       to: to,
-      from: "yesgobus.help@gmail.com",
+      // from: "yesgobus.help@gmail.com",
+      from: "support@yesgobus.com",
       subject: subject,
       text: message,
     };

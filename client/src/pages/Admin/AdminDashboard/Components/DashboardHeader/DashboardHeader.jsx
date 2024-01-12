@@ -24,7 +24,7 @@ export default function DashboardHeader() {
 
   const getStats = async () => {
     try {
-      const response = await getAgentStats(loggedInAdmin._id);
+      const response = await getAgentStats(loggedInAdmin?._id);
       setAgentStats(response.data);
     } catch (error) {
       console.error("Error :", error);
@@ -32,8 +32,11 @@ export default function DashboardHeader() {
   };
 
   useEffect(() => {
-    getStats();
-    getBalance();
+    if (loggedInAdmin?.role === "YSB_ADMIN") {
+      getBalance();
+    } else {
+      getStats();
+    }
   }, []);
 
   return (
@@ -67,7 +70,7 @@ export default function DashboardHeader() {
 
       {/* Cards */}
 
-      {loggedInAdmin.role === "YSB_ADMIN" &&
+      {loggedInAdmin?.role === "YSB_ADMIN" &&
         <div
           className="cards-container p-3 rounded-lg bg-white
           border border-solid border-gray-300 shadow-lg md:p-10"
@@ -87,7 +90,7 @@ export default function DashboardHeader() {
         </div>
       }
 
-      {loggedInAdmin.role !== "YSB_ADMIN" &&
+      {loggedInAdmin?.role !== "YSB_ADMIN" &&
         <div
           className="cards-container p-3 rounded-lg bg-white
           border border-solid border-gray-300 shadow-lg md:p-10"
@@ -96,37 +99,37 @@ export default function DashboardHeader() {
             <WalletCard
               color={"#3f3f3f"}
               name={"Total booking"}
-              balance={agentStats?.totalBookings}
+              balance={agentStats?.totalBookings || 0}
               stats
             />
             <WalletCard
               color={"#fd5901"}
               name={"Bookings this month"}
-              balance={agentStats?.bookingsThisMonth}
+              balance={agentStats?.bookingsThisMonth || 0}
               stats
             />
             <WalletCard
               color={"#fd5901"}
               name={"Bookings last month"}
-              balance={agentStats?.bookingsLastMonth}
+              balance={agentStats?.bookingsLastMonth || 0}
               stats
             />
             <WalletCard
               color={"#3f3f3f"}
               name={"Sales this month"}
-              balance={`Rs. ${agentStats?.salesThisMonth}`}
+              balance={`Rs. ${agentStats?.salesThisMonth || 0}`}
               stats
             />
             <WalletCard
               color={"#3f3f3f"}
               name={"Sales last month"}
-              balance={`Rs. ${agentStats?.salesLastMonth}`}
+              balance={`Rs. ${agentStats?.salesLastMonth || 0}`}
               stats
             />
             <WalletCard
               color={"#fd5901"}
               name={"Total all-time sales"}
-              balance={`Rs. ${agentStats?.totalAllTimeSales}`}
+              balance={`Rs. ${agentStats?.totalAllTimeSales || 0}`}
               stats
             />
           </div>

@@ -410,7 +410,8 @@ export const sendBookingConfirmationEmail = async (req, res) => {
       Pickup: ${pickUpLocation} Is Booked.
       Thank You, Shine Gobus`;
     const adminSubject = "New Bus Booking";
-    await sendMail("yesgobus99@gmail.com", adminSubject, adminMailMessage);
+    // await sendMail("yesgobus99@gmail.com", adminSubject, adminMailMessage);
+    await sendMail("support@yesgobus.com", adminSubject, adminMailMessage);
     res.status(200).send({
       status: 200,
       message: "Email Sent",
