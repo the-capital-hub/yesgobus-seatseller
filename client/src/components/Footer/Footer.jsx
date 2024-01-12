@@ -28,9 +28,9 @@ const Footer = () => {
           <FooterLinks
             title={"Policies"}
             links={[
-              "Security safeguards",
-              "Terms of service",
-              "Privacy",
+              { link: "/security-safeguards", label: "Security safeguards" },
+              { link: "/terms-of-service", label: "Terms of service" },
+              { link: "/privacy", label: "Privacy" },
               // "Accessibility",
             ]}
           />
