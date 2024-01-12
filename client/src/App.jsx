@@ -10,6 +10,9 @@ import {
   PaymentSuccess,
   TicketView,
   Profile,
+  SecuritySafeguards,
+  TermsOfService,
+  Privacy,
 } from "./pages";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 // import KycLandingPage from "./pages/KYC/KycLandingPage/KycLandingPage";
@@ -80,6 +83,10 @@ function App() {
         <Route path="/busbooking/ticket" element={<TicketView />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/contactus" element={<ContactUs />} />
+        <Route path="/security-safeguards" element={<SecuritySafeguards />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
+        <Route path="/privacy" element={<Privacy />} />
+
         {/* <Route path="/cabs" element={<ComingSoon />} />
         <Route path="/cabs/kyc" element={<KYC />} />
         <Route path="/cabs/kyc/payment" element={<KycPayments />} /> */}

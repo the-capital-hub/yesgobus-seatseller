@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./FooterLinks.scss";
 
 const FooterLinks = ({ title, links }) => {
@@ -5,12 +6,10 @@ const FooterLinks = ({ title, links }) => {
     <div className="footerLinks">
       <h1>{title}</h1>
       <div className="links">
-        {links?.map((link) => (
-          link === "About Us" ? (
-            <a href="" key={link}>{link}</a>
-          ) : (
-            <a key={link}>{link}</a>
-          )
+        {links?.map(({ link, label }) => (
+          <Link to={link} key={link}>
+            {label}
+          </Link>
         ))}
       </div>
     </div>
