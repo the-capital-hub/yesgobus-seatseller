@@ -74,7 +74,6 @@
       font-size: 15px;
     }
   }
-
 }
 
 #google_translate_element {
@@ -83,8 +82,9 @@
   select {
     border: none;
     outline: none;
-    padding: 12px;
-    font-size: 16px;
+    // padding: 12px;
+    padding: 8px;
+    font-size: 10px;
     color: #333;
     border-radius: 8px;
     background-color: #fd5901;
@@ -94,7 +94,7 @@
   }
 
   .goog-te-combo {
-    font-size: 15px !important;
+    font-size: 12px !important;
     color: white;
   }
 }
