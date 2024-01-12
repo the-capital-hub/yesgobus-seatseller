@@ -19,7 +19,9 @@ const ContactUs = () => {
               "Write to us about your query and our customer support team will revert as soon as possible."
             }
             text={"Send Mail"}
-            link={"yesgobus.help@gmail.com"}
+            // link={"yesgobus.help@gmail.com"}
+            link={"support@yesgobus.com"}
+
           />
           <Card
             img={call}

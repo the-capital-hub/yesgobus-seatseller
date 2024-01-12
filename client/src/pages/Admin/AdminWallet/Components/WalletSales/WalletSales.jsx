@@ -54,6 +54,13 @@ const columns = [
     sorter: (a, b) => a.totalAmount - b.totalAmount,
   },
   {
+    title: "Booked By Agent",
+    label: "Bookend By Agent",
+    dataIndex: "bookedByAgent",
+    key: "bookedByAgent",
+    sorter: (a, b) => a.bookedByAgent.localeCompare(b.bookedByAgent),
+  },
+  {
     title: "Actions",
     key: "actions",
     render: (_, record) => (
