@@ -194,9 +194,9 @@ const Login = () => {
         toast.dismiss(loadingToast);
       }
     } else {
+      const loadingToast = toast.loading("Creating account...");
       try {
         setLoading(true);
-        const loadingToast = toast.loading("Creating account...");
         const response = await axiosInstance.post(
           `${import.meta.env.VITE_BASE_URL}/api/user/signup`,
           createAccountData
