@@ -817,8 +817,7 @@ const Payment = () => {
           const response = await axiosInstance.post(
             `${import.meta.env.VITE_BASE_URL}/api/payment/initiatePayment`,
             {
-              // amount: bookingDetails?.totalFare,
-              amount: 1,
+              amount: bookingDetails?.totalFare,
               redirectUrl: `https://yesgobus.com/busbooking/payment?blockTicketId=${srsResponse.pnr_number}&bookingId=${bookResponse.data._id}&paymentVerify=1`,
             }
           );
