@@ -46,6 +46,7 @@ const BusBookingCard = ({
   //srs
   scheduleId,
   isSrs = false,
+  isBusAc,
 }) => {
   const [showSeats, setShowSeats] = useState(false);
   const [seatDetails, setSeatDetails] = useState([]);
@@ -439,7 +440,7 @@ const BusBookingCard = ({
 
   // fetch vrl seats
   const fetchVrlSeats = async () => {
-    let seatData = [];
+    // let seatData = [];
     try {
       const seatsResponse = await getVrlSeatLayout({
         referenceNumber: ReferenceNumber,
@@ -456,7 +457,7 @@ const BusBookingCard = ({
       // });
       // const uniqueBaseFares = Array.from(uniqueBaseFaresSet);
       // setVrlPrices(uniqueBaseFares);
-      setSeatDetails({ ...seatData, isAcBus: seatData?.BusType == "0" });
+      setSeatDetails(seatData);
       setAvailableSeats(availableSeats.length);
       setSeatLoading(false);
       setShowSeats(!showSeats);
@@ -528,8 +529,7 @@ const BusBookingCard = ({
     let seatData = [];
     try {
       const response = await axiosInstance.get(
-        `${
-          import.meta.env.VITE_BASE_URL
+        `${import.meta.env.VITE_BASE_URL
         }/api/busBooking/getSeatLayout/${tripId}`
       );
       seatData = response.data?.seats;
@@ -720,10 +720,10 @@ const BusBookingCard = ({
             isVrl
               ? vrlPickupLocations
               : isSrs
-              ? seatDetails.boardingPointlocationsAndTimes
-              : Array.isArray(pickUpLocationOne)
-              ? pickUpLocationOne
-              : [pickUpLocationOne]
+                ? seatDetails.boardingPointlocationsAndTimes
+                : Array.isArray(pickUpLocationOne)
+                  ? pickUpLocationOne
+                  : [pickUpLocationOne]
           }
           // pickUpLocationTwo={pickUpLocationTwo}
           // dropTimes={dropTimes}
@@ -731,10 +731,10 @@ const BusBookingCard = ({
             isVrl
               ? vrlDropLocations
               : isSrs
-              ? seatDetails.droppingPointlocationsAndTimes
-              : Array.isArray(dropLocationOne)
-              ? dropLocationOne
-              : [dropLocationOne]
+                ? seatDetails.droppingPointlocationsAndTimes
+                : Array.isArray(dropLocationOne)
+                  ? dropLocationOne
+                  : [dropLocationOne]
           }
           // dropLocationTwo={dropLocationTwo}
           backSeat={backSeat}
@@ -748,7 +748,7 @@ const BusBookingCard = ({
           ReferenceNumber={ReferenceNumber}
           scheduleId={scheduleId}
           isSrs={isSrs}
-          isAcBus={seatDetails.isAcBus}
+          isAcBus={isVrl ? isBusAc : seatDetails.isAcBus}
         />
       )}
       <Toaster />

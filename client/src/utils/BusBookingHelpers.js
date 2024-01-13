@@ -111,6 +111,7 @@ export function getBusBookingCardProps(
       // cancellationPolicy:bus?.cancellationPolicy,
       fare: bus?.fares,
       isVrl: true,
+      isBusAc: bus?.BusType === 0,
     };
   } else {
     return {
