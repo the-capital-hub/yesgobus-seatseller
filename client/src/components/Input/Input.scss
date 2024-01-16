@@ -4,8 +4,8 @@
     align-items: flex-start;
     gap: 10px;
 
-    span {
-        font-size: 16px;
+    span.title {
+        font-size: 16px !important;
         color: #333;
         font-weight: bold !important;
       }
