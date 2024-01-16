@@ -1127,7 +1127,7 @@ const Payment = () => {
                 <br />
                 <div className="detailsContainer">
                   <Input
-                    title={"First Name"}
+                    title={"First Name *"}
                     type={"text"}
                     placeholder={"First name"}
                     onChanged={(e) =>
@@ -1137,7 +1137,7 @@ const Payment = () => {
                     value={userData[`firstName_${index}`] || ""}
                   />
                   <Input
-                    title={"Last Name"}
+                    title={"Last Name *"}
                     type={"text"}
                     placeholder={"Last name"}
                     onChanged={(e) => handleInputChange(e, `lastName_${index}`)}
@@ -1145,7 +1145,7 @@ const Payment = () => {
                     value={userData[`lastName_${index}`] || ""}
                   />
                   <Input
-                    title={"Age"}
+                    title={"Age *"}
                     type={"number"}
                     placeholder={"Enter Age"}
                     onChanged={(e) => handleInputChange(e, `age_${index}`)}
@@ -1153,7 +1153,7 @@ const Payment = () => {
                     value={userData[`age_${index}`] || ""}
                   />
                   <div className="genderContainer">
-                    <label htmlFor={`gender_${index}`}>Gender</label>
+                    <label htmlFor={`gender_${index}`}>Gender *</label>
                     <select
                       name={`gender_${index}`}
                       id={`gender_${index}`}
@@ -1176,7 +1176,7 @@ const Payment = () => {
             <h4>Enter Contact Details</h4>
             <div className="detailsContainer">
               <Input
-                title={"Email"}
+                title={"Email *"}
                 type={"text"}
                 placeholder={"example@email.com"}
                 onChanged={handleInputChange}
@@ -1184,7 +1184,7 @@ const Payment = () => {
                 value={userData.email}
               />
               <Input
-                title={"Mobile Number"}
+                title={"Mobile Number *"}
                 type={"number"}
                 placeholder={"1234567890"}
                 onChanged={handleInputChange}
@@ -1199,7 +1199,7 @@ const Payment = () => {
                 givenName={"alternativeNumber"}
               /> */}
               <Input
-                title={"Address"}
+                title={"Address *"}
                 type={"text"}
                 placeholder={"Address"}
                 onChanged={handleInputChange}
