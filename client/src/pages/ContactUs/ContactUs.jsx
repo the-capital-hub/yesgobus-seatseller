@@ -30,7 +30,7 @@ const ContactUs = () => {
               "You may call us between Monday to Friday 9:00 am to 5:30 pm from your registered mobile number."
             }
             text={"Call Us"}
-            link={"9964376733"}
+            link={"9888417555"}
           />
           <Card
             img={locationIcon}
