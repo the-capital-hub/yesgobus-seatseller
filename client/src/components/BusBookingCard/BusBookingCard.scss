@@ -120,6 +120,7 @@
         .time-and-price {
           display: flex;
           justify-content: space-between;
+          align-items: center;
 
           .price-container {
             border: 0.75px solid rgb(235, 235, 235);
@@ -146,7 +147,7 @@
         .duration-and-seats-left {
           display: flex;
           gap: 10px;
-          margin-top: -10px;
+          // margin-top: -10px;
 
           .duration {
             font-size: 10px;

@@ -190,6 +190,9 @@
       .right {
         .wrapper {
           padding: 0px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
         }
       }
     }
