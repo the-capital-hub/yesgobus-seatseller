@@ -73,7 +73,7 @@
       }
 
       & > .dates {
-        @media (max-width: 420px) {
+        @media (max-width: 426px) {
           display: none;
         }
       }
@@ -190,6 +190,9 @@
       .right {
         .wrapper {
           padding: 0px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
         }
       }
     }
