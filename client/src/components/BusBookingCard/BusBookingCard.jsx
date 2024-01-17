@@ -529,7 +529,8 @@ const BusBookingCard = ({
     let seatData = [];
     try {
       const response = await axiosInstance.get(
-        `${import.meta.env.VITE_BASE_URL
+        `${
+          import.meta.env.VITE_BASE_URL
         }/api/busBooking/getSeatLayout/${tripId}`
       );
       seatData = response.data?.seats;
@@ -638,7 +639,7 @@ const BusBookingCard = ({
             {/* <BusBookingCardInfo img={true} title={travelTime} /> */}
             <BusBookingCardInfo title={travelTime} />
             <BusBookingCardInfo subtitle={reachLocation} title={reachTime} />
-            <p className="price">₹{price}</p>
+            <p className="price">₹{(+price).toFixed(2)}</p>
             <BusBookingCardInfo
               setShowSeats={fetchSeatData}
               buttonText={!availableSeats || (!seatDetails && "Full")}
@@ -657,7 +658,7 @@ const BusBookingCard = ({
               {pickUpTime} ─ {reachTime}
             </h4>
             <span className="price-container">
-              <p>From</p> <p className="price">₹ {price}</p>
+              <p>From</p> <p className="price">₹ {(+price).toFixed(2)}</p>
             </span>
           </div>
           <div className="duration-and-seats-left">
@@ -720,10 +721,10 @@ const BusBookingCard = ({
             isVrl
               ? vrlPickupLocations
               : isSrs
-                ? seatDetails.boardingPointlocationsAndTimes
-                : Array.isArray(pickUpLocationOne)
-                  ? pickUpLocationOne
-                  : [pickUpLocationOne]
+              ? seatDetails.boardingPointlocationsAndTimes
+              : Array.isArray(pickUpLocationOne)
+              ? pickUpLocationOne
+              : [pickUpLocationOne]
           }
           // pickUpLocationTwo={pickUpLocationTwo}
           // dropTimes={dropTimes}
@@ -731,10 +732,10 @@ const BusBookingCard = ({
             isVrl
               ? vrlDropLocations
               : isSrs
-                ? seatDetails.droppingPointlocationsAndTimes
-                : Array.isArray(dropLocationOne)
-                  ? dropLocationOne
-                  : [dropLocationOne]
+              ? seatDetails.droppingPointlocationsAndTimes
+              : Array.isArray(dropLocationOne)
+              ? dropLocationOne
+              : [dropLocationOne]
           }
           // dropLocationTwo={dropLocationTwo}
           backSeat={backSeat}
