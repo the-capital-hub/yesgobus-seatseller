@@ -96,7 +96,11 @@ export function getBusBookingCardProps(
       reachLocation: bus?.ToCityName,
       reachTime: bus?.ArrivalTime,
       // calucalte total time
-      travelTime: calculateVrlTravelTime(bus?.CityTime24, bus?.ApproxArrival),
+      travelTime: calculateVrlTravelTime(
+        bus?.BookingDate,
+        bus?.CityTime24,
+        bus?.ApproxArrival
+      ),
       seatsLeft: bus?.EmptySeats,
       // avlWindowSeats:bus?.avlWindowSeats,
       price: bus?.lowestPrice,
@@ -165,13 +169,17 @@ const priceToDisplaySrs = (fare) => {
   }
 };
 
-function calculateVrlTravelTime(pickupTime, arrivalTime) {
-  const currentDate = new Date();
+function calculateVrlTravelTime(bookingDate, pickupTime, arrivalTime) {
+  // const currentDate = new Date();
+  const departureTime = `${bookingDate} ${pickupTime}`;
+  const departureDateTime = new Date(
+    departureTime.replace(/(\d+)-(\d+)-(\d+) (\d+):(\d+)/, "$2/$1/$3 $4:$5")
+  );
 
-  const [hours, minutes, seconds] = pickupTime.split(":");
-  currentDate.setHours(hours);
-  currentDate.setMinutes(minutes);
-  currentDate.setSeconds(seconds || 0);
+  // const [hours, minutes, seconds] = pickupTime.split(":");
+  // currentDate.setHours(hours);
+  // currentDate.setMinutes(minutes);
+  // currentDate.setSeconds(seconds || 0);
 
   const arrivalDateTime = new Date(
     arrivalTime.replace(
@@ -179,7 +187,8 @@ function calculateVrlTravelTime(pickupTime, arrivalTime) {
       "$2/$1/$3 $4:$5 $6"
     )
   );
-  const timeDifference = arrivalDateTime - currentDate;
+  // console.log(departureDateTime, arrivalDateTime);
+  const timeDifference = arrivalDateTime - departureDateTime;
 
   const travelTimeInMinutes = timeDifference / (1000 * 60);
   return formatTravelTime(parseInt(travelTimeInMinutes));
@@ -188,7 +197,9 @@ function calculateVrlTravelTime(pickupTime, arrivalTime) {
 const formatTravelTime = (durationInMins) => {
   const hours = Math.floor(durationInMins / 60);
   const minutes = durationInMins % 60;
-  const formattedHours = hours > 0 ? `${hours} :` : "";
-  const formattedMinutes = minutes > 0 ? ` ${minutes}` : "";
+  const formattedHours =
+    hours > 0 ? `${hours.toString().padStart(2, "0")}:` : "";
+  const formattedMinutes =
+    minutes > 0 ? `${minutes.toString().padStart(2, "0")}` : "00";
   return `${formattedHours}${formattedMinutes}`;
 };
