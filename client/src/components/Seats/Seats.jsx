@@ -795,12 +795,12 @@ const Seats = ({
       bookingDetails.totalFare = bookingDetails.totalFare + newGst;
 
       // if AC bus, add platform charge
-      if (isAcBus) {
-        const newServiceTax =
-          import.meta.env.VITE_SERVICE_TAX * parseFloat(bookingDetails.fare);
-        bookingDetails.serviceTax += newServiceTax;
-        bookingDetails.totalFare += newServiceTax;
-      }
+      // if (isAcBus) {
+      //   const newServiceTax =
+      //     import.meta.env.VITE_SERVICE_TAX * parseFloat(bookingDetails.fare);
+      //   bookingDetails.serviceTax += newServiceTax;
+      //   bookingDetails.totalFare += newServiceTax;
+      // }
 
       navigate("/busbooking/payment", {
         state: {
