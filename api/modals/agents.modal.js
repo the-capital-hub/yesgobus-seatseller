@@ -55,6 +55,7 @@ const agentSchema = new Schema(
     agentCode: {
       type: String,
       required: true,
+      unique: true,
     },
   },
   {
