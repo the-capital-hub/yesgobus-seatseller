@@ -214,7 +214,20 @@ const Login = () => {
           });
           setShowLogin(!showLogin);
           setShowCreateAccount(!showCreateAccount);
-        } else if (response.status === 406) {
+          // } else if (response.status === 406) {
+          //   toast.dismiss(loadingToast);
+          //   toast.error("User already exists", {
+          //     duration: 2000,
+          //     position: "top-center",
+          //     style: {
+          //       background: "red",
+          //       color: "white",
+          //     },
+          //   });
+        }
+      } catch (error) {
+        toast.dismiss(loadingToast);
+        if (error.response.status === 409) {
           toast.dismiss(loadingToast);
           toast.error("User already exists", {
             duration: 2000,
@@ -224,18 +237,17 @@ const Login = () => {
               color: "white",
             },
           });
+        } else {
+          toast.error("Error", {
+            duration: 2000,
+            position: "top-center",
+            style: {
+              background: "red",
+              color: "white",
+            },
+          });
+          console.error("Error registering user:", error);
         }
-      } catch (error) {
-        toast.dismiss(loadingToast);
-        toast.error("Error", {
-          duration: 2000,
-          position: "top-center",
-          style: {
-            background: "red",
-            color: "white",
-          },
-        });
-        console.error("Error registering user:", error);
       } finally {
         toast.dismiss(loadingToast);
         setLoading(false);
