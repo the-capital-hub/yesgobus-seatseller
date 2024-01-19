@@ -49,6 +49,7 @@ export default function AdminAccountDetails() {
         navigate("/admin/login");
       }, 2000);
     } catch (error) {
+      console.log(error);
       console.error("Error Registering User:", error.response.data.message);
       if (error.response.data.message === "Yesgobus account doesnot exists") {
         messageApi.open({
