@@ -104,22 +104,26 @@ const Navbar = ({ page }) => {
     <nav className="navbar burger">
       <div className="left">
         {page === "home" ? (
-          <img
-            className="logo"
-            onClick={() => navigate("/")}
-            src={logo}
-            width={50}
-            height={50}
-            alt=""
-          />
+          <a href={"/"}>
+            <img
+              className="logo"
+              // onClick={() => navigate("/")}
+              src={logo}
+              width={50}
+              height={50}
+              alt=""
+            />
+          </a>
         ) : (
-          <img
-            className="blacklogo"
-            onClick={() => navigate("/")}
-            src={blacklogo}
-            width={50}
-            alt=""
-          />
+          <a href={"/"}>
+            <img
+              className="blacklogo"
+              // onClick={() => navigate("/")}
+              src={blacklogo}
+              width={50}
+              alt=""
+            />
+          </a>
         )}
         <a href="/busbooking">
           <span>Bus</span>
@@ -137,7 +141,7 @@ const Navbar = ({ page }) => {
       <div className="right  ">
         <div className="hidden md:block" id="google_translate_element"></div>
         {loggedInUser ? (
-          <a href={`/profile`} className="user">
+          <Link to={`/profile`} className="user">
             <span
               className={
                 page === "home" ? "user-icon" : "user-icon icon-change "
@@ -146,7 +150,7 @@ const Navbar = ({ page }) => {
               <UserIcon />
             </span>
             <div className="user-name">{JSON.parse(loggedInUser).fullName}</div>
-          </a>
+          </Link>
         ) : (
           <a href="/login">
             <Button text="Login" />
