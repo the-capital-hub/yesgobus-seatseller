@@ -34,7 +34,6 @@ export default function AdminAccountDetails() {
 
     try {
       setLoading(true);
-      console.log(formData);
       await agentRegisterAPI(formData);
       // const response = await agentRegisterAPI(formData);
       // console.log("register response", response);
