@@ -94,7 +94,7 @@ export default function AdminSidebar({ admin }) {
       <div className={`navigation py-10 h-full`} ref={navigationRef}>
         <nav className="flex flex-col gap-5 h-full">
           {NAVLINKS.map(({ label, icon, link }) => {
-            if (label === "Track Agent" && admin.role !== "YSB_ADMIN") {
+            if (label === "Track BDAs" && admin.role !== "YSB_ADMIN") {
               return null;
             }
             if (label === "Records" && admin.role === "YSB_ADMIN") {
