@@ -1,15 +1,15 @@
 import { getAgentPerfomanceReport } from "../../../../../api/admin";
 import { useEffect, useState } from "react";
 import { Table, Spin, ConfigProvider, Button } from "antd";
-import { DownloadOutlined } from '@ant-design/icons';
+import { DownloadOutlined } from "@ant-design/icons";
 import { CSVLink } from "react-csv";
 
 const performanceColumn = [
   {
-    title: "Agent Name",
+    title: "BDA Name",
     dataIndex: "agentName",
     key: "agentName",
-    label: "Agent Name",
+    label: "BDA Name",
   },
   {
     title: "Email",
@@ -36,6 +36,10 @@ const performanceColumn = [
     key: "revenue",
     sorter: (a, b) => a.revenue - b.revenue,
     label: "Revenue",
+    render: (_, record) => {
+      let amount = Number.parseFloat(+record.revenue).toFixed(2);
+      return <p>{amount}</p>;
+    },
   },
   {
     title: "UserId",
@@ -72,13 +76,19 @@ export default function TrackAgentList() {
           },
         }}
       >
-        {agentPerformanceReport?.length > 0 &&
+        {agentPerformanceReport?.length > 0 && (
           <div className="flex flex-end pb-2 flex-container">
-            <Button type="primary" icon={<DownloadOutlined />} >
-              <CSVLink data={agentPerformanceReport} headers={performanceColumn} filename={"AgentReport.csv"}>Export to CSV</CSVLink>
+            <Button type="primary" icon={<DownloadOutlined />}>
+              <CSVLink
+                data={agentPerformanceReport}
+                headers={performanceColumn}
+                filename={"AgentReport.csv"}
+              >
+                Export to CSV
+              </CSVLink>
             </Button>
           </div>
-        }
+        )}
         <Table
           dataSource={agentPerformanceReport}
           columns={performanceColumn}
@@ -100,8 +110,6 @@ export default function TrackAgentList() {
           scroll={{ x: true }}
           rowKey={(record) => `${record.agentId}-${record.userId}`}
         />
-
-
       </ConfigProvider>
       {/* </Spin> */}
     </div>

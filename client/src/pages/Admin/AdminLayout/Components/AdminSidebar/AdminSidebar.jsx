@@ -31,7 +31,7 @@ const NAVLINKS = [
     link: "/admin/records",
   },
   {
-    label: "Track Agent",
+    label: "Track BDA",
     icon: <IconAgents />,
     link: "/admin/track-agents",
   },
