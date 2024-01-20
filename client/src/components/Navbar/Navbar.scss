@@ -46,6 +46,7 @@
 
     // display: block;
     display: flex;
+    align-items: center;
     gap: 1rem;
 
     .user {
@@ -182,8 +183,8 @@
     .bus-page {
       margin-top: 35px;
     }
-    .contactus-page {
-    }
+    // .contactus-page {
+    // }
 
     .select_vehicle {
       padding-top: 10px;

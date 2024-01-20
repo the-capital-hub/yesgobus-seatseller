@@ -137,7 +137,7 @@ const Navbar = ({ page }) => {
       <div className="right  ">
         <div className="hidden md:block" id="google_translate_element"></div>
         {loggedInUser ? (
-          <Link to={`/profile`} className="user">
+          <a href={`/profile`} className="user">
             <span
               className={
                 page === "home" ? "user-icon" : "user-icon icon-change "
@@ -146,10 +146,10 @@ const Navbar = ({ page }) => {
               <UserIcon />
             </span>
             <div className="user-name">{JSON.parse(loggedInUser).fullName}</div>
-          </Link>
+          </a>
         ) : (
           <a href="/login">
-            <Button text="Login / Signup" />
+            <Button text="Login" />
           </a>
         )}
       </div>

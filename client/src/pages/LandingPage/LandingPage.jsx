@@ -197,7 +197,7 @@ const LandingPage = () => {
             <img
               src={fromto}
               alt="reverse route"
-              className="reverse-image"
+              className="reverse-image cursor-pointer"
               onClick={({ target: image }) => {
                 const currentRotation =
                   getComputedStyle(image).getPropertyValue("transform");
