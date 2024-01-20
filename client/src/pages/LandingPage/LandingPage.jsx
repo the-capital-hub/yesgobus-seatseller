@@ -102,7 +102,9 @@ const LandingPage = () => {
 
   const handleSearchClick = () => {
     if (fromLocation && toLocation && selectedDate) {
-      if (fromLocation.trim().toLowerCase() === toLocation.trim().toLowerCase()) {
+      if (
+        fromLocation.trim().toLowerCase() === toLocation.trim().toLowerCase()
+      ) {
         alert("Source and destination cities cannot be the same.");
         return;
       }
@@ -259,7 +261,6 @@ const LandingPage = () => {
               </button>
             </div>
           </div>
-
         </div>
       </div>
 
@@ -388,9 +389,6 @@ const LandingPage = () => {
         <TitleAndText
           title={"Why choose us for Bus Booking?"}
           textOne={
-            "Choosing us for your bus booking needs is a decision rooted in reliability and convenience. Our years of experience in the industry have enabled us to establish a reputation for seamless service. When you choose us, you're opting for a booking platform that values your time and understands your travel requirements. Our intuitive interface simplifies the booking process, allowing you to quickly search for available routes, compare prices, and select the most suitable options. With real-time updates on bus schedules and availability, you can plan your journey with confidence, knowing that your travel arrangements are in capable hands."
-          }
-          textTwo={
             "Choosing us for your bus booking needs is a decision rooted in reliability and convenience. Our years of experience in the industry have enabled us to establish a reputation for seamless service. When you choose us, you're opting for a booking platform that values your time and understands your travel requirements. Our intuitive interface simplifies the booking process, allowing you to quickly search for available routes, compare prices, and select the most suitable options. With real-time updates on bus schedules and availability, you can plan your journey with confidence, knowing that your travel arrangements are in capable hands."
           }
         />
