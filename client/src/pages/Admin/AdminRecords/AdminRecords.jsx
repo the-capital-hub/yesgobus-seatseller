@@ -7,7 +7,7 @@ import { getAgentBookings } from "../../../api/admin";
 // import { ADMIN_KEY } from "../AdminLogin/AdminLogin";
 import { formatBusTravelTime } from "../../../utils/Admin/AdminHelpers";
 import { Navigate, useOutletContext } from "react-router-dom";
-import { DownloadOutlined } from '@ant-design/icons';
+import { DownloadOutlined } from "@ant-design/icons";
 import { CSVLink } from "react-csv";
 
 const columns = [
@@ -56,6 +56,10 @@ const columns = [
     dataIndex: "totalAmount",
     key: "totalAmount",
     sorter: (a, b) => a.totalAmount - b.totalAmount,
+    render: (_, record) => {
+      let amount = Number.parseFloat(+record.totalAmount).toFixed(2);
+      return <p>{amount}</p>;
+    },
   },
   {
     title: "Actions",
@@ -146,13 +150,19 @@ export default function AdminRecords() {
               },
             }}
           >
-            {bookings?.length > 0 &&
+            {bookings?.length > 0 && (
               <div className="flex flex-end pb-2 flex-container">
-                <Button type="primary" icon={<DownloadOutlined />} >
-                  <CSVLink data={bookings} headers={columns} filename={"Records.csv"}>Export to CSV</CSVLink>
+                <Button type="primary" icon={<DownloadOutlined />}>
+                  <CSVLink
+                    data={bookings}
+                    headers={columns}
+                    filename={"Records.csv"}
+                  >
+                    Export to CSV
+                  </CSVLink>
                 </Button>
               </div>
-            }
+            )}
             <Table
               dataSource={bookings}
               columns={columns}

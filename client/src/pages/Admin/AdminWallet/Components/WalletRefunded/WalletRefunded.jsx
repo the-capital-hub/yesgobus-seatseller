@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { getAllBookingRefund } from "../../../../../api/admin";
 import { formatBusTravelTime } from "../../../../../utils/Admin/AdminHelpers";
 import { CSVLink } from "react-csv";
-import { DownloadOutlined } from '@ant-design/icons';
+import { DownloadOutlined } from "@ant-design/icons";
 
 const columns = [
   {
@@ -52,10 +52,14 @@ const columns = [
     dataIndex: "totalAmount",
     key: "totalAmount",
     sorter: (a, b) => a.totalAmount - b.totalAmount,
+    render: (_, record) => {
+      let amount = Number.parseFloat(+record.totalAmount).toFixed(2);
+      return <p>{amount}</p>;
+    },
   },
   {
-    title: "Booked By Agent",
-    label: "Bookend By Agent",
+    title: "Booked By BDA",
+    label: "Bookend By BDA",
     dataIndex: "bookedByAgent",
     key: "bookedByAgent",
     sorter: (a, b) => a.bookedByAgent.localeCompare(b.bookedByAgent),
@@ -70,7 +74,6 @@ const columns = [
           title="Details"
           trigger="click"
           getPopupContainer={(triggerNode) => triggerNode.parentNode}
-
         >
           <a>View</a>
         </Popover>
@@ -134,13 +137,15 @@ export default function WalletRefunded() {
           <p className="m-0 text-2xl font-semibold">Refunded</p>
         </div>
       </div>
-      {refunds?.length > 0 &&
+      {refunds?.length > 0 && (
         <div className="flex flex-end pb-2 flex-container">
-          <Button type="primary" icon={<DownloadOutlined />} >
-            <CSVLink data={refunds} headers={columns} filename={"Refunds.csv"}>Export to CSV</CSVLink>
+          <Button type="primary" icon={<DownloadOutlined />}>
+            <CSVLink data={refunds} headers={columns} filename={"Refunds.csv"}>
+              Export to CSV
+            </CSVLink>
           </Button>
         </div>
-      }
+      )}
       <Table
         columns={columns}
         dataSource={refunds}

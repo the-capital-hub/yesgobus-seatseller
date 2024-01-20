@@ -27,7 +27,7 @@ const LeftFilter = ({
   const [selectedDroppingPoints, setSelectedDroppingPoints] = useState([]);
 
   const handleSliderChangeCommitted = (event, newRange) => {
-    setRange(newRange);
+    // setRange(newRange);
     onFilterChange({
       boardingPoints: boardingPointsFilter,
       droppingPoints: droppingPointsFilter,
@@ -35,6 +35,10 @@ const LeftFilter = ({
       minPrice: newRange[0],
       maxPrice: newRange[1],
     });
+  };
+
+  const handleSliderChange = (event, newRange) => {
+    setRange(newRange);
   };
 
   useEffect(() => {
@@ -204,7 +208,6 @@ const LeftFilter = ({
           destinationCity={destinationCity}
           key={"Drop-Points"}
           doj={doj}
-
         />
         <LeftFilterBox
           title={"Bus Partner"}
@@ -216,7 +219,6 @@ const LeftFilter = ({
           destinationCity={destinationCity}
           key={"Bus-Partner"}
           doj={doj}
-
         />
         {/* <LeftFilterBox
           title={"Bus Type"}
@@ -230,7 +232,8 @@ const LeftFilter = ({
           <Slider
             value={range}
             onChangeCommitted={handleSliderChangeCommitted}
-            valueLabelDisplay="auto"
+            onChange={handleSliderChange}
+            valueLabelDisplay="off"
             min={0}
             max={4000}
             step={1}

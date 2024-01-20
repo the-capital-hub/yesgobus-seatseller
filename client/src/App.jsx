@@ -110,6 +110,7 @@ function App() {
 
         {/* 404 Not Found */}
         <Route path="*" element={<NotFoundPage />} />
+        <Route path="/not-found" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );

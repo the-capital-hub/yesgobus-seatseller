@@ -3,7 +3,7 @@ import "./NotFoundPage.scss";
 import NotFoundImg from "../../../assets/error/notfound404.png";
 import { useNavigate } from "react-router-dom";
 
-function NotFound404() {
+function NotFoundPage() {
   const navigate = useNavigate();
 
   return (
@@ -14,11 +14,11 @@ function NotFound404() {
 
       <div className="d-flex justify-content-center gap-3">
         <button className="btn btn-light" onClick={() => navigate("/")}>
-          Go Back
+          Go Home
         </button>
       </div>
     </div>
   );
 }
 
-export default NotFound404;
+export default NotFoundPage;

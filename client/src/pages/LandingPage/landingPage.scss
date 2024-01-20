@@ -211,10 +211,15 @@
 
   .whyChooseYesGoBus {
     background: #f6f6f6;
-    padding: 50px;
+    padding: 50px 10px;
+
+    @media (min-width: 1024px) {
+      padding: 50px;
+    }
 
     .titleContainer {
       justify-content: center;
+      margin-inline: auto;
     }
 
     .whyChooseYesGoBusContainer {
@@ -258,10 +263,19 @@
   }
 
   .about {
-    padding: 50px;
+    padding: 50px 10px;
+
+    @media (min-width: 1024px) {
+      padding: 50px;
+    }
+
     display: flex;
     flex-direction: column;
     gap: 50px;
+
+    .titleContainer {
+      margin-inline: auto;
+    }
   }
 
   .aboveFooter {
@@ -347,6 +361,7 @@
 
         .bus-search-container {
           display: flex;
+          flex-wrap: wrap;
           margin-top: 20px;
           padding: 30px 10px;
           .infoCard {

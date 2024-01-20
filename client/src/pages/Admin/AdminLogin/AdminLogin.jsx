@@ -97,10 +97,10 @@ export default function AdminLogin() {
 
           <div className="heading">
             <h1
-              className="text-3xl md:text-5xl text-center"
+              className="text-3xl md:text-5xl text-center max-w-4xl"
               style={{ margin: "0", color: "#1B1D58" }}
             >
-              Login to Admin
+              Login to Business Development Associate (BDA)
             </h1>
           </div>
 

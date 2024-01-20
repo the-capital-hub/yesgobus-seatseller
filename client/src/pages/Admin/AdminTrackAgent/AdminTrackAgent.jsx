@@ -9,7 +9,7 @@ import {
 } from "../../../api/admin";
 import { useState, useEffect } from "react";
 import { Navigate, useOutletContext } from "react-router-dom";
-import { DownloadOutlined } from '@ant-design/icons';
+import { DownloadOutlined } from "@ant-design/icons";
 import { CSVLink } from "react-csv";
 
 function AdminTrackAgent() {
@@ -38,6 +38,10 @@ function AdminTrackAgent() {
       dataIndex: "revenue",
       key: "revenue",
       sorter: (a, b) => a.revenue - b.revenue,
+      render: (_, record) => {
+        let amount = Number.parseFloat(+record.revenue).toFixed(2);
+        return <p>{amount}</p>;
+      },
     },
     {
       title: "UserId",
@@ -173,14 +177,22 @@ function AdminTrackAgent() {
       {/* <HeaderWithSort /> */}
 
       <div className="trackAgent-container flex flex-col gap-5 py-5">
-        <h2 className="m-0">Track Agent Performance</h2>
-        {agentPerformanceReport?.length > 0 &&
+        <h2 className="m-0">
+          Track Business Development Associate (BDA) Performance
+        </h2>
+        {agentPerformanceReport?.length > 0 && (
           <div className="flex flex-end pb-2 flex-container">
-            <Button type="primary" icon={<DownloadOutlined />} >
-              <CSVLink data={agentPerformanceReport} headers={performanceColumn} filename={"AgentReport.csv"}>Export to CSV</CSVLink>
+            <Button type="primary" icon={<DownloadOutlined />}>
+              <CSVLink
+                data={agentPerformanceReport}
+                headers={performanceColumn}
+                filename={"AgentReport.csv"}
+              >
+                Export to CSV
+              </CSVLink>
             </Button>
           </div>
-        }
+        )}
         <Table
           dataSource={agentPerformanceReport}
           columns={performanceColumn}
@@ -204,7 +216,9 @@ function AdminTrackAgent() {
       </div>
 
       <div className="trackAgent-container flex flex-col gap-5 py-5">
-        <h2 className="m-0">Pending Agent Account</h2>
+        <h2 className="m-0">
+          Pending Business Development Associate (BDA) Account
+        </h2>
         <Table
           dataSource={pendingAgents}
           columns={pendingAccountColumn}
