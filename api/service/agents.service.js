@@ -25,25 +25,16 @@ export const registerAgent = async (agentData) => {
       ],
     });
     if (!existingAgent) {
-      const prevAgent = await Agent.findOne({}, { agentCode: 1 }, { sort: { agentCode: -1 } });
-      // const agentCode = generateUserId(
-      //   prevAgent?.agentCode.length > 6 ? "BD0000" : prevAgent.agentCode
-      // );
-      let newAgentCode;
-      if (prevAgent && prevAgent.agentCode) {
-        const lastAgentCode = prevAgent.agentCode;
-        const lastNumber = parseInt(lastAgentCode.substring(2), 10);
-        const newNumber = lastNumber + 1;
-        newAgentCode = `BD${newNumber.toString().padStart(4, '0')}`;
-      } else {
-        newAgentCode = "BD0001";
-      }
+      const prevAgent = await Agent.findOne({}, { agentCode: 1 }, { sort: { createdAt: -1 } });
+      const agentCode = generateUserId(
+        prevAgent?.agentCode.length > 6 ? "BD0000" : prevAgent.agentCode
+      );
       const hashedPassword = bcrypt.hashSync(agentData.password, 5);
       const newAgent = new Agent({
         ...agentData,
         password: hashedPassword,
         id: existingUserAccount._id,
-        agentCode: newAgentCode,
+        agentCode: agentCode.join(""),
       });
       await newAgent.save();
       return {
