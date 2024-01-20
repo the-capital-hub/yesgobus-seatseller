@@ -503,7 +503,7 @@ const BusBooking = () => {
                     className={`date ${date === selectedDate ? "active" : ""}`}
                     onClick={() => handleDateFilter(date)}
                   >
-                    {date}
+                    {date.replace(/,/g, ", ")}
                   </p>
                 ))}
               </div>
@@ -516,7 +516,7 @@ const BusBooking = () => {
                 className={`date ${date === selectedDate ? "active" : ""}`}
                 onClick={() => handleDateFilter(date)}
               >
-                {date}
+                {date.replace(/,/g, ", ")}
               </p>
             ))}
           </div>

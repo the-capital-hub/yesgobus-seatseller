@@ -104,22 +104,26 @@ const Navbar = ({ page }) => {
     <nav className="navbar burger">
       <div className="left">
         {page === "home" ? (
-          <img
-            className="logo"
-            onClick={() => navigate("/")}
-            src={logo}
-            width={50}
-            height={50}
-            alt=""
-          />
+          <a href={"/"}>
+            <img
+              className="logo"
+              // onClick={() => navigate("/")}
+              src={logo}
+              width={50}
+              height={50}
+              alt=""
+            />
+          </a>
         ) : (
-          <img
-            className="blacklogo"
-            onClick={() => navigate("/")}
-            src={blacklogo}
-            width={50}
-            alt=""
-          />
+          <a href={"/"}>
+            <img
+              className="blacklogo"
+              // onClick={() => navigate("/")}
+              src={blacklogo}
+              width={50}
+              alt=""
+            />
+          </a>
         )}
         <a href="/busbooking">
           <span>Bus</span>
@@ -149,7 +153,7 @@ const Navbar = ({ page }) => {
           </Link>
         ) : (
           <a href="/login">
-            <Button text="Login / Signup" />
+            <Button text="Login" />
           </a>
         )}
       </div>

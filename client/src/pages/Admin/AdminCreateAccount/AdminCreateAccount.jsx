@@ -18,10 +18,10 @@ export default function AdminCreateAccount() {
           />
           <div className="headings">
             <h1
-              className="text-3xl md:text-5xl"
+              className="text-3xl md:text-5xl text-center max-w-4xl"
               style={{ margin: "0", color: "#1B1D58" }}
             >
-              Create Admin Account
+              Create Business Development Associate (BDA) Account
             </h1>
             {/* <p className="">Create account using social networks</p> */}
 
