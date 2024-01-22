@@ -529,8 +529,7 @@ const BusBookingCard = ({
     let seatData = [];
     try {
       const response = await axiosInstance.get(
-        `${
-          import.meta.env.VITE_BASE_URL
+        `${import.meta.env.VITE_BASE_URL
         }/api/busBooking/getSeatLayout/${tripId}`
       );
       seatData = response.data?.seats;
@@ -620,6 +619,14 @@ const BusBookingCard = ({
     }, []);
     return uniqueFares;
   };
+
+  const convertSeatSellerFare = (fare) => {
+    const fareArray = Array.isArray(fare) ? fare : [fare];
+    const basePricesArray = fareArray.map(details => parseFloat(details.baseFare).toFixed(2));
+    return basePricesArray;
+  };
+  
+
 
   return (
     <div className={`BusBookingCard ${showSeats && "bg-lightgrey"}`}>
@@ -721,10 +728,10 @@ const BusBookingCard = ({
             isVrl
               ? vrlPickupLocations
               : isSrs
-              ? seatDetails.boardingPointlocationsAndTimes
-              : Array.isArray(pickUpLocationOne)
-              ? pickUpLocationOne
-              : [pickUpLocationOne]
+                ? seatDetails.boardingPointlocationsAndTimes
+                : Array.isArray(pickUpLocationOne)
+                  ? pickUpLocationOne
+                  : [pickUpLocationOne]
           }
           // pickUpLocationTwo={pickUpLocationTwo}
           // dropTimes={dropTimes}
@@ -732,10 +739,10 @@ const BusBookingCard = ({
             isVrl
               ? vrlDropLocations
               : isSrs
-              ? seatDetails.droppingPointlocationsAndTimes
-              : Array.isArray(dropLocationOne)
-              ? dropLocationOne
-              : [dropLocationOne]
+                ? seatDetails.droppingPointlocationsAndTimes
+                : Array.isArray(dropLocationOne)
+                  ? dropLocationOne
+                  : [dropLocationOne]
           }
           // dropLocationTwo={dropLocationTwo}
           backSeat={backSeat}
@@ -744,7 +751,7 @@ const BusBookingCard = ({
           price={price}
           seatDetails={seatDetails}
           cancellationPolicy={cancellationPolicy}
-          fare={isVrl ? allPrices : isSrs ? convertSrsFare(fare) : fare}
+          fare={isVrl ? allPrices : isSrs ? convertSrsFare(fare) : convertSeatSellerFare(fare)}
           isVrl={isVrl}
           ReferenceNumber={ReferenceNumber}
           scheduleId={scheduleId}

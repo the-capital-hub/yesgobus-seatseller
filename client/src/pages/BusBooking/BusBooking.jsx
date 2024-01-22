@@ -69,9 +69,8 @@ const BusBooking = () => {
   for (let i = 0; i <= 6; i++) {
     const nextDate = new Date(date);
     nextDate.setDate(date.getDate() + i);
-    const formattedDate = `${daysOfWeek[nextDate.getDay()]},${
-      months[nextDate.getMonth()]
-    }-${nextDate.getDate()}`;
+    const formattedDate = `${daysOfWeek[nextDate.getDay()]},${months[nextDate.getMonth()]
+      }-${nextDate.getDate()}`;
     dates.push(formattedDate);
   }
 
@@ -295,36 +294,30 @@ const BusBooking = () => {
         }
 
         //seat seller buses
-        try {
-          //   const response = await axiosInstance.post(
-          //     `${import.meta.env.VITE_BASE_URL}/api/busBooking/getBusDetails`,
-          //     {
-          //       sourceCity: sourceCity.trim(),
-          //       destinationCity: destinationCity.trim(),
-          //       doj: doj,
-          //       // boardingPoints,
-          //       // droppingPoints,
-          //       ...filters,
-          //     }
-          //   );
-          //   if (response.data.data[0] !== null) {
-          //     setBusDetails(response.data.data);
-          //     setNoOfBuses(response.data.data.length);
-          //   } else {
-          //     setBusDetails([]);
-          //     setNoOfBuses(0);
-          //   }
-          //   setSourceCityId(response.data.sourceCity);
-          //   setDestinationCityId(response.data.destinationCity);
-          //   setLoading(false);
-        } catch (error) {
-          setBusDetails([]);
-          setNoOfBuses(0);
-          setLoading(false);
-        } finally {
-          setLoading(false);
-        }
+
       }
+    }
+    try {
+      const response = await axiosInstance.post(
+        `${import.meta.env.VITE_BASE_URL}/api/busBooking/getBusDetails`,
+        {
+          sourceCity: sourceCity.trim(),
+          destinationCity: destinationCity.trim(),
+          doj: doj,
+          ...filters,
+        }
+      );
+      if (response.data.data.length !== 0) {
+        setBusDetails(response.data.data);
+        setNoOfBuses(response.data.data.length);
+      }
+      // setLoading(false);
+    } catch (error) {
+      // setBusDetails([]);
+      // setNoOfBuses(0);
+      // setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -355,18 +348,9 @@ const BusBooking = () => {
 
   const priceToDisplay = (fare) => {
     const fareArray = Array.isArray(fare) ? fare : [fare];
-
-    const prices = fareArray.map((price) => {
-      return parseInt(price, 10);
-    });
-
-    if (prices.length === 1) {
-      return prices[0].toFixed(2);
-    } else {
-      const minPrice = Math.min(...prices).toFixed(2);
-      const maxPrice = Math.max(...prices).toFixed(2);
-      return `${minPrice} - ${maxPrice}`;
-    }
+    const basePricesArray = fareArray.map(details => parseFloat(details.baseFare));
+      const minPrice = Math.min(...basePricesArray).toFixed(2);
+      return minPrice;
   };
 
   // const priceToDisplaySrs = (fare) => {
@@ -583,6 +567,7 @@ const BusBooking = () => {
                     key={isVrl ? bus?.ReferenceNumber : bus.id}
                   >
                     <BusBookingCard {...busProps} key={bus?.ReferenceNumber} />
+
                   </div>
                 );
               })}
@@ -679,9 +664,9 @@ const BusBooking = () => {
                     tripId={bus?.id}
                     // inventoryType={bus.inventoryType}
                     sourceCity={fromLocation}
-                    sourceCityId={sourceCityId}
+                    sourceCityId={bus?.source}
                     destinationCity={toLocation}
-                    destinationCityId={destinationCityId}
+                    destinationCityId={bus?.destination}
                     doj={selectedDate}
                     title={bus?.travels}
                     busName={bus?.travels}
@@ -700,7 +685,7 @@ const BusBooking = () => {
                     )}
                     seatsLeft={bus?.availableSeats}
                     avlWindowSeats={bus?.avlWindowSeats}
-                    price={priceToDisplay(bus?.fares)}
+                    price={priceToDisplay(bus?.fareDetails)}
                     // pickUpTimes={pickUpTimes}
                     pickUpLocationOne={bus?.boardingTimes}
                     // pickUpLocationTwo={pickUpLocationTwo}
@@ -709,7 +694,7 @@ const BusBooking = () => {
                     // dropLocationTwo={dropLocationTwo}
                     backSeat={true}
                     cancellationPolicy={bus?.cancellationPolicy}
-                    fare={bus?.fares}
+                    fare={bus?.fareDetails}
                   />
                 </div>
               ))}

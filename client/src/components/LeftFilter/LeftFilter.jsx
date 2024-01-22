@@ -68,16 +68,16 @@ const LeftFilter = ({
       for (const sourceCity of sourceCities) {
         for (const destinationCity of destinationCities) {
           try {
-            // response = await axiosInstance.get(
-            //   `${import.meta.env.VITE_BASE_URL}/api/busBooking/getFilters`,
-            //   {
-            //     params: {
-            //       sourceCity: sourceCity,
-            //       destinationCity: destinationCity,
-            //       doj: doj,
-            //     },
-            //   }
-            // );
+            response = await axiosInstance.get(
+              `${import.meta.env.VITE_BASE_URL}/api/busBooking/getFilters`,
+              {
+                params: {
+                  sourceCity: sourceCity,
+                  destinationCity: destinationCity,
+                  doj: doj,
+                },
+              }
+            );
           } catch (error) {
             // console.error("Error fetching filters:", error);
           }
