@@ -591,7 +591,7 @@ const Seats = ({
 
           if (seat) {
             seatCount++;
-            const isHighlighted = seat.BaseFare === highlightedPrice;
+            const isHighlighted = seat.baseFare === highlightedPrice;
             if (seat.available === "true") {
               if (selectedSeats.includes(seat.name)) {
                 seatRow.push(
@@ -701,7 +701,7 @@ const Seats = ({
                   <td key={seat.name}>
                     <div
                       className={`seat_____container ${
-                        isHighlighted ? "highlighted_____seat" : ""
+                        isHighlighted ? "" : ""
                       } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
@@ -722,7 +722,7 @@ const Seats = ({
                   <td key={seat.name}>
                     <div
                       className={`seat_____container ${
-                        isHighlighted ? "highlighted_____seat" : ""
+                        isHighlighted ? "" : ""
                       } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
