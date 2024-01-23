@@ -59,10 +59,10 @@ export const getBalanceAPI = async () => {
 };
 
 //get all bookings
-export const getAllBookings = async () => {
+export const getAllBookings = async (agentId) => {
   try {
     const response = await axiosInstance.get(
-      `${baseUrl}/${ADMIN_ENDPOINTS.getAllBookings}`
+      `${baseUrl}/${ADMIN_ENDPOINTS.getAllBookings}/${agentId}`
     );
     return response.data;
   } catch (error) {
@@ -72,10 +72,10 @@ export const getAllBookings = async () => {
 };
 
 //get all bookings refund
-export const getAllBookingRefund = async () => {
+export const getAllBookingRefund = async (agentId) => {
   try {
     const response = await axiosInstance.get(
-      `${baseUrl}/${ADMIN_ENDPOINTS.getAllRefunds}`
+      `${baseUrl}/${ADMIN_ENDPOINTS.getAllRefunds}/${agentId}`
     );
     return response.data;
   } catch (error) {

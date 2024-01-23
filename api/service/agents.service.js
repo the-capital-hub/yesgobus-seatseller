@@ -132,16 +132,9 @@ export const getAgentBookings = async (agentId) => {
     }
     const bookings = await BusBooking.find({
       $or: [
-        {
-          $and: [
-            { userId: agent.id },
-            {
-              $or: [{ agentCode: agent.agentCode }, { agentCode: null }],
-            },
-          ],
-        },
-        { agentCode: agent.agentCode },
-      ],
+          { userId: agent.id },
+          { agentCode: agent.agentCode },
+        ],
       bookingStatus: "paid",
     });
     return {
@@ -165,14 +158,7 @@ export const getAllAgentsBookings = async () => {
       agents.map(async (agent) => {
         const bookings = await BusBooking.find({
           $or: [
-            {
-              $and: [
-                { userId: agent.id },
-                {
-                  $or: [{ agentCode: agent.agentCode }, { agentCode: null }],
-                },
-              ],
-            },
+            { userId: agent.id },
             { agentCode: agent.agentCode },
           ],
           bookingStatus: "paid",
@@ -278,8 +264,34 @@ export const getAllPendingAgents = async () => {
   }
 };
 
-export const getAllBookings = async () => {
+export const getAllBookings = async (agentId) => {
   try {
+    const agent = await Agent.findById(agentId);
+    if (!agent) {
+      return {
+        status: 404,
+        message: "Agent not found",
+      };
+    }
+
+    const isMasterAdmin =
+      agent.email === process.env.MASTER_ADMIN_EMAIL;
+
+    if (!isMasterAdmin) {
+      const bookings = await BusBooking.find({
+        $or: [
+          { userId: agent.id },
+          { agentCode: agent.agentCode },
+        ],
+        bookingStatus: "paid",
+      });
+      return {
+        status: 200,
+        message: "Bookings details retrived",
+        data: bookings,
+      };
+    }
+
     const bookings = await BusBooking.find({ bookingStatus: "paid" }).sort({
       createdAt: -1,
     });
@@ -305,8 +317,34 @@ export const getAllBookings = async () => {
   }
 };
 
-export const getAllBookingRefund = async () => {
+export const getAllBookingRefund = async (agentId) => {
   try {
+    const agent = await Agent.findById(agentId);
+    if (!agent) {
+      return {
+        status: 404,
+        message: "Agent not found",
+      };
+    }
+
+    const isMasterAdmin =
+      agent.email === process.env.MASTER_ADMIN_EMAIL;
+
+    if (!isMasterAdmin) {
+      const bookings = await BusBooking.find({
+        $or: [
+          { userId: agent.id },
+          { agentCode: agent.agentCode },
+        ],
+        bookingStatus: "cancelled",
+      });
+      return {
+        status: 200,
+        message: "Bookings details retrived",
+        data: bookings,
+      };
+    }
+
     const bookings = await BusBooking.find({ bookingStatus: "cancelled" }).sort(
       { createdAt: -1 }
     );
@@ -342,14 +380,7 @@ export const getAgentPerformanceReport = async () => {
       agents.map(async (agent) => {
         const bookings = await BusBooking.find({
           $or: [
-            {
-              $and: [
-                { userId: agent.id },
-                {
-                  $or: [{ agentCode: agent.agentCode }, { agentCode: null }],
-                },
-              ],
-            },
+            { userId: agent.id },
             { agentCode: agent.agentCode },
           ],
           bookingStatus: "paid",
@@ -434,16 +465,9 @@ export const getAgentStats = async (agentId) => {
     }
     const bookings = await BusBooking.find({
       $or: [
-        {
-          $and: [
-            { userId: agent.id },
-            {
-              $or: [{ agentCode: agent.agentCode }, { agentCode: null }],
-            },
-          ],
-        },
-        { agentCode: agent.agentCode },
-      ],
+          { userId: agent.id },
+          { agentCode: agent.agentCode },
+        ],
       bookingStatus: "paid",
     });
     const totalRevenue = bookings.reduce(

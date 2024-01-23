@@ -5,6 +5,7 @@ import { getAllBookingRefund } from "../../../../../api/admin";
 import { formatBusTravelTime } from "../../../../../utils/Admin/AdminHelpers";
 import { CSVLink } from "react-csv";
 import { DownloadOutlined } from "@ant-design/icons";
+import { useOutletContext } from "react-router-dom";
 
 const columns = [
   {
@@ -100,11 +101,13 @@ const Content = ({ record }) => {
 
 export default function WalletRefunded() {
   const [refunds, setRefunds] = useState(null);
+  const { admin } = useOutletContext();
+
 
   useEffect(() => {
-    const getBookingRefundDetails = async () => {
+    const getBookingRefundDetails = async (agentId) => {
       try {
-        const response = await getAllBookingRefund();
+        const response = await getAllBookingRefund(agentId);
         const bookingsData = response.data.map((booking) => {
           booking.doj = new Date(booking.doj).toISOString().split("T")[0];
           booking.customerName =
@@ -117,9 +120,10 @@ export default function WalletRefunded() {
       }
     };
 
-    getBookingRefundDetails();
+    getBookingRefundDetails(admin._id);
   }, []);
 
+  const filteredColumns = columns.filter(column => column.dataIndex === undefined || refunds?.some(item => item[column.dataIndex] !== undefined));
   return (
     <section className="history-wrapper flex flex-col gap-4">
       <div className="flex justify-between items-center">
@@ -140,14 +144,14 @@ export default function WalletRefunded() {
       {refunds?.length > 0 && (
         <div className="flex flex-end pb-2 flex-container">
           <Button type="primary" icon={<DownloadOutlined />}>
-            <CSVLink data={refunds} headers={columns} filename={"Refunds.csv"}>
+            <CSVLink data={refunds} headers={filteredColumns} filename={"Refunds.csv"}>
               Export to CSV
             </CSVLink>
           </Button>
         </div>
       )}
       <Table
-        columns={columns}
+        columns={filteredColumns}
         dataSource={refunds}
         className="box-container"
         pagination={{

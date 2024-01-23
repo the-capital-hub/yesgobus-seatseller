@@ -44,9 +44,9 @@ export default function DashboardSide() {
             <p className="m-0 text-xs">Receive</p>
           </div>
         </div>
-
+        <hr />
         {/* History */}
-        <SideHistory />
+        {/* <SideHistory /> */}
       </div>
     </div>
   );

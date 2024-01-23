@@ -5,6 +5,7 @@ import { getAllBookings } from "../../../../../api/admin";
 import { formatBusTravelTime } from "../../../../../utils/Admin/AdminHelpers";
 import { CSVLink } from "react-csv";
 import { DownloadOutlined } from "@ant-design/icons";
+import { useOutletContext } from "react-router-dom";
 
 const columns = [
   {
@@ -100,11 +101,12 @@ const Content = ({ record }) => {
 
 export default function WalletSales() {
   const [bookings, setBookings] = useState(null);
+  const { admin } = useOutletContext();
 
   useEffect(() => {
-    const getAllBookingDetails = async () => {
+    const getAllBookingDetails = async (agentId) => {
       try {
-        const response = await getAllBookings();
+        const response = await getAllBookings(agentId);
         const bookingsData = response.data.map((booking) => {
           booking.doj = new Date(booking.doj).toISOString().split("T")[0];
           booking.customerName =
@@ -117,8 +119,11 @@ export default function WalletSales() {
       }
     };
 
-    getAllBookingDetails();
+    getAllBookingDetails(admin._id);
   }, []);
+
+  const filteredColumns = columns.filter(column => column.dataIndex === undefined || bookings?.some(item => item[column.dataIndex] !== undefined));
+
 
   return (
     <section className="history-wrapper flex flex-col gap-4">
@@ -137,14 +142,14 @@ export default function WalletSales() {
       {bookings?.length > 0 && (
         <div className="flex flex-end pb-2 flex-container">
           <Button type="primary" icon={<DownloadOutlined />}>
-            <CSVLink data={bookings} headers={columns} filename={"Sales.csv"}>
+            <CSVLink data={bookings} headers={filteredColumns} filename={"Sales.csv"}>
               Export to CSV
             </CSVLink>
           </Button>
         </div>
       )}
       <Table
-        columns={columns}
+        columns={filteredColumns}
         dataSource={bookings}
         className="box-container"
         pagination={{
