@@ -123,6 +123,7 @@ export default function WalletRefunded() {
     getBookingRefundDetails(admin._id);
   }, []);
 
+  const filteredColumns = columns.filter(column => column.dataIndex === undefined || refunds?.some(item => item[column.dataIndex] !== undefined));
   return (
     <section className="history-wrapper flex flex-col gap-4">
       <div className="flex justify-between items-center">
@@ -143,14 +144,14 @@ export default function WalletRefunded() {
       {refunds?.length > 0 && (
         <div className="flex flex-end pb-2 flex-container">
           <Button type="primary" icon={<DownloadOutlined />}>
-            <CSVLink data={refunds} headers={columns} filename={"Refunds.csv"}>
+            <CSVLink data={refunds} headers={filteredColumns} filename={"Refunds.csv"}>
               Export to CSV
             </CSVLink>
           </Button>
         </div>
       )}
       <Table
-        columns={columns}
+        columns={filteredColumns}
         dataSource={refunds}
         className="box-container"
         pagination={{
