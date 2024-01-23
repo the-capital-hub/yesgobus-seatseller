@@ -109,7 +109,8 @@ export const getAllPendingAgentsControllr = async (req, res) => {
 
 export const getAllBookingsController = async (req, res) => {
   try {
-    const result = await getAllBookings();
+    const { agentId } = req.params;
+    const result = await getAllBookings(agentId);
     res.status(200).send(result);
   } catch (err) {
     console.log(err);
@@ -119,7 +120,8 @@ export const getAllBookingsController = async (req, res) => {
 
 export const getAllBookingRefundsController = async (req, res) => {
   try {
-    const result = await getAllBookingRefund();
+    const { agentId } = req.params;
+    const result = await getAllBookingRefund(agentId);
     res.status(200).send(result);
   } catch (err) {
     console.log(err);
