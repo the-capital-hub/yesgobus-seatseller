@@ -94,12 +94,14 @@ export const signIn = async (emailMobile, password) => {
 export const googleSignUp = async (jwtToken) => {
   try {
     const { email, name } = jwt.decode(jwtToken);
+    const userId = generateRandomNumber(8);
     const newUser = await User.findOneAndUpdate(
       { email },
       {
         $setOnInsert: {
           email: email,
           fullName: name,
+          userId: userId,
         },
       },
       {
@@ -126,12 +128,14 @@ export const googleSignUp = async (jwtToken) => {
 
 export const facebookSignUp = async ({ name, email }) => {
   try {
+    const userId = generateRandomNumber(8);
     const newUser = await User.findOneAndUpdate(
       { email },
       {
         $setOnInsert: {
           email,
           fullName: name,
+          userId: userId,
         },
       },
       {
