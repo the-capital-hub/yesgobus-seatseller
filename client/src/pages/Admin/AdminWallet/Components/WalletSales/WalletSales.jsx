@@ -122,6 +122,9 @@ export default function WalletSales() {
     getAllBookingDetails(admin._id);
   }, []);
 
+  const filteredColumns = columns.filter(column => column.dataIndex === undefined || bookings?.some(item => item[column.dataIndex] !== undefined));
+
+
   return (
     <section className="history-wrapper flex flex-col gap-4">
       <div className="flex justify-between items-center">
@@ -139,14 +142,14 @@ export default function WalletSales() {
       {bookings?.length > 0 && (
         <div className="flex flex-end pb-2 flex-container">
           <Button type="primary" icon={<DownloadOutlined />}>
-            <CSVLink data={bookings} headers={columns} filename={"Sales.csv"}>
+            <CSVLink data={bookings} headers={filteredColumns} filename={"Sales.csv"}>
               Export to CSV
             </CSVLink>
           </Button>
         </div>
       )}
       <Table
-        columns={columns}
+        columns={filteredColumns}
         dataSource={bookings}
         className="box-container"
         pagination={{
