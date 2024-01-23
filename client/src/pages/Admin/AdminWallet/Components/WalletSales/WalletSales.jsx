@@ -5,6 +5,7 @@ import { getAllBookings } from "../../../../../api/admin";
 import { formatBusTravelTime } from "../../../../../utils/Admin/AdminHelpers";
 import { CSVLink } from "react-csv";
 import { DownloadOutlined } from "@ant-design/icons";
+import { useOutletContext } from "react-router-dom";
 
 const columns = [
   {
@@ -100,11 +101,12 @@ const Content = ({ record }) => {
 
 export default function WalletSales() {
   const [bookings, setBookings] = useState(null);
+  const { admin } = useOutletContext();
 
   useEffect(() => {
-    const getAllBookingDetails = async () => {
+    const getAllBookingDetails = async (agentId) => {
       try {
-        const response = await getAllBookings();
+        const response = await getAllBookings(agentId);
         const bookingsData = response.data.map((booking) => {
           booking.doj = new Date(booking.doj).toISOString().split("T")[0];
           booking.customerName =
@@ -117,7 +119,7 @@ export default function WalletSales() {
       }
     };
 
-    getAllBookingDetails();
+    getAllBookingDetails(admin._id);
   }, []);
 
   return (
