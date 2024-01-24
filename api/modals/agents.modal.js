@@ -57,6 +57,9 @@ const agentSchema = new Schema(
       required: true,
       unique: true,
     },
+    maxTicket: {
+      type: Number,
+    },
   },
   {
     timestamps: true

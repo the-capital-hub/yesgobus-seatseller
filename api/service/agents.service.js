@@ -132,9 +132,9 @@ export const getAgentBookings = async (agentId) => {
     }
     const bookings = await BusBooking.find({
       $or: [
-          { userId: agent.id },
-          { agentCode: agent.agentCode },
-        ],
+        { userId: agent.id },
+        { agentCode: agent.agentCode },
+      ],
       bookingStatus: "paid",
     });
     return {
@@ -397,6 +397,7 @@ export const getAgentPerformanceReport = async () => {
           userId: agent.userId,
           email: agent.email,
           phone: agent.phNum,
+          maxTicket: agent.maxTicket,
         };
       })
     );
@@ -465,9 +466,9 @@ export const getAgentStats = async (agentId) => {
     }
     const bookings = await BusBooking.find({
       $or: [
-          { userId: agent.id },
-          { agentCode: agent.agentCode },
-        ],
+        { userId: agent.id },
+        { agentCode: agent.agentCode },
+      ],
       bookingStatus: "paid",
     });
     const totalRevenue = bookings.reduce(
@@ -527,3 +528,31 @@ export const getAgentStats = async (agentId) => {
     };
   }
 };
+
+export const updateAgent = async (agentId, updateData) => {
+  try {
+    const agent = await Agent.findByIdAndUpdate(
+      agentId,
+      updateData,
+      { new: true }
+    );
+    if (!agent) {
+      return {
+        status: 404,
+        message: "Agent not found",
+      };
+    }
+    return {
+      status: 200,
+      message: "Agent account updated",
+      data: agent,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      message: error.message || "Internal Server Error",
+    };
+  }
+};
+
