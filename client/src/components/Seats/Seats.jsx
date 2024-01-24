@@ -65,6 +65,9 @@ const Seats = ({
   }, [fare]);
 
   function convertMinutesToTime(minutes) {
+    if (!minutes) {
+      return "";
+    }
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     const journeyDay = Math.floor(hours / 24);
@@ -183,13 +186,13 @@ const Seats = ({
   const lowerTierSeats = isVrl
     ? seatDetails.filter((seat) => seat.UpLowBerth === "LB")
     : isSrs
-    ? seatDetails.coach_details.filter((seat) => seat.z_index === 0)
-    : seatDetails.filter((seat) => seat.zIndex === "0");
+      ? seatDetails.coach_details.filter((seat) => seat.z_index === 0)
+      : seatDetails.filter((seat) => seat.zIndex === "0");
   const upperTierSeats = isVrl
     ? seatDetails.filter((seat) => seat.UpLowBerth === "UB")
     : isSrs
-    ? seatDetails.coach_details.filter((seat) => seat.z_index === 1)
-    : seatDetails.filter((seat) => seat.zIndex === "1");
+      ? seatDetails.coach_details.filter((seat) => seat.z_index === 1)
+      : seatDetails.filter((seat) => seat.zIndex === "1");
 
   const renderSeatTable = (seats, selectedSeats) => {
     if (isVrl) {
@@ -225,9 +228,8 @@ const Seats = ({
                 seatRow.push(
                   <td key={seat.SeatNo}>
                     <div
-                      className={`seat_____container ${
-                        isHighlighted ? "highlighted_____seat" : ""
-                      } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                      className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
                         onClick={() =>
@@ -259,9 +261,8 @@ const Seats = ({
                   seatRow.push(
                     <td key={seat.SeatNo}>
                       <div
-                        className={`seat_____container ${
-                          isHighlighted ? "highlighted_____seat" : ""
-                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                        className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                          } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                       >
                         <img
                           onClick={() =>
@@ -292,9 +293,8 @@ const Seats = ({
                   seatRow.push(
                     <td key={seat.SeatNo}>
                       <div
-                        className={`seat_____container ${
-                          isHighlighted ? "highlighted_____seat" : ""
-                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                        className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                          } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                       >
                         <img
                           onClick={() =>
@@ -409,9 +409,8 @@ const Seats = ({
                 seatRow.push(
                   <td key={seat.seatName}>
                     <div
-                      className={`seat_____container ${
-                        isHighlighted ? "highlighted_____seat" : ""
-                      } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                      className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
                         onClick={() =>
@@ -421,20 +420,19 @@ const Seats = ({
                             seatDetails.available_gst[seat.seatName] || 0,
                             0,
                             parseFloat(seatDetails.available[seat.seatName]) +
-                              parseFloat(
-                                seatDetails.available_gst[seat.seatName] || 0
-                              ),
+                            parseFloat(
+                              seatDetails.available_gst[seat.seatName] || 0
+                            ),
                             seatDetails.ladies_seats?.includes(seat.seatName)
                             // seat.ac,
                             // seat.sleeper
                           )
                         }
-                        title={`ID: ${seat.seatName}\nFare: ₹${
-                          seatDetails.available[seat.seatName]
-                        }`}
+                        title={`ID: ${seat.seatName}\nFare: ₹${seatDetails.available[seat.seatName]
+                          }`}
                         src={seat.width === 1 ? singleselected : selectedFill}
                         alt="selected seat"
-                        // className={(seat.width == "2") ? "vertical" : ""}
+                      // className={(seat.width == "2") ? "vertical" : ""}
                       />
                     </div>
                   </td>
@@ -444,9 +442,8 @@ const Seats = ({
                   seatRow.push(
                     <td key={seat.seatName}>
                       <div
-                        className={`seat_____container ${
-                          isHighlighted ? "highlighted_____seat" : ""
-                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                        className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                          } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                       >
                         <img
                           onClick={() =>
@@ -456,24 +453,23 @@ const Seats = ({
                               seatDetails.available_gst[seat.seatName] || 0,
                               0,
                               parseFloat(seatDetails.available[seat.seatName]) +
-                                parseFloat(
-                                  seatDetails.available_gst[seat.seatName] || 0
-                                ),
+                              parseFloat(
+                                seatDetails.available_gst[seat.seatName] || 0
+                              ),
                               seatDetails.ladies_seats?.includes(seat.seatName)
                               // seat.ac,
                               // seat.sleeper
                             )
                           }
-                          title={`ID: ${seat.seatName}\nFare: ₹${
-                            seatDetails.available_gst[seat.seatName]
-                          }`}
+                          title={`ID: ${seat.seatName}\nFare: ₹${seatDetails.available_gst[seat.seatName]
+                            }`}
                           src={
                             seat.width === 1
                               ? singleladiesavailable
                               : ladiesavailable
                           }
                           alt="available ladies"
-                          // className={(seat.width == "2") ? "vertical" : ""}
+                        // className={(seat.width == "2") ? "vertical" : ""}
                         />
                       </div>
                     </td>
@@ -482,9 +478,8 @@ const Seats = ({
                   seatRow.push(
                     <td key={seat.seatName}>
                       <div
-                        className={`seat_____container ${
-                          isHighlighted ? "highlighted_____seat" : ""
-                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                        className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                          } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                       >
                         <img
                           onClick={() =>
@@ -494,20 +489,19 @@ const Seats = ({
                               seatDetails.available_gst[seat.seatName] || 0,
                               0,
                               parseFloat(seatDetails.available[seat.seatName]) +
-                                parseFloat(
-                                  seatDetails.available_gst[seat.seatName] || 0
-                                ),
+                              parseFloat(
+                                seatDetails.available_gst[seat.seatName] || 0
+                              ),
                               seatDetails.ladies_seats?.includes(seat.seatName)
                               // seat.ac,
                               // seat.sleeper
                             )
                           }
-                          title={`ID: ${seat.seatName}\nFare: ₹${
-                            seatDetails.available[seat.seatName]
-                          }`}
+                          title={`ID: ${seat.seatName}\nFare: ₹${seatDetails.available[seat.seatName]
+                            }`}
                           src={seat.width === 1 ? singleavailable : available}
                           alt="available"
-                          // className={(seat.width == "2") ? "vertical" : ""}
+                        // className={(seat.width == "2") ? "vertical" : ""}
                         />
                       </div>
                     </td>
@@ -519,9 +513,8 @@ const Seats = ({
                 seatRow.push(
                   <td key={seat.seatName}>
                     <div
-                      className={`seat_____container ${
-                        isHighlighted ? "highlighted_____seat" : ""
-                      } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                      className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
                         title={`ID: ${seat.seatName}`}
@@ -529,7 +522,7 @@ const Seats = ({
                           seat.width === 1 ? singleladiesbooked : ladiesbooked
                         }
                         alt="ladiesbooked"
-                        // className={(seat.width == "2") ? "vertical" : ""}
+                      // className={(seat.width == "2") ? "vertical" : ""}
                       />
                     </div>
                   </td>
@@ -538,15 +531,14 @@ const Seats = ({
                 seatRow.push(
                   <td key={seat.seatName}>
                     <div
-                      className={`seat_____container ${
-                        isHighlighted ? "highlighted_____seat" : ""
-                      } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                      className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
                         title={`ID: ${seat.seatName}`}
                         src={seat.width === 1 ? singlebooked : booked}
                         alt="booked"
-                        // className={(seat.width == "2") ? "vertical" : ""}
+                      // className={(seat.width == "2") ? "vertical" : ""}
                       />
                     </div>
                   </td>
@@ -597,9 +589,8 @@ const Seats = ({
                 seatRow.push(
                   <td key={seat.name}>
                     <div
-                      className={`seat_____container ${
-                        isHighlighted ? "highlighted_____seat" : ""
-                      } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                      className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
                         onClick={() =>
@@ -631,9 +622,8 @@ const Seats = ({
                   seatRow.push(
                     <td key={seat.name}>
                       <div
-                        className={`seat_____container ${
-                          isHighlighted ? "highlighted_____seat" : ""
-                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                        className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                          } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                       >
                         <img
                           onClick={() =>
@@ -664,9 +654,8 @@ const Seats = ({
                   seatRow.push(
                     <td key={seat.name}>
                       <div
-                        className={`seat_____container ${
-                          isHighlighted ? "highlighted_____seat" : ""
-                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                        className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                          } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                       >
                         <img
                           onClick={() =>
@@ -700,9 +689,8 @@ const Seats = ({
                 seatRow.push(
                   <td key={seat.name}>
                     <div
-                      className={`seat_____container ${
-                        isHighlighted ? "" : ""
-                      } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                      className={`seat_____container ${isHighlighted ? "" : ""
+                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
                         title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
@@ -721,9 +709,8 @@ const Seats = ({
                 seatRow.push(
                   <td key={seat.name}>
                     <div
-                      className={`seat_____container ${
-                        isHighlighted ? "" : ""
-                      } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                      className={`seat_____container ${isHighlighted ? "" : ""
+                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
                         title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
@@ -786,7 +773,7 @@ const Seats = ({
   const handleContinue = () => {
     if (
       bookingDetails.boardingPoint.bpId &&
-      bookingDetails.droppingPoint.bpId &&
+      (bookingDetails.droppingPoint.bpId || dropLocationOne[0] === undefined || dropLocationOne[0]?.bpName === undefined) &&
       bookingDetails.selectedSeats.length !== 0
     ) {
       // Add GST 5 %
@@ -852,11 +839,15 @@ const Seats = ({
         }
         break;
       case "drop":
-        if (bookingDetails.droppingPoint.bpId) {
+        if (bookingDetails?.droppingPoint?.bpId) {
+          setError(null);
+          handleContinue();
+        } if (dropLocationOne[0] === undefined || dropLocationOne[0]?.bpName === undefined) {
           setError(null);
           handleContinue();
         } else {
           setError("Please select a drop location.");
+          console.log(dropLocationOne);
         }
         break;
       default:
@@ -913,9 +904,8 @@ const Seats = ({
             <div className="filters">
               {/* <p className="tag">Seat Price:</p> */}
               <button
-                className={`filter ${
-                  selectedPriceFilter === null ? "highlighted" : ""
-                }`}
+                className={`filter ${selectedPriceFilter === null ? "highlighted" : ""
+                  }`}
                 onClick={() => setSelectedPriceFilter(null)}
               >
                 All
@@ -923,9 +913,8 @@ const Seats = ({
               {prices.map((price) => (
                 <button
                   key={price}
-                  className={`filter ${
-                    selectedPriceFilter === price ? "highlighted" : ""
-                  }`}
+                  className={`filter ${selectedPriceFilter === price ? "highlighted" : ""
+                    }`}
                   onClick={() => setSelectedPriceFilter(price)}
                 >
                   ₹{price}
@@ -1002,27 +991,29 @@ const Seats = ({
         <div className="seatMobileRight">
           <div className="drop-pickup-points-mobile">
             <span className="title">DROP POINT</span>
-            {dropLocationOne?.map((droppingPoint, index) => (
+            {dropLocationOne.length > 0 && dropLocationOne?.map((droppingPoint, index) => (
               <PickUpAndDropPoints
                 highlight={
-                  bookingDetails.droppingPoint.bpId === droppingPoint.bpId
+                  bookingDetails?.droppingPoint?.bpId === droppingPoint?.bpId
                 }
-                key={droppingPoint.bpId}
+                key={droppingPoint?.bpId}
                 time={
                   isVrl || isSrs
-                    ? droppingPoint.time
-                    : convertMinutesToTime(droppingPoint.time)
+                    ? droppingPoint?.time
+                    : convertMinutesToTime(droppingPoint?.time)
                 }
-                locationOne={droppingPoint.bpName}
-                locationTwo={droppingPoint.address}
-                onClick={() =>
-                  setBookingDetails((prev) => {
-                    return {
-                      ...prev,
-                      droppingPoint,
-                    };
-                  })
-                }
+                locationOne={droppingPoint?.bpName}
+                locationTwo={droppingPoint?.address}
+                onClick={() => {
+                  if (droppingPoint?.bpName) {
+                    setBookingDetails((prev) => {
+                      return {
+                        ...prev,
+                        droppingPoint,
+                      };
+                    });
+                  }
+                }}
               />
             ))}
           </div>
@@ -1126,27 +1117,29 @@ const Seats = ({
             </div>
             <div className="seatsLeftContainer">
               <span className="title">DROP POINT</span>
-              {dropLocationOne?.map((droppingPoint, index) => (
+              {dropLocationOne.length > 0 && dropLocationOne?.map((droppingPoint, index) => (
                 <PickUpAndDropPoints
                   highlight={
-                    bookingDetails.droppingPoint.bpId === droppingPoint.bpId
+                    bookingDetails.droppingPoint.bpId === droppingPoint?.bpId
                   }
-                  key={droppingPoint.bpId}
+                  key={droppingPoint?.bpId}
                   time={
                     isVrl || isSrs
-                      ? droppingPoint.time
-                      : convertMinutesToTime(droppingPoint.time)
+                      ? droppingPoint?.time
+                      : convertMinutesToTime(droppingPoint?.time)
                   }
-                  locationOne={droppingPoint.bpName}
-                  locationTwo={droppingPoint.address}
-                  onClick={() =>
-                    setBookingDetails((prev) => {
-                      return {
-                        ...prev,
-                        droppingPoint,
-                      };
-                    })
-                  }
+                  locationOne={droppingPoint?.bpName}
+                  locationTwo={droppingPoint?.address}
+                  onClick={() => {
+                    if (droppingPoint?.bpName) {
+                      setBookingDetails((prev) => {
+                        return {
+                          ...prev,
+                          droppingPoint,
+                        };
+                      });
+                    }
+                  }}
                 />
               ))}
             </div>
@@ -1174,9 +1167,8 @@ const Seats = ({
           {prices.length > 1 && (
             <div className="filters">
               <button
-                className={`filter ${
-                  selectedPriceFilter === null ? "highlighted" : ""
-                }`}
+                className={`filter ${selectedPriceFilter === null ? "highlighted" : ""
+                  }`}
                 onClick={() => setSelectedPriceFilter(null)}
               >
                 All
@@ -1184,9 +1176,8 @@ const Seats = ({
               {prices.map((price) => (
                 <button
                   key={price}
-                  className={`filter ${
-                    selectedPriceFilter === price ? "highlighted" : ""
-                  }`}
+                  className={`filter ${selectedPriceFilter === price ? "highlighted" : ""
+                    }`}
                   onClick={() => setSelectedPriceFilter(price)}
                 >
                   ₹{price}
