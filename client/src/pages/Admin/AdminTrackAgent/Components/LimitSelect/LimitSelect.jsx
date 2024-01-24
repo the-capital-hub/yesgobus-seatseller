@@ -11,7 +11,7 @@ const DEFAULT_LIMITS = [
   { value: 50, label: "50" },
 ];
 
-export default function LimitSelect({ record }) {
+export default function LimitSelect({ record, setAgentPerformanceReport }) {
   let { maxTicket, agentId, agentName } = record;
 
   const [items, setItems] = useState(() => {
@@ -78,8 +78,20 @@ export default function LimitSelect({ record }) {
       maxTicket: value,
     };
     try {
-      const response = await updateAgentTicketLimitAPI(updatedLimit, agentId);
-      console.log(response);
+      const { data } = await updateAgentTicketLimitAPI(updatedLimit, agentId);
+      console.log(data);
+      setAgentPerformanceReport((prev) => {
+        let copy = [...prev];
+        copy.map((agentData) => {
+          if (agentData.agentId === data._id) {
+            agentData.maxTicket = data.maxTicket;
+          }
+
+          return agentData;
+        });
+
+        return [...copy];
+      });
       toast.success(`Ticket Limit updated for ${agentName}`);
     } catch (error) {
       console.error("Error updating ticket limit", error);

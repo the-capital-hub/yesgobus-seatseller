@@ -56,7 +56,12 @@ function AdminTrackAgent() {
       dataIndex: "maxTicketLimit",
       key: "maxTicketLimit",
       render: (_, record) => {
-        return <LimitSelect record={record} />;
+        return (
+          <LimitSelect
+            record={record}
+            setAgentPerformanceReport={setAgentPerformanceReport}
+          />
+        );
       },
     },
   ];
