@@ -14,6 +14,7 @@ import {
   isAgent,
   getAgentStats,
   updateAgent,
+  getAgentRemainingTicketByDay,
 } from '../service/agents.service.js';
 
 export const registerAgentController = async (req, res) => {
@@ -180,6 +181,18 @@ export const updateAgentController = async (req, res) => {
     res.status(200).send(result);
   } catch (err) {
     console.log(err);
-    res.status(err.status || 500).json({ message: "Error approving agent" });
+    res.status(err.status || 500).json({ message: "Error updating agent" });
+  }
+};
+
+
+export const getAgentRemainingTicketByDayController = async (req, res) => {
+  try {
+    const { agentId } = req.params;
+    const result = await getAgentRemainingTicketByDay(agentId);
+    res.status(200).send(result);
+  } catch (err) {
+    console.log(err);
+    res.status(err.status || 500).json({ message: "Error getting limit" });
   }
 };

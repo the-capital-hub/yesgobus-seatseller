@@ -397,7 +397,7 @@ export const getAgentPerformanceReport = async () => {
           userId: agent.userId,
           email: agent.email,
           phone: agent.phNum,
-          maxTicket: agent.maxTicket,
+          maxTicket: agent.maxTicket || 50,
         };
       })
     );
@@ -419,7 +419,15 @@ export const getAgentPerformanceReport = async () => {
 export const verifyAgentCode = async (agentCode) => {
   try {
     const existingAgent = await Agent.findOne({ agentCode: agentCode });
+    const checkLimit = await getAgentRemainingTicketByDay(existingAgent._id);
+
     if (existingAgent) {
+      if (checkLimit.remainingLimit === 0) {
+        return {
+          status: 404,
+          message: "Agent's Today's Max Limit Exceeded",
+        };
+      }
       return {
         status: 200,
         message: "Agent code verified successfully",
@@ -442,9 +450,19 @@ export const verifyAgentCode = async (agentCode) => {
 export const isAgent = async (userId) => {
   try {
     const existingAgent = await Agent.findOne({ userId: userId, status: true });
+    if (existingAgent) {
+      const checkLimit = await getAgentRemainingTicketByDay(existingAgent._id);
+      return {
+        status: 200,
+        isAgent: true,
+        isBookable: checkLimit.remainingLimit !== 0,
+        maxLimit: checkLimit.maxLimit,
+      };
+    }
     return {
       status: 200,
-      isAgent: existingAgent ? true : false,
+      isAgent: false,
+      isBookable: true,
     };
   } catch (error) {
     console.log(error);
@@ -556,3 +574,43 @@ export const updateAgent = async (agentId, updateData) => {
   }
 };
 
+export const getAgentRemainingTicketByDay = async (agentId) => {
+  try {
+    const agent = await Agent.findById(agentId);
+    if (!agent) {
+      return {
+        status: 404,
+        message: "Agent not found",
+      };
+    }
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    const bookings = await BusBooking.find({
+      $or: [
+        { userId: agent.id },
+        { agentCode: agent.agentCode },
+      ],
+      bookingStatus: "paid",
+      createdAt: { $gte: today, $lt: tomorrow },
+    });
+    const remainingLimit = agent.maxTicket !== undefined ? Math.max(agent.maxTicket - bookings.length, 0) : Math.max(50 - bookings.length, 0);
+
+    return {
+      status: 200,
+      message: "Agent booking limit retrieved",
+      bookingsCount: bookings.length || 0,
+      maxLimit: agent.maxTicket !== undefined ? agent.maxTicket : 50,
+      remainingLimit: remainingLimit
+    };
+
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      message: error.message || "Internal Server Error",
+    };
+  }
+}
