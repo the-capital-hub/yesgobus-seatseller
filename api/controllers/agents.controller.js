@@ -13,6 +13,7 @@ import {
   verifyAgentCode,
   isAgent,
   getAgentStats,
+  updateAgent,
 } from '../service/agents.service.js';
 
 export const registerAgentController = async (req, res) => {
@@ -172,3 +173,13 @@ export const getAgentStatsController = async (req, res) => {
   }
 };
 
+export const updateAgentController = async (req, res) => {
+  try {
+    const { agentId } = req.params;
+    const result = await updateAgent(agentId, req.body);
+    res.status(200).send(result);
+  } catch (err) {
+    console.log(err);
+    res.status(err.status || 500).json({ message: "Error approving agent" });
+  }
+};
