@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 import { Navigate, useOutletContext } from "react-router-dom";
 import { DownloadOutlined } from "@ant-design/icons";
 import { CSVLink } from "react-csv";
+import LimitSelect from "./Components/LimitSelect/LimitSelect";
 
 function AdminTrackAgent() {
   const [pendingAgents, setPendingAgents] = useState(null);
@@ -20,8 +21,8 @@ function AdminTrackAgent() {
 
   const performanceColumn = [
     {
-      title: "Agent Name",
-      label: "Agent Name",
+      title: "BDA Name",
+      label: "BDA Name",
       dataIndex: "agentName",
       key: "agentName",
     },
@@ -48,6 +49,15 @@ function AdminTrackAgent() {
       label: "UserId",
       dataIndex: "userId",
       key: "userId",
+    },
+    {
+      title: "Ticket Limit",
+      label: "Ticket Limit",
+      dataIndex: "maxTicketLimit",
+      key: "maxTicketLimit",
+      render: (_, record) => {
+        return <LimitSelect record={record} />;
+      },
     },
   ];
 
@@ -212,6 +222,7 @@ function AdminTrackAgent() {
             spinning:
               !agentPerformanceReport || !agentPerformanceReport.length === 0,
           }}
+          rowKey={(record) => record.agentId}
         />
       </div>
 
