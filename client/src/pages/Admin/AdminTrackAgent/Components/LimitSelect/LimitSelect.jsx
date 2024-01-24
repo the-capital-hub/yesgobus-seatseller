@@ -2,6 +2,7 @@ import { Button, Divider, Input, Select, Space } from "antd";
 import { useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { updateAgentTicketLimitAPI } from "../../../../../api/admin";
+import toast from "react-hot-toast";
 
 const DEFAULT_LIMITS = [
   { value: 0, label: "0" },
@@ -11,7 +12,7 @@ const DEFAULT_LIMITS = [
 ];
 
 export default function LimitSelect({ record }) {
-  let { maxTicket, agentId } = record;
+  let { maxTicket, agentId, agentName } = record;
 
   const [items, setItems] = useState(() => {
     if (!maxTicket) {
@@ -79,8 +80,10 @@ export default function LimitSelect({ record }) {
     try {
       const response = await updateAgentTicketLimitAPI(updatedLimit, agentId);
       console.log(response);
+      toast.success(`Ticket Limit updated for ${agentName}`);
     } catch (error) {
       console.error("Error updating ticket limit", error);
+      toast.error("Error updating Ticket Limit. Please try again!");
     }
   }
 

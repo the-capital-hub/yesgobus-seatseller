@@ -2,6 +2,7 @@ import { Outlet, Navigate } from "react-router-dom";
 import "./AdminLayout.scss";
 import { ADMIN_KEY } from "../AdminLogin/AdminLogin";
 import AdminSidebar from "./Components/AdminSidebar/AdminSidebar";
+import { Toaster } from "react-hot-toast";
 
 export default function AdminLayout() {
   const loggedInAdmin = localStorage.getItem(`${ADMIN_KEY}-loggedInAdmin`);
@@ -28,6 +29,9 @@ export default function AdminLayout() {
           <Outlet context={{ admin }} />
         </div>
       </div>
+
+      {/* Toaster */}
+      <Toaster />
     </div>
   );
 }
