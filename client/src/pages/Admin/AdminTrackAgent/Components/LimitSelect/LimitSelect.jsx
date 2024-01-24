@@ -37,8 +37,8 @@ export default function LimitSelect({ record, setAgentPerformanceReport }) {
   const [open, setOpen] = useState();
   const inputRef = useRef(null);
 
-  function handleNewLimitChange(e) {
-    setNewLimit(e.target.value);
+  function handleNewLimitChange(value) {
+    setNewLimit(value);
   }
 
   function addNewItem(e) {
