@@ -73,13 +73,13 @@ export default function LimitSelect({ record, setAgentPerformanceReport }) {
 
   //   Handle Limit Submit
   async function handleLimitSubmit(value, agentId) {
-    console.log(value, agentId);
+    // console.log(value, agentId);
     let updatedLimit = {
       maxTicket: value,
     };
     try {
       const { data } = await updateAgentTicketLimitAPI(updatedLimit, agentId);
-      console.log(data);
+      //   console.log(data);
       setAgentPerformanceReport((prev) => {
         let copy = [...prev];
         copy.map((agentData) => {
