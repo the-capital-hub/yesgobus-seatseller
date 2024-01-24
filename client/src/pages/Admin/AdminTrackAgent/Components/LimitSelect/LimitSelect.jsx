@@ -1,4 +1,4 @@
-import { Button, Divider, Input, Select, Space } from "antd";
+import { Button, Divider, InputNumber, Select, Space } from "antd";
 import { useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { updateAgentTicketLimitAPI } from "../../../../../api/admin";
@@ -122,16 +122,19 @@ export default function LimitSelect({ record, setAgentPerformanceReport }) {
               padding: "0 8px 4px",
             }}
           >
-            <Input
+            <InputNumber
               placeholder="Custom Limit"
               ref={inputRef}
               value={newLimit}
               onChange={handleNewLimitChange}
               onKeyDown={(e) => e.stopPropagation()}
               type="number"
+              min={1}
+              max={120}
+              style={{ width: "130px" }}
             />
             <Button type="text" icon={<FaPlus />} onClick={addNewItem}>
-              Add item
+              Add Limit
             </Button>
           </Space>
         </>
