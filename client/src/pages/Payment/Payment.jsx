@@ -500,6 +500,10 @@ const Payment = () => {
             setLoadingModalVisible(false);
             setStartCountdown(false);
             setCountdown(10);
+            if (!checkAgent.data.isBookable) {
+              alert("Max Limit Exceeded, Come back tomorrow");
+              return;
+            }
             const isConfirmed = window.confirm(
               "Do you want to confirm the booking?"
             );
@@ -724,6 +728,10 @@ const Payment = () => {
             setLoadingModalVisible(false);
             setStartCountdown(false);
             setCountdown(10);
+            if (!checkAgent.data.isBookable) {
+              alert("Max Limit Exceeded, Come back tomorrow");
+              return;
+            }
             const isConfirmed = window.confirm(
               "Do you want to confirm the booking?"
             );
@@ -1039,7 +1047,7 @@ const Payment = () => {
         alert("Agent code Verified");
       } else {
         setAgentCodeVerified(false);
-        alert("Agent Code not found");
+        alert("Agent Code not found or Agent's Today's Max Limit Exceeded");
       }
     } catch (error) {
       console.error("Error", error);
@@ -1213,24 +1221,27 @@ const Payment = () => {
           </div>
 
           {/* Agent Details */}
-          <div className="details">
-            <h4>Enter Agent Code (Optional)</h4>
-            <div className="detailsContainer">
-              <Input
-                title={"Agent Code"}
-                type={"text"}
-                placeholder={"ys2tx7"}
-                onChanged={handleInputChange}
-                givenName={"agentCode"}
-                value={userData.agentCode}
-              />
-              <Button
-                text={`Verify`}
-                onClicked={handleAgentCodeVerify}
-                style={{ height: "40px", marginTop: "35px" }}
-              />
+          {!loggedInUser.isAgent &&
+            <div className="details">
+              <h4>Enter Agent Code (Optional)</h4>
+              <div className="detailsContainer">
+                <Input
+                  title={"Agent Code"}
+                  type={"text"}
+                  placeholder={"ys2tx7"}
+                  onChanged={handleInputChange}
+                  givenName={"agentCode"}
+                  value={userData.agentCode}
+                />
+                <Button
+                  text={`Verify`}
+                  onClicked={handleAgentCodeVerify}
+                  style={{ height: "40px", marginTop: "35px" }}
+                />
+              </div>
             </div>
-          </div>
+          }
+
 
           {/* Picode Details */}
           {/* <div className="details">
