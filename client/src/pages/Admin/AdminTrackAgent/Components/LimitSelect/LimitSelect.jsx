@@ -1,6 +1,7 @@
 import { Button, Divider, Input, Select, Space } from "antd";
 import { useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
+import { updateAgentTicketLimitAPI } from "../../../../../api/admin";
 
 const DEFAULT_LIMITS = [
   { value: 0, label: "0" },
@@ -55,26 +56,44 @@ export default function LimitSelect({ record }) {
     setSelectedLimit(String(newLimit));
     setNewLimit("");
     setOpen(false);
+    // Submit limit
+    handleLimitSubmit(newLimit, agentId);
     setTimeout(() => {
       inputRef.current?.focus();
     }, 0);
   }
 
   // Handle TicketSelect change
-  function handleTicketLimitChange(value, agentId) {
+  function handleTicketLimitChange(value) {
     setSelectedLimit(String(value));
+    // Submit Limit
+    handleLimitSubmit(value, agentId);
+  }
+
+  //   Handle Limit Submit
+  async function handleLimitSubmit(value, agentId) {
     console.log(value, agentId);
+    let updatedLimit = {
+      maxTicket: value,
+    };
+    try {
+      const response = await updateAgentTicketLimitAPI(updatedLimit, agentId);
+      console.log(response);
+    } catch (error) {
+      console.error("Error updating ticket limit", error);
+    }
   }
 
   return (
     <Select
       style={{
-        width: 300,
+        width: 270,
       }}
       open={open}
       defaultValue={maxTicket ? String(maxTicket) : "0"}
       value={selectedLimit}
-      onChange={(value) => handleTicketLimitChange(value, agentId)}
+      onChange={handleTicketLimitChange}
+      onDropdownVisibleChange={(visible) => setOpen(visible)}
       dropdownRender={(menu) => (
         <>
           {menu}

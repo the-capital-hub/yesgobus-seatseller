@@ -15,6 +15,7 @@ const ADMIN_ENDPOINTS = {
   getAgentBookings: "api/agent/getAgentBookings",
   verifyAgentCode: "api/agent/verifyAgentCode",
   getAgentStats: "api/agent/agentStats",
+  updateAgentTicketLimit: "api/agent/updateAgent",
 };
 
 // Register Agent
@@ -84,7 +85,6 @@ export const getAllBookingRefund = async (agentId) => {
   }
 };
 
-
 //approve agent
 export const approveAgent = async (agentId) => {
   try {
@@ -97,7 +97,6 @@ export const approveAgent = async (agentId) => {
     throw error;
   }
 };
-
 
 //reject agent
 export const rejectAgent = async (agentId) => {
@@ -112,7 +111,6 @@ export const rejectAgent = async (agentId) => {
   }
 };
 
-
 //get pending agent request
 export const getAllPendingAgents = async () => {
   try {
@@ -125,7 +123,6 @@ export const getAllPendingAgents = async () => {
     throw error;
   }
 };
-
 
 //get agent performance report
 export const getAgentPerfomanceReport = async () => {
@@ -175,6 +172,20 @@ export const getAgentStats = async (agentId) => {
     return response.data;
   } catch (error) {
     console.error("Error getting agent stats", error);
+    throw error;
+  }
+};
+
+// Update agent ticket limit
+export const updateAgentTicketLimitAPI = async (newLimit, agentId) => {
+  try {
+    const response = await axiosInstance.patch(
+      `${baseUrl}/${ADMIN_ENDPOINTS.updateAgentTicketLimit}/${agentId}`,
+      newLimit
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating agent ticket limit", error);
     throw error;
   }
 };
