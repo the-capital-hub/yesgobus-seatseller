@@ -6,12 +6,14 @@ import {
   getAllPendingAgents,
   approveAgent,
   rejectAgent,
+  deactivateAgent,
 } from "../../../api/admin";
 import { useState, useEffect } from "react";
 import { Navigate, useOutletContext } from "react-router-dom";
 import { DownloadOutlined } from "@ant-design/icons";
 import { CSVLink } from "react-csv";
 import LimitSelect from "./Components/LimitSelect/LimitSelect";
+import toast from "react-hot-toast";
 
 function AdminTrackAgent() {
   const [pendingAgents, setPendingAgents] = useState(null);
@@ -61,6 +63,17 @@ function AdminTrackAgent() {
             record={record}
             setAgentPerformanceReport={setAgentPerformanceReport}
           />
+        );
+      },
+    },
+    {
+      title: "Action",
+      label: "action",
+      dataIndex: "action",
+      key: "action",
+      render: (_, record) => {
+        return (
+          <Button type="primary" onClick={() => deactivateModal(record.agentId)}>{"Deactivate"}</Button>
         );
       },
     },
@@ -147,6 +160,21 @@ function AdminTrackAgent() {
     });
   }
 
+  function deactivateModal(agentId) {
+    modal.confirm({
+      title: "Deactivate agent",
+      content: "Are you sure you want to deactivate this agent account?",
+      okText: "Deactivate",
+      cancelText: "Cancel",
+      centered: true,
+      maskClosable: true,
+      onOk() {
+        handleDeactivate(agentId);
+      },
+    });
+  }
+
+
   function rejectModel(agentId) {
     modal.confirm({
       title: "Reject Agent",
@@ -164,7 +192,8 @@ function AdminTrackAgent() {
   const handleAccept = async (agentId) => {
     try {
       await approveAgent(agentId);
-      alert("Agent account accepted");
+      // alert("Agent account accepted");
+      toast.success(`Agent account accepted`);
       getPerfomanceReport();
       getPendingAgents();
     } catch (error) {
@@ -175,13 +204,26 @@ function AdminTrackAgent() {
   const handleReject = async (agentId) => {
     try {
       await rejectAgent(agentId);
-      alert("Agent account rejected");
+      // alert("Agent account rejected");
+      toast.success(`Agent account rejected`);
       getPerfomanceReport();
       getPendingAgents();
     } catch (error) {
       console.log("Error", error);
     }
   };
+
+  const handleDeactivate = async (agentId) => {
+    try {
+      await deactivateAgent(agentId);
+      // alert("Agent account deactivated");
+      toast.success(`Agent account deactivated`);
+      getPerfomanceReport();
+      getPendingAgents();
+    } catch (error) {
+      console.log("Error", error);
+    }
+  }
 
   if (admin.role !== "YSB_ADMIN") {
     return <Navigate to={"/admin"} replace></Navigate>;
