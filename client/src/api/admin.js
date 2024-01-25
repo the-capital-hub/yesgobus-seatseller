@@ -74,10 +74,10 @@ export const getAllBookings = async (agentId) => {
 };
 
 //get all bookings refund
-export const getAllBookingRefund = async (agentId) => {
+export const getAllBookingRefund = async (agentId, params) => {
   try {
     const response = await axiosInstance.get(
-      `${baseUrl}/${ADMIN_ENDPOINTS.getAllRefunds}/${agentId}`
+      `${baseUrl}/${ADMIN_ENDPOINTS.getAllRefunds}/${agentId}?${params}`
     );
     return response.data;
   } catch (error) {

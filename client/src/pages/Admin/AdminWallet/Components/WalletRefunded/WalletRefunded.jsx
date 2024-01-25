@@ -6,6 +6,7 @@ import { formatBusTravelTime } from "../../../../../utils/Admin/AdminHelpers";
 import { CSVLink } from "react-csv";
 import { DownloadOutlined } from "@ant-design/icons";
 import { useOutletContext } from "react-router-dom";
+import DateFilter from "../../../../../components/Admin/DateFilter/DateFilter";
 
 const columns = [
   {
@@ -103,27 +104,54 @@ export default function WalletRefunded() {
   const [refunds, setRefunds] = useState(null);
   const { admin } = useOutletContext();
 
+  // Local states
+  const [dateFilters, setDateFilters] = useState({
+    fromDate: null,
+    toDate: null,
+  });
+  const [loading, setLoading] = useState(false);
+
+  const getBookingRefundDetails = async (agentId, params) => {
+    try {
+      const response = await getAllBookingRefund(agentId, params);
+      const bookingsData = response.data.map((booking) => {
+        booking.doj = new Date(booking.doj).toISOString().split("T")[0];
+        booking.customerName =
+          booking.customerName + " " + (booking.customerLastName || "");
+        return booking;
+      });
+      setRefunds(bookingsData);
+    } catch (error) {
+      console.error("Error :", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const getBookingRefundDetails = async (agentId) => {
-      try {
-        const response = await getAllBookingRefund(agentId);
-        const bookingsData = response.data.map((booking) => {
-          booking.doj = new Date(booking.doj).toISOString().split("T")[0];
-          booking.customerName =
-            booking.customerName + " " + (booking.customerLastName || "");
-          return booking;
-        });
-        setRefunds(bookingsData);
-      } catch (error) {
-        console.error("Error :", error);
-      }
-    };
-
     getBookingRefundDetails(admin._id);
   }, []);
 
-  const filteredColumns = columns.filter(column => column.dataIndex === undefined || refunds?.some(item => item[column.dataIndex] !== undefined));
+  // Refetch when dateFilters change
+  useEffect(() => {
+    if (dateFilters.fromDate && dateFilters.toDate) {
+      let params = new URLSearchParams({
+        fromDate: dateFilters.fromDate,
+        toDate: dateFilters.toDate,
+      });
+      setLoading(true);
+      getBookingRefundDetails(admin._id, params);
+    } else {
+      setLoading(true);
+      getBookingRefundDetails(admin._id);
+    }
+  }, [dateFilters, admin._id]);
+
+  const filteredColumns = columns.filter(
+    (column) =>
+      column.dataIndex === undefined ||
+      refunds?.some((item) => item[column.dataIndex] !== undefined)
+  );
   return (
     <section className="history-wrapper flex flex-col gap-4">
       <div className="flex justify-between items-center">
@@ -141,15 +169,25 @@ export default function WalletRefunded() {
           <p className="m-0 text-2xl font-semibold">Refunded</p>
         </div>
       </div>
+
+      {/* Export to CSV */}
       {refunds?.length > 0 && (
-        <div className="flex flex-end pb-2 flex-container">
+        <div className="flex flex-col md:flex-row items-center gap-4 pb-2 flex-end flex-container">
           <Button type="primary" icon={<DownloadOutlined />}>
-            <CSVLink data={refunds} headers={filteredColumns} filename={"Refunds.csv"}>
+            <CSVLink
+              data={refunds}
+              headers={filteredColumns}
+              filename={"Refunds.csv"}
+            >
               Export to CSV
             </CSVLink>
           </Button>
+
+          {/* Date Filters */}
+          <DateFilter setDateFilters={setDateFilters} />
         </div>
       )}
+
       <Table
         columns={filteredColumns}
         dataSource={refunds}
@@ -164,7 +202,7 @@ export default function WalletRefunded() {
               <Spin />
             </div>
           ),
-          spinning: !refunds || !refunds.length === 0,
+          spinning: !refunds || !refunds.length === 0 || loading,
         }}
         rowKey={(record) => record._id}
         scroll={{ x: true }}

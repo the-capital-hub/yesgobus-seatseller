@@ -81,6 +81,9 @@ export default function TrackAgentList() {
       });
       setLoading(true);
       getPerfomanceReport(params);
+    } else {
+      setLoading(true);
+      getPerfomanceReport();
     }
   }, [dateFilters]);
 
