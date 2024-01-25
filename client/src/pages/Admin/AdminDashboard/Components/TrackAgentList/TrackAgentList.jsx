@@ -69,10 +69,12 @@ export default function TrackAgentList() {
     }
   };
 
+  // Initial call
   useEffect(() => {
     getPerfomanceReport();
   }, []);
 
+  // Refetch when dateFilters change
   useEffect(() => {
     if (dateFilters.fromDate && dateFilters.toDate) {
       let params = new URLSearchParams({

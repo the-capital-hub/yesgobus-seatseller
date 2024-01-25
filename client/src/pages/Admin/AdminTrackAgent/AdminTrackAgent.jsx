@@ -14,12 +14,20 @@ import { DownloadOutlined } from "@ant-design/icons";
 import { CSVLink } from "react-csv";
 import LimitSelect from "./Components/LimitSelect/LimitSelect";
 import toast from "react-hot-toast";
+import DateFilter from "../../../components/Admin/DateFilter/DateFilter";
 
 function AdminTrackAgent() {
   const [pendingAgents, setPendingAgents] = useState(null);
   const [agentPerformanceReport, setAgentPerformanceReport] = useState(null);
   const [modal, contextHolder] = Modal.useModal();
   const { admin } = useOutletContext();
+
+  // Local states
+  const [dateFilters, setDateFilters] = useState({
+    fromDate: null,
+    toDate: null,
+  });
+  const [loading, setLoading] = useState(false);
 
   const performanceColumn = [
     {
@@ -73,7 +81,12 @@ function AdminTrackAgent() {
       key: "action",
       render: (_, record) => {
         return (
-          <Button type="primary" onClick={() => deactivateModal(record.agentId)}>{"Deactivate"}</Button>
+          <Button
+            type="primary"
+            onClick={() => deactivateModal(record.agentId)}
+          >
+            {"Deactivate"}
+          </Button>
         );
       },
     },
@@ -132,19 +145,37 @@ function AdminTrackAgent() {
     }
   };
 
-  const getPerfomanceReport = async () => {
+  const getPerfomanceReport = async (params) => {
     try {
-      const response = await getAgentPerfomanceReport();
+      const response = await getAgentPerfomanceReport(params);
       setAgentPerformanceReport(response.data);
     } catch (error) {
       console.error("Error", error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
+  // Initial call
   useEffect(() => {
     getPerfomanceReport();
     getPendingAgents();
   }, []);
+
+  // Refetch when dateFilters change
+  useEffect(() => {
+    if (dateFilters.fromDate && dateFilters.toDate) {
+      let params = new URLSearchParams({
+        fromDate: dateFilters.fromDate,
+        toDate: dateFilters.toDate,
+      });
+      setLoading(true);
+      getPerfomanceReport(params);
+    } else {
+      setLoading(true);
+      getPerfomanceReport();
+    }
+  }, [dateFilters]);
 
   function acceptModel(agentId) {
     modal.confirm({
@@ -173,7 +204,6 @@ function AdminTrackAgent() {
       },
     });
   }
-
 
   function rejectModel(agentId) {
     modal.confirm({
@@ -223,7 +253,7 @@ function AdminTrackAgent() {
     } catch (error) {
       console.log("Error", error);
     }
-  }
+  };
 
   if (admin.role !== "YSB_ADMIN") {
     return <Navigate to={"/admin"} replace></Navigate>;
@@ -237,8 +267,10 @@ function AdminTrackAgent() {
         <h2 className="m-0">
           Track Business Development Associate (BDA) Performance
         </h2>
+
+        {/* Export to CSV */}
         {agentPerformanceReport?.length > 0 && (
-          <div className="flex flex-end pb-2 flex-container">
+          <div className="flex flex-col md:flex-row items-center gap-4 pb-2 flex-end flex-container">
             <Button type="primary" icon={<DownloadOutlined />}>
               <CSVLink
                 data={agentPerformanceReport}
@@ -248,6 +280,9 @@ function AdminTrackAgent() {
                 Export to CSV
               </CSVLink>
             </Button>
+
+            {/* Date Filters */}
+            <DateFilter setDateFilters={setDateFilters} />
           </div>
         )}
         <Table
@@ -267,7 +302,9 @@ function AdminTrackAgent() {
               </div>
             ),
             spinning:
-              !agentPerformanceReport || !agentPerformanceReport.length === 0,
+              !agentPerformanceReport ||
+              !agentPerformanceReport.length === 0 ||
+              loading,
           }}
           rowKey={(record) => record.agentId}
           scroll={{ x: true }}
