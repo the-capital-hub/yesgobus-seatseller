@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Table, Spin, ConfigProvider, Button } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
 import { CSVLink } from "react-csv";
+import DateFilter from "../../../../../components/Admin/DateFilter/DateFilter";
 
 const performanceColumn = [
   {
@@ -50,21 +51,59 @@ const performanceColumn = [
 ];
 export default function TrackAgentList() {
   const [agentPerformanceReport, setAgentPerformanceReport] = useState(null);
+  const [dateFilters, setDateFilters] = useState({
+    fromDate: null,
+    toDate: null,
+  });
+  const [loading, setLoading] = useState(false);
+
+  // Fetch function
+  const getPerfomanceReport = async (params) => {
+    try {
+      const response = await getAgentPerfomanceReport(params);
+      setAgentPerformanceReport(response.data);
+    } catch (error) {
+      console.error("Error", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const getPerfomanceReport = async () => {
-      try {
-        const response = await getAgentPerfomanceReport();
-        setAgentPerformanceReport(response.data);
-      } catch (error) {
-        console.error("Error", error.message);
-      }
-    };
     getPerfomanceReport();
   }, []);
 
+  useEffect(() => {
+    if (dateFilters.fromDate && dateFilters.toDate) {
+      let params = new URLSearchParams({
+        fromDate: dateFilters.fromDate,
+        toDate: dateFilters.toDate,
+      });
+      setLoading(true);
+      getPerfomanceReport(params);
+    }
+  }, [dateFilters]);
+
   return (
     <div className="list-container">
+      {/* Export to CSV */}
+      {agentPerformanceReport?.length > 0 && (
+        <div className="flex flex-col md:flex-row items-center gap-4 pb-2 flex-end flex-container">
+          <Button type="primary" icon={<DownloadOutlined />}>
+            <CSVLink
+              data={agentPerformanceReport}
+              headers={performanceColumn}
+              filename={"AgentReport.csv"}
+            >
+              Export to CSV
+            </CSVLink>
+          </Button>
+
+          {/* Date Filters */}
+          <DateFilter setDateFilters={setDateFilters} />
+        </div>
+      )}
+
       <ConfigProvider
         theme={{
           token: {},
@@ -76,19 +115,6 @@ export default function TrackAgentList() {
           },
         }}
       >
-        {agentPerformanceReport?.length > 0 && (
-          <div className="flex flex-end pb-2 flex-container">
-            <Button type="primary" icon={<DownloadOutlined />}>
-              <CSVLink
-                data={agentPerformanceReport}
-                headers={performanceColumn}
-                filename={"AgentReport.csv"}
-              >
-                Export to CSV
-              </CSVLink>
-            </Button>
-          </div>
-        )}
         <Table
           dataSource={agentPerformanceReport}
           columns={performanceColumn}
@@ -105,7 +131,9 @@ export default function TrackAgentList() {
               </div>
             ),
             spinning:
-              !agentPerformanceReport || !agentPerformanceReport.length === 0,
+              !agentPerformanceReport ||
+              !agentPerformanceReport.length === 0 ||
+              loading,
           }}
           scroll={{ x: true }}
           rowKey={(record) => `${record.agentId}-${record.userId}`}

@@ -17,7 +17,6 @@ const ADMIN_ENDPOINTS = {
   getAgentStats: "api/agent/agentStats",
   updateAgentTicketLimit: "api/agent/updateAgent",
   deactivateAgent: "api/agent/deactivateAgent",
-
 };
 
 // Register Agent
@@ -127,10 +126,10 @@ export const getAllPendingAgents = async () => {
 };
 
 //get agent performance report
-export const getAgentPerfomanceReport = async () => {
+export const getAgentPerfomanceReport = async (params) => {
   try {
     const response = await axiosInstance.get(
-      `${baseUrl}/${ADMIN_ENDPOINTS.getAgentPerfomanceReport}`
+      `${baseUrl}/${ADMIN_ENDPOINTS.getAgentPerfomanceReport}?${params}`
     );
     return response.data;
   } catch (error) {
