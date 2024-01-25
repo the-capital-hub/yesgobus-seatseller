@@ -17,7 +17,6 @@ const ADMIN_ENDPOINTS = {
   getAgentStats: "api/agent/agentStats",
   updateAgentTicketLimit: "api/agent/updateAgent",
   deactivateAgent: "api/agent/deactivateAgent",
-
 };
 
 // Register Agent
@@ -62,10 +61,10 @@ export const getBalanceAPI = async () => {
 };
 
 //get all bookings
-export const getAllBookings = async (agentId) => {
+export const getAllBookings = async (agentId, params) => {
   try {
     const response = await axiosInstance.get(
-      `${baseUrl}/${ADMIN_ENDPOINTS.getAllBookings}/${agentId}`
+      `${baseUrl}/${ADMIN_ENDPOINTS.getAllBookings}/${agentId}?${params}`
     );
     return response.data;
   } catch (error) {
@@ -75,10 +74,10 @@ export const getAllBookings = async (agentId) => {
 };
 
 //get all bookings refund
-export const getAllBookingRefund = async (agentId) => {
+export const getAllBookingRefund = async (agentId, params) => {
   try {
     const response = await axiosInstance.get(
-      `${baseUrl}/${ADMIN_ENDPOINTS.getAllRefunds}/${agentId}`
+      `${baseUrl}/${ADMIN_ENDPOINTS.getAllRefunds}/${agentId}?${params}`
     );
     return response.data;
   } catch (error) {
@@ -127,10 +126,10 @@ export const getAllPendingAgents = async () => {
 };
 
 //get agent performance report
-export const getAgentPerfomanceReport = async () => {
+export const getAgentPerfomanceReport = async (params) => {
   try {
     const response = await axiosInstance.get(
-      `${baseUrl}/${ADMIN_ENDPOINTS.getAgentPerfomanceReport}`
+      `${baseUrl}/${ADMIN_ENDPOINTS.getAgentPerfomanceReport}?${params}`
     );
     return response.data;
   } catch (error) {
@@ -140,10 +139,10 @@ export const getAgentPerfomanceReport = async () => {
 };
 
 //get all agent booking
-export const getAgentBookings = async (agentId) => {
+export const getAgentBookings = async (agentId, params) => {
   try {
     const response = await axiosInstance.get(
-      `${baseUrl}/${ADMIN_ENDPOINTS.getAgentBookings}/${agentId}`
+      `${baseUrl}/${ADMIN_ENDPOINTS.getAgentBookings}/${agentId}?${params}`
     );
     return response.data;
   } catch (error) {
