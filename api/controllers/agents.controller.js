@@ -15,6 +15,7 @@ import {
   getAgentStats,
   updateAgent,
   getAgentRemainingTicketByDay,
+  adminInactivateAgent,
 } from '../service/agents.service.js';
 
 export const registerAgentController = async (req, res) => {
@@ -47,7 +48,7 @@ export const loginAgentController = async (req, res) => {
 export const getAgentBookingsController = async (req, res) => {
   try {
     const { agentId } = req.params;
-    const result = await getAgentBookings(agentId);
+    const result = await getAgentBookings(agentId, req.query);
     res.status(result.status).send(result);
   } catch (err) {
     console.log(err);
@@ -112,7 +113,7 @@ export const getAllPendingAgentsControllr = async (req, res) => {
 export const getAllBookingsController = async (req, res) => {
   try {
     const { agentId } = req.params;
-    const result = await getAllBookings(agentId);
+    const result = await getAllBookings(agentId, req.query);
     res.status(200).send(result);
   } catch (err) {
     console.log(err);
@@ -123,7 +124,7 @@ export const getAllBookingsController = async (req, res) => {
 export const getAllBookingRefundsController = async (req, res) => {
   try {
     const { agentId } = req.params;
-    const result = await getAllBookingRefund(agentId);
+    const result = await getAllBookingRefund(agentId, req.query);
     res.status(200).send(result);
   } catch (err) {
     console.log(err);
@@ -133,7 +134,7 @@ export const getAllBookingRefundsController = async (req, res) => {
 
 export const getAgentPerformanceReportController = async (req, res) => {
   try {
-    const result = await getAgentPerformanceReport();
+    const result = await getAgentPerformanceReport(req.query);
     res.status(200).send(result);
   } catch (err) {
     console.log(err);
@@ -194,5 +195,16 @@ export const getAgentRemainingTicketByDayController = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(err.status || 500).json({ message: "Error getting limit" });
+  }
+};
+
+export const adminInactivateAgentController = async (req, res) => {
+  try {
+    const { agentId } = req.params;
+    const result = await adminInactivateAgent(agentId);
+    res.status(200).send(result);
+  } catch (err) {
+    console.log(err);
+    res.status(err.status || 500).json({ message: "Error deactivate agent" });
   }
 };

@@ -121,7 +121,7 @@ export const loginAgent = async (emailMobile, password) => {
   }
 };
 
-export const getAgentBookings = async (agentId) => {
+export const getAgentBookings = async (agentId, filter) => {
   try {
     const agent = await Agent.findById(agentId);
     if (!agent) {
@@ -130,13 +130,20 @@ export const getAgentBookings = async (agentId) => {
         message: "Agent not found",
       };
     }
-    const bookings = await BusBooking.find({
+    const bookingCriteria = {
       $or: [
         { userId: agent.id },
         { agentCode: agent.agentCode },
       ],
       bookingStatus: "paid",
-    });
+    };
+    if (filter.fromDate && filter.toDate) {
+      bookingCriteria.createdAt = {
+        $gte: new Date(filter.fromDate),
+        $lte: new Date(filter.toDate),
+      };
+    }
+    const bookings = await BusBooking.find(bookingCriteria);
     return {
       status: 200,
       message: "Booking records retrived",
@@ -264,7 +271,7 @@ export const getAllPendingAgents = async () => {
   }
 };
 
-export const getAllBookings = async (agentId) => {
+export const getAllBookings = async (agentId, filter) => {
   try {
     const agent = await Agent.findById(agentId);
     if (!agent) {
@@ -278,13 +285,20 @@ export const getAllBookings = async (agentId) => {
       agent.email === process.env.MASTER_ADMIN_EMAIL;
 
     if (!isMasterAdmin) {
-      const bookings = await BusBooking.find({
+      const bookingCriteria = {
         $or: [
           { userId: agent.id },
           { agentCode: agent.agentCode },
         ],
         bookingStatus: "paid",
-      });
+      };
+      if (filter.fromDate && filter.toDate) {
+        bookingCriteria.createdAt = {
+          $gte: new Date(filter.fromDate),
+          $lte: new Date(filter.toDate),
+        };
+      }
+      const bookings = await BusBooking.find(bookingCriteria);
       return {
         status: 200,
         message: "Bookings details retrived",
@@ -292,7 +306,14 @@ export const getAllBookings = async (agentId) => {
       };
     }
 
-    const bookings = await BusBooking.find({ bookingStatus: "paid" }).sort({
+    const bookingCriteria = { bookingStatus: "paid" };
+    if (filter.fromDate && filter.toDate) {
+      bookingCriteria.createdAt = {
+        $gte: new Date(filter.fromDate),
+        $lte: new Date(filter.toDate),
+      };
+    }
+    const bookings = await BusBooking.find(bookingCriteria).sort({
       createdAt: -1,
     });
     const agents = await Agent.find({ email: { $ne: "admin@yesgobus.com" } });
@@ -317,7 +338,7 @@ export const getAllBookings = async (agentId) => {
   }
 };
 
-export const getAllBookingRefund = async (agentId) => {
+export const getAllBookingRefund = async (agentId, filter) => {
   try {
     const agent = await Agent.findById(agentId);
     if (!agent) {
@@ -331,21 +352,35 @@ export const getAllBookingRefund = async (agentId) => {
       agent.email === process.env.MASTER_ADMIN_EMAIL;
 
     if (!isMasterAdmin) {
-      const bookings = await BusBooking.find({
+      const bookingCriteria = {
         $or: [
           { userId: agent.id },
           { agentCode: agent.agentCode },
         ],
         bookingStatus: "cancelled",
-      });
+      }
+      if (filter.fromDate && filter.toDate) {
+        bookingCriteria.createdAt = {
+          $gte: new Date(filter.fromDate),
+          $lte: new Date(filter.toDate),
+        };
+      }
+
+      const bookings = await BusBooking.find(bookingCriteria);
       return {
         status: 200,
         message: "Bookings details retrived",
         data: bookings,
       };
     }
-
-    const bookings = await BusBooking.find({ bookingStatus: "cancelled" }).sort(
+    const bookingCriteria = { bookingStatus: "cancelled" };
+    if (filter.fromDate && filter.toDate) {
+      bookingCriteria.createdAt = {
+        $gte: new Date(filter.fromDate),
+        $lte: new Date(filter.toDate),
+      };
+    }
+    const bookings = await BusBooking.find(bookingCriteria).sort(
       { createdAt: -1 }
     );
     const agents = await Agent.find({ email: { $ne: "admin@yesgobus.com" } });
@@ -370,25 +405,38 @@ export const getAllBookingRefund = async (agentId) => {
   }
 };
 
-export const getAgentPerformanceReport = async () => {
+export const getAgentPerformanceReport = async (filter) => {
   try {
-    const agents = await Agent.find({
+    const agentFilter = {
       email: { $ne: "admin@yesgobus.com" },
       status: true,
-    });
+    };
+    const agents = await Agent.find(agentFilter);
+
     const allBookings = await Promise.all(
       agents.map(async (agent) => {
-        const bookings = await BusBooking.find({
+        const bookingCriteria = {
           $or: [
             { userId: agent.id },
             { agentCode: agent.agentCode },
           ],
           bookingStatus: "paid",
-        });
+        };
+
+        if (filter.fromDate && filter.toDate) {
+          bookingCriteria.createdAt = {
+            $gte: new Date(filter.fromDate),
+            $lte: new Date(filter.toDate),
+          };
+        }
+
+        const bookings = await BusBooking.find(bookingCriteria);
+
         const totalRevenue = bookings.reduce(
           (sum, booking) => sum + booking.totalAmount,
           0
         );
+
         return {
           agentName: agent.firstName + " " + agent.lastName,
           bookingsMade: bookings.length,
@@ -398,23 +446,24 @@ export const getAgentPerformanceReport = async () => {
           email: agent.email,
           phone: agent.phNum,
           maxTicket: agent.maxTicket || 50,
+          status: agent.status,
         };
       })
     );
-
     return {
       status: 200,
       message: "Booking records retrieved",
       data: allBookings,
     };
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return {
       status: 500,
       message: error.message || "Internal Server Error",
     };
   }
 };
+
 
 export const verifyAgentCode = async (agentCode) => {
   try {
@@ -614,3 +663,30 @@ export const getAgentRemainingTicketByDay = async (agentId) => {
     };
   }
 }
+
+export const adminInactivateAgent = async (agentId) => {
+  try {
+    const agent = await Agent.findByIdAndUpdate(
+      agentId,
+      { status: false },
+      { new: true }
+    );
+    if (!agent) {
+      return {
+        status: 404,
+        message: "Agent not found",
+      };
+    }
+    return {
+      status: 200,
+      message: "Agent account deactivated",
+      data: agent,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      message: error.message || "Internal Server Error",
+    };
+  }
+};
