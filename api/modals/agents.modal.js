@@ -6,11 +6,11 @@ const agentSchema = new Schema(
   {
     userId: {
       type: String,
-      // required: true,
+      required: true,
     },
     id: {
       type: String,
-      // required: true,
+      required: true,
     },
     firstName: {
       type: String,
