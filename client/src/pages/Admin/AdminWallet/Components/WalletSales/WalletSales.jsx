@@ -1,11 +1,10 @@
-import { Popover, Space, Spin, Table, Button } from "antd";
+import { Popover, Space, Spin, Table } from "antd";
 import TransactionArrow from "../../../../../components/Admin/TransactionArrow/TransactionArrow";
 import { useEffect, useState } from "react";
 import { getAllBookings } from "../../../../../api/admin";
 import { formatBusTravelTime } from "../../../../../utils/Admin/AdminHelpers";
-import { CSVLink } from "react-csv";
-import { DownloadOutlined } from "@ant-design/icons";
 import { useOutletContext } from "react-router-dom";
+import FiltersAndExport from "../../../../../components/Admin/FiltersAndExport/FiltersAndExport";
 
 const columns = [
   {
@@ -103,27 +102,56 @@ export default function WalletSales() {
   const [bookings, setBookings] = useState(null);
   const { admin } = useOutletContext();
 
-  useEffect(() => {
-    const getAllBookingDetails = async (agentId) => {
-      try {
-        const response = await getAllBookings(agentId);
-        const bookingsData = response.data.map((booking) => {
-          booking.doj = new Date(booking.doj).toISOString().split("T")[0];
-          booking.customerName =
-            booking.customerName + " " + (booking.customerLastName || "");
-          return booking;
-        });
-        setBookings(bookingsData);
-      } catch (error) {
-        console.error("Error :", error);
-      }
-    };
+  // Local states
+  const [dateFilters, setDateFilters] = useState({
+    fromDate: null,
+    toDate: null,
+  });
+  const [loading, setLoading] = useState(false);
 
+  // Fetch function
+  const getAllBookingDetails = async (agentId, params) => {
+    try {
+      const response = await getAllBookings(agentId, params);
+      const bookingsData = response.data.map((booking) => {
+        booking.doj = new Date(booking.doj).toISOString().split("T")[0];
+        booking.customerName =
+          booking.customerName + " " + (booking.customerLastName || "");
+        return booking;
+      });
+      setBookings(bookingsData);
+    } catch (error) {
+      console.error("Error :", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Inital call
+  useEffect(() => {
     getAllBookingDetails(admin._id);
   }, []);
 
-  const filteredColumns = columns.filter(column => column.dataIndex === undefined || bookings?.some(item => item[column.dataIndex] !== undefined));
+  // Refetch when dateFilters change
+  useEffect(() => {
+    if (dateFilters.fromDate && dateFilters.toDate) {
+      let params = new URLSearchParams({
+        fromDate: dateFilters.fromDate,
+        toDate: dateFilters.toDate,
+      });
+      setLoading(true);
+      getAllBookingDetails(admin._id, params);
+    } else {
+      setLoading(true);
+      getAllBookingDetails(admin._id);
+    }
+  }, [dateFilters, admin._id]);
 
+  const filteredColumns = columns.filter(
+    (column) =>
+      column.dataIndex === undefined ||
+      bookings?.some((item) => item[column.dataIndex] !== undefined)
+  );
 
   return (
     <section className="history-wrapper flex flex-col gap-4">
@@ -139,15 +167,15 @@ export default function WalletSales() {
           <p className="m-0 text-2xl font-semibold">Sales</p>
         </div>
       </div>
-      {bookings?.length > 0 && (
-        <div className="flex flex-end pb-2 flex-container">
-          <Button type="primary" icon={<DownloadOutlined />}>
-            <CSVLink data={bookings} headers={filteredColumns} filename={"Sales.csv"}>
-              Export to CSV
-            </CSVLink>
-          </Button>
-        </div>
-      )}
+
+      {/* Filters and Export */}
+      <FiltersAndExport
+        setDateFilters={setDateFilters}
+        csvData={bookings}
+        csvHeaders={filteredColumns}
+        fileName={"Sales"}
+      />
+
       <Table
         columns={filteredColumns}
         dataSource={bookings}
@@ -162,7 +190,7 @@ export default function WalletSales() {
               <Spin />
             </div>
           ),
-          spinning: !bookings || !bookings.length === 0,
+          spinning: !bookings || !bookings.length === 0 || loading,
         }}
         rowKey={(record) => record._id}
         scroll={{ x: true }}
