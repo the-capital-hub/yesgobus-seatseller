@@ -1,12 +1,10 @@
-import { Popover, Space, Spin, Table, Button } from "antd";
+import { Popover, Space, Spin, Table } from "antd";
 import TransactionArrow from "../../../../../components/Admin/TransactionArrow/TransactionArrow";
 import { useEffect, useState } from "react";
 import { getAllBookings } from "../../../../../api/admin";
 import { formatBusTravelTime } from "../../../../../utils/Admin/AdminHelpers";
-import { CSVLink } from "react-csv";
-import { DownloadOutlined } from "@ant-design/icons";
 import { useOutletContext } from "react-router-dom";
-import DateFilter from "../../../../../components/Admin/DateFilter/DateFilter";
+import FiltersAndExport from "../../../../../components/Admin/FiltersAndExport/FiltersAndExport";
 
 const columns = [
   {
@@ -170,23 +168,14 @@ export default function WalletSales() {
         </div>
       </div>
 
-      {/* Export to CSV */}
-      {bookings?.length > 0 && (
-        <div className="flex flex-col md:flex-row items-center gap-4 pb-2 flex-end flex-container">
-          <Button type="primary" icon={<DownloadOutlined />}>
-            <CSVLink
-              data={bookings}
-              headers={filteredColumns}
-              filename={"Sales.csv"}
-            >
-              Export to CSV
-            </CSVLink>
-          </Button>
+      {/* Filters and Export */}
+      <FiltersAndExport
+        setDateFilters={setDateFilters}
+        csvData={bookings}
+        csvHeaders={filteredColumns}
+        fileName={"Sales"}
+      />
 
-          {/* Date Filters */}
-          <DateFilter setDateFilters={setDateFilters} />
-        </div>
-      )}
       <Table
         columns={filteredColumns}
         dataSource={bookings}

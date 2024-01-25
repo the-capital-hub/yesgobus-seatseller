@@ -10,11 +10,9 @@ import {
 } from "../../../api/admin";
 import { useState, useEffect } from "react";
 import { Navigate, useOutletContext } from "react-router-dom";
-import { DownloadOutlined } from "@ant-design/icons";
-import { CSVLink } from "react-csv";
 import LimitSelect from "./Components/LimitSelect/LimitSelect";
 import toast from "react-hot-toast";
-import DateFilter from "../../../components/Admin/DateFilter/DateFilter";
+import FiltersAndExport from "../../../components/Admin/FiltersAndExport/FiltersAndExport";
 
 function AdminTrackAgent() {
   const [pendingAgents, setPendingAgents] = useState(null);
@@ -268,23 +266,14 @@ function AdminTrackAgent() {
           Track Business Development Associate (BDA) Performance
         </h2>
 
-        {/* Export to CSV */}
-        {agentPerformanceReport?.length > 0 && (
-          <div className="flex flex-col md:flex-row items-center gap-4 pb-2 flex-end flex-container">
-            <Button type="primary" icon={<DownloadOutlined />}>
-              <CSVLink
-                data={agentPerformanceReport}
-                headers={performanceColumn}
-                filename={"AgentReport.csv"}
-              >
-                Export to CSV
-              </CSVLink>
-            </Button>
+        {/* Filters and Export */}
+        <FiltersAndExport
+          setDateFilters={setDateFilters}
+          csvData={agentPerformanceReport}
+          csvHeaders={performanceColumn}
+          fileName={"AgentReports"}
+        />
 
-            {/* Date Filters */}
-            <DateFilter setDateFilters={setDateFilters} />
-          </div>
-        )}
         <Table
           dataSource={agentPerformanceReport}
           columns={performanceColumn}

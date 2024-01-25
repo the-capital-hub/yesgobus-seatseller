@@ -1,12 +1,10 @@
-import { Popover, Space, Spin, Table, Button } from "antd";
+import { Popover, Space, Spin, Table } from "antd";
 import TransactionArrow from "../../../../../components/Admin/TransactionArrow/TransactionArrow";
 import { useEffect, useState } from "react";
 import { getAllBookingRefund } from "../../../../../api/admin";
 import { formatBusTravelTime } from "../../../../../utils/Admin/AdminHelpers";
-import { CSVLink } from "react-csv";
-import { DownloadOutlined } from "@ant-design/icons";
 import { useOutletContext } from "react-router-dom";
-import DateFilter from "../../../../../components/Admin/DateFilter/DateFilter";
+import FiltersAndExport from "../../../../../components/Admin/FiltersAndExport/FiltersAndExport";
 
 const columns = [
   {
@@ -171,23 +169,13 @@ export default function WalletRefunded() {
         </div>
       </div>
 
-      {/* Export to CSV */}
-      {refunds?.length > 0 && (
-        <div className="flex flex-col md:flex-row items-center gap-4 pb-2 flex-end flex-container">
-          <Button type="primary" icon={<DownloadOutlined />}>
-            <CSVLink
-              data={refunds}
-              headers={filteredColumns}
-              filename={"Refunds.csv"}
-            >
-              Export to CSV
-            </CSVLink>
-          </Button>
-
-          {/* Date Filters */}
-          <DateFilter setDateFilters={setDateFilters} />
-        </div>
-      )}
+      {/* Filters And Export */}
+      <FiltersAndExport
+        setDateFilters={setDateFilters}
+        csvData={refunds}
+        csvHeaders={filteredColumns}
+        fileName={"Refunds"}
+      />
 
       <Table
         columns={filteredColumns}

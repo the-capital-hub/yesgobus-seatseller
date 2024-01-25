@@ -1,4 +1,4 @@
-import { ConfigProvider, Table, Spin, Space, Popover, Button } from "antd";
+import { ConfigProvider, Table, Spin, Space, Popover } from "antd";
 // import NotificationIcon from "../../../components/SvgIcons/NotificationIcon";
 // import UserIcon from "../../../components/SvgIcons/UserIcon";
 import "./AdminRecords.scss";
@@ -7,9 +7,7 @@ import { getAgentBookings } from "../../../api/admin";
 // import { ADMIN_KEY } from "../AdminLogin/AdminLogin";
 import { formatBusTravelTime } from "../../../utils/Admin/AdminHelpers";
 import { Navigate, useOutletContext } from "react-router-dom";
-import { DownloadOutlined } from "@ant-design/icons";
-import { CSVLink } from "react-csv";
-import DateFilter from "../../../components/Admin/DateFilter/DateFilter";
+import FiltersAndExport from "../../../components/Admin/FiltersAndExport/FiltersAndExport";
 
 const columns = [
   {
@@ -170,23 +168,13 @@ export default function AdminRecords() {
         <div className="flex flex-col gap-4">
           <h2 className="m-0">Records</h2>
 
-          {/* Export to CSV */}
-          {bookings?.length > 0 && (
-            <div className="flex flex-col md:flex-row items-center gap-4 pb-2 flex-end flex-container">
-              <Button type="primary" icon={<DownloadOutlined />}>
-                <CSVLink
-                  data={bookings}
-                  headers={columns}
-                  filename={"Records.csv"}
-                >
-                  Export to CSV
-                </CSVLink>
-              </Button>
-
-              {/* Date Filters */}
-              <DateFilter setDateFilters={setDateFilters} />
-            </div>
-          )}
+          {/* Filters and Export */}
+          <FiltersAndExport
+            setDateFilters={setDateFilters}
+            csvData={bookings}
+            csvHeaders={columns}
+            fileName={"Records"}
+          />
 
           <ConfigProvider
             theme={{

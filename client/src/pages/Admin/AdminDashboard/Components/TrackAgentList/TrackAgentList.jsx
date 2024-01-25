@@ -1,9 +1,7 @@
 import { getAgentPerfomanceReport } from "../../../../../api/admin";
 import { useEffect, useState } from "react";
-import { Table, Spin, ConfigProvider, Button } from "antd";
-import { DownloadOutlined } from "@ant-design/icons";
-import { CSVLink } from "react-csv";
-import DateFilter from "../../../../../components/Admin/DateFilter/DateFilter";
+import { Table, Spin, ConfigProvider } from "antd";
+import FiltersAndExport from "../../../../../components/Admin/FiltersAndExport/FiltersAndExport";
 
 const performanceColumn = [
   {
@@ -91,23 +89,13 @@ export default function TrackAgentList() {
 
   return (
     <div className="list-container">
-      {/* Export to CSV */}
-      {agentPerformanceReport?.length > 0 && (
-        <div className="flex flex-col md:flex-row items-center gap-4 pb-2 flex-end flex-container">
-          <Button type="primary" icon={<DownloadOutlined />}>
-            <CSVLink
-              data={agentPerformanceReport}
-              headers={performanceColumn}
-              filename={"AgentReport.csv"}
-            >
-              Export to CSV
-            </CSVLink>
-          </Button>
-
-          {/* Date Filters */}
-          <DateFilter setDateFilters={setDateFilters} />
-        </div>
-      )}
+      {/* Filters and Export */}
+      <FiltersAndExport
+        setDateFilters={setDateFilters}
+        fileName={"AgentReport"}
+        csvData={agentPerformanceReport}
+        csvHeaders={performanceColumn}
+      />
 
       <ConfigProvider
         theme={{
