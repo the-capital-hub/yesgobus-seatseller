@@ -62,7 +62,7 @@ export default function DateFilter({ setDateFilters }) {
   }
 
   return (
-    <div className="flex flex-col w-full min-[375px]:w-fit md:flex-row md:items-center gap-4">
+    <div className="flex flex-col w-full min-[375px]:w-fit md:flex-row md:items-center gap-2">
       <span className="flex items-center justify-end gap-2">
         From
         <DatePicker
@@ -85,7 +85,7 @@ export default function DateFilter({ setDateFilters }) {
         />
       </span>
 
-      <div className="self-center flex items-center gap-4">
+      <div className="self-center flex items-center gap-2">
         <Button htmlType="button" type="primary" onClick={handleFetchClick}>
           Fetch
         </Button>

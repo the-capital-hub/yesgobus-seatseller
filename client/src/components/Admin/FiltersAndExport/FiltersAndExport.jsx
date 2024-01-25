@@ -10,7 +10,10 @@ export default function FiltersAndExport({
   fileName,
 }) {
   return (
-    <div className="flex flex-col md:flex-row items-center gap-4 pb-2 flex-end flex-container">
+    <div className="flex flex-col md:flex-row items-center md:justify-between gap-4 pb-2 flex-end flex-container">
+      {/* Date Filters */}
+      <DateFilter setDateFilters={setDateFilters} />
+
       {csvData?.length > 0 && (
         <Button type="primary" icon={<DownloadOutlined />}>
           <CSVLink
@@ -22,9 +25,6 @@ export default function FiltersAndExport({
           </CSVLink>
         </Button>
       )}
-
-      {/* Date Filters */}
-      <DateFilter setDateFilters={setDateFilters} />
     </div>
   );
 }
