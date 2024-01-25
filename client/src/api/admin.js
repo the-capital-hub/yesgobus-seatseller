@@ -139,10 +139,10 @@ export const getAgentPerfomanceReport = async (params) => {
 };
 
 //get all agent booking
-export const getAgentBookings = async (agentId) => {
+export const getAgentBookings = async (agentId, params) => {
   try {
     const response = await axiosInstance.get(
-      `${baseUrl}/${ADMIN_ENDPOINTS.getAgentBookings}/${agentId}`
+      `${baseUrl}/${ADMIN_ENDPOINTS.getAgentBookings}/${agentId}?${params}`
     );
     return response.data;
   } catch (error) {

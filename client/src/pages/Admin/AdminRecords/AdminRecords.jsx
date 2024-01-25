@@ -2,13 +2,14 @@ import { ConfigProvider, Table, Spin, Space, Popover, Button } from "antd";
 // import NotificationIcon from "../../../components/SvgIcons/NotificationIcon";
 // import UserIcon from "../../../components/SvgIcons/UserIcon";
 import "./AdminRecords.scss";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getAgentBookings } from "../../../api/admin";
 // import { ADMIN_KEY } from "../AdminLogin/AdminLogin";
 import { formatBusTravelTime } from "../../../utils/Admin/AdminHelpers";
 import { Navigate, useOutletContext } from "react-router-dom";
 import { DownloadOutlined } from "@ant-design/icons";
 import { CSVLink } from "react-csv";
+import DateFilter from "../../../components/Admin/DateFilter/DateFilter";
 
 const columns = [
   {
@@ -100,12 +101,20 @@ const tableStyles = {
 export default function AdminRecords() {
   const { admin } = useOutletContext();
 
+  // Local states
   const [bookings, setBookings] = useState(null);
+  const [dateFilters, setDateFilters] = useState({
+    fromDate: null,
+    toDate: null,
+  });
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const getAllAgentBookings = async () => {
+  // Fetch function
+  const getAllAgentBookings = useCallback(
+    async (params) => {
+      console.log("called");
       try {
-        const response = await getAgentBookings(admin._id);
+        const response = await getAgentBookings(admin._id, params);
         const bookingsData = response.data.map((booking) => {
           booking.doj = new Date(booking.doj).toISOString().split("T")[0];
           booking.customerName =
@@ -115,10 +124,31 @@ export default function AdminRecords() {
         setBookings(bookingsData);
       } catch (error) {
         console.error("Error :", error);
+      } finally {
+        setLoading(false);
       }
-    };
+    },
+    [admin._id]
+  );
+
+  // Initial Call
+  useEffect(() => {
     getAllAgentBookings();
-  }, [admin._id]);
+  }, [getAllAgentBookings]);
+
+  useEffect(() => {
+    if (dateFilters.fromDate && dateFilters.toDate) {
+      let params = new URLSearchParams({
+        fromDate: dateFilters.fromDate,
+        toDate: dateFilters.toDate,
+      });
+      setLoading(true);
+      getAllAgentBookings(params);
+    } else {
+      setLoading(true);
+      getAllAgentBookings();
+    }
+  }, [dateFilters, getAllAgentBookings]);
 
   if (admin.role === "YSB_ADMIN") {
     return <Navigate to={"/admin"} replace></Navigate>;
@@ -139,6 +169,25 @@ export default function AdminRecords() {
         {/* Table */}
         <div className="flex flex-col gap-4">
           <h2 className="m-0">Records</h2>
+
+          {/* Export to CSV */}
+          {bookings?.length > 0 && (
+            <div className="flex flex-col md:flex-row items-center gap-4 pb-2 flex-end flex-container">
+              <Button type="primary" icon={<DownloadOutlined />}>
+                <CSVLink
+                  data={bookings}
+                  headers={columns}
+                  filename={"Records.csv"}
+                >
+                  Export to CSV
+                </CSVLink>
+              </Button>
+
+              {/* Date Filters */}
+              <DateFilter setDateFilters={setDateFilters} />
+            </div>
+          )}
+
           <ConfigProvider
             theme={{
               token: {},
@@ -150,19 +199,6 @@ export default function AdminRecords() {
               },
             }}
           >
-            {bookings?.length > 0 && (
-              <div className="flex flex-end pb-2 flex-container">
-                <Button type="primary" icon={<DownloadOutlined />}>
-                  <CSVLink
-                    data={bookings}
-                    headers={columns}
-                    filename={"Records.csv"}
-                  >
-                    Export to CSV
-                  </CSVLink>
-                </Button>
-              </div>
-            )}
             <Table
               dataSource={bookings}
               columns={columns}
@@ -178,7 +214,7 @@ export default function AdminRecords() {
                     <Spin />
                   </div>
                 ),
-                spinning: !bookings || !bookings.length === 0,
+                spinning: !bookings || !bookings.length === 0 || loading,
               }}
               rowKey={(record) => record._id}
             />

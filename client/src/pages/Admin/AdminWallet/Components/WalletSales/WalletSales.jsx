@@ -111,7 +111,7 @@ export default function WalletSales() {
   });
   const [loading, setLoading] = useState(false);
 
-  // Fetch call
+  // Fetch function
   const getAllBookingDetails = async (agentId, params) => {
     try {
       const response = await getAllBookings(agentId, params);
