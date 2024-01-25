@@ -189,7 +189,6 @@ function hasFilters(filters) {
 
 export const getBusDetails = async (searchArgs, filters) => {
   try {
-    // if(filters.busPartners )
     const [sourceCity, destinationCity] = await Promise.all([
       City.findOne({ name: capitalizeFirstLetter(searchArgs.sourceCity) }),
       City.findOne({ name: capitalizeFirstLetter(searchArgs.destinationCity) }),
@@ -397,7 +396,7 @@ export const sendVrlRequest = async (url, data) => {
 };
 
 const capitalizeFirstLetter = (str) => {
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
 };
 
 // get vrl bus filters
@@ -407,7 +406,7 @@ export const getVrlFilters = async (args) => {
       VrlCity.findOne({ CityName: capitalizeFirstLetter(args.sourceCity) }),
       VrlCity.findOne({ CityName: capitalizeFirstLetter(args.destinationCity) }),
     ]);
-
+    
     const dateParts = args.doj.split('-');
     const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
 
