@@ -16,6 +16,7 @@ import {
   getAgentStatsController,
   updateAgentController,
   getAgentRemainingTicketByDayController,
+  adminInactivateAgentController,
 } from "../controllers/agents.controller.js";
 
 const router = express.Router();
@@ -36,5 +37,6 @@ router.get("/isAgent/:userId", isAgentController);
 router.get("/agentStats/:agentId", getAgentStatsController);
 router.patch("/updateAgent/:agentId", updateAgentController);
 router.get("/getAgentTicketLimit/:agentId", getAgentRemainingTicketByDayController);
+router.patch("/deactivateAgent/:agentId", adminInactivateAgentController);
 
 export default router;

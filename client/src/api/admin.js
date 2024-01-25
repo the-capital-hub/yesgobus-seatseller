@@ -16,6 +16,8 @@ const ADMIN_ENDPOINTS = {
   verifyAgentCode: "api/agent/verifyAgentCode",
   getAgentStats: "api/agent/agentStats",
   updateAgentTicketLimit: "api/agent/updateAgent",
+  deactivateAgent: "api/agent/deactivateAgent",
+
 };
 
 // Register Agent
@@ -186,6 +188,19 @@ export const updateAgentTicketLimitAPI = async (newLimit, agentId) => {
     return response.data;
   } catch (error) {
     console.error("Error updating agent ticket limit", error);
+    throw error;
+  }
+};
+
+//deactivate agent
+export const deactivateAgent = async (agentId) => {
+  try {
+    const response = await axiosInstance.patch(
+      `${baseUrl}/${ADMIN_ENDPOINTS.deactivateAgent}/${agentId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error deactivating agent", error);
     throw error;
   }
 };
