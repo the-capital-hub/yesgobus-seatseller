@@ -128,6 +128,7 @@ export default function WalletRefunded() {
     }
   };
 
+  // Initial call
   useEffect(() => {
     getBookingRefundDetails(admin._id);
   }, []);

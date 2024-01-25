@@ -61,10 +61,10 @@ export const getBalanceAPI = async () => {
 };
 
 //get all bookings
-export const getAllBookings = async (agentId) => {
+export const getAllBookings = async (agentId, params) => {
   try {
     const response = await axiosInstance.get(
-      `${baseUrl}/${ADMIN_ENDPOINTS.getAllBookings}/${agentId}`
+      `${baseUrl}/${ADMIN_ENDPOINTS.getAllBookings}/${agentId}?${params}`
     );
     return response.data;
   } catch (error) {
