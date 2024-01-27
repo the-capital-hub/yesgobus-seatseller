@@ -85,7 +85,7 @@ export default function ResetPassword() {
 
             {/* Submit */}
             <Button htmlType="submit" type="primary" loading={loading}>
-              Reset
+              {loading ? "Please wait" : "Reset"}
             </Button>
           </Form>
         </div>
