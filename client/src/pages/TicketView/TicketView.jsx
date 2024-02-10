@@ -217,7 +217,7 @@ export default function TicketView() {
           </div>
         </div>
 
-        <div className="table">
+        <div className="ticketTable">
           <table>
             {/* Table Head */}
             <thead>
@@ -278,6 +278,22 @@ export default function TicketView() {
               </tr>
             </tbody>
           </table>
+
+          {/* Email and Phone Number */}
+          <div className="space-y-4 mt-8 border">
+            <h3 className="">
+              Email:{" "}
+              <p className="inline font-normal">
+                {bookingDetails.customerEmail}
+              </p>
+            </h3>
+            <h3>
+              Phone Number:{" "}
+              <p className="inline font-normal">
+                {bookingDetails.customerPhone}
+              </p>
+            </h3>
+          </div>
         </div>
 
         <CustomerSupport contactNumber={contactNumber} />

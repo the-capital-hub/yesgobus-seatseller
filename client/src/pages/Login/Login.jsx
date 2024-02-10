@@ -16,6 +16,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
 import { useSelector } from "react-redux";
 import { selectIsMobileApp } from "../../stores/slices/designSlice";
+import ForgotPassword from "../../components/Shared/ForgotPassword/ForgotPassword";
 
 const Login = () => {
   const loggedInUser = localStorage.getItem("loggedInUser");
@@ -99,6 +100,9 @@ const Login = () => {
         onChanged={handleOtherLoginChanges}
         givenName={"password"}
       />
+
+      {/* Forgot Password */}
+      <ForgotPassword />
     </>
   );
 
@@ -420,7 +424,6 @@ const Login = () => {
               <>
                 <h1>Log In</h1>
 
-
                 <p>
                   Dont have an account?
                   <span
@@ -431,7 +434,6 @@ const Login = () => {
                     Create an account
                   </span>
                 </p>
-
               </>
             ) : (
               <>

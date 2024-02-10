@@ -33,6 +33,7 @@ import {
   AdminAccountDetails,
 } from "./pages/Admin";
 import NotFoundPage from "./pages/Error/NotFoundPage/NotFoundPage";
+import ResetPassword from "./pages/ResetPassword/ResetPassword";
 
 function App() {
   const dispatch = useDispatch();
@@ -111,6 +112,9 @@ function App() {
         {/* 404 Not Found */}
         <Route path="*" element={<NotFoundPage />} />
         <Route path="/not-found" element={<NotFoundPage />} />
+
+        {/* Reset Passwords Page */}
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
     </BrowserRouter>
   );

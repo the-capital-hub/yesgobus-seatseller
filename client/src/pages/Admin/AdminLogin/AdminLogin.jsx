@@ -6,6 +6,7 @@ import { useRef, useState } from "react";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { agentLoginAPI } from "../../../api/admin";
 import { ValidateLoginData } from "../../../utils/Admin/CreateAccountHelpers";
+import ForgotPassword from "../../../components/Shared/ForgotPassword/ForgotPassword";
 
 export const ADMIN_KEY = "YGB-ADMIN";
 
@@ -162,6 +163,9 @@ export default function AdminLogin() {
                 </em>
               )}
             </div>
+
+            {/* Forgot Password */}
+            <ForgotPassword />
 
             <div className="flex flex-col items-center gap-7 my-7">
               <Link
