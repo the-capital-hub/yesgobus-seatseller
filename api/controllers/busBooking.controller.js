@@ -367,8 +367,12 @@ export const sendBookingConfirmationMessage = async (req, res) => {
       pickUpLocation.length > 15
         ? pickUpLocation.substring(0, 15) + '...'
         : pickUpLocation;
+
+        const contactNumbers = contact.split(' ');
+        const selectedContacts = contactNumbers.slice(0, 2).join(' ');
+
     const message =
-      `Dear ${fullName} Your PNR: ${opPNR} Journey: ${sourceCity} to  ${destinationCity} Seat: ${seats} Amount Rs.${amount} Date: ${doj} Contact: ${contact} Pickup: ${truncatedPickupLocation} Is Booked. Thank You, Shine Gobus`;
+      `Dear ${fullName} Your PNR: ${opPNR} Journey: ${sourceCity} to  ${destinationCity} Seat: ${seats} Amount Rs.${amount} Date: ${doj} Contact: ${selectedContacts} Pickup: ${truncatedPickupLocation} Is Booked. Thank You, Shine Gobus`;
     const templateId = process.env.BOOKING_CONFIRMATION_TEMPLATE_ID;
     const response = await sendMessage(message, to, templateId);
     res.status(200).send(response);
