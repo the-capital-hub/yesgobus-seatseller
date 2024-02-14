@@ -21,7 +21,10 @@ const BusBookingCardInfo = ({
         {img && <img className="img" src={rightarrow} />}
         {button && (
           <Button
-            onClicked={() => setShowSeats(!showSeats)}
+            onClicked={() => {
+              localStorage.removeItem('bookingDetails');
+              setShowSeats(!showSeats)
+            }}
             text={showSeats ? "Unselect" : buttonText || "Select"}
           />
         )}
