@@ -52,6 +52,7 @@ const BusBookingCard = ({
   const [seatDetails, setSeatDetails] = useState([]);
   const [seatLoading, setSeatLoading] = useState(false);
   const [availableSeats, setAvailableSeats] = useState(seatsLeft);
+
   // const [srsSeats, setSrsSeats] = useState(null);
   const priceToDisplay = (fare) => {
     const prices = fare;
@@ -472,18 +473,18 @@ const BusBookingCard = ({
   const fetchSrsSeats = async () => {
     try {
       const seatsResponse = await getSrsSeatLayout(scheduleId);
-      let coach_details = seatsResponse.result.bus_layout.coach_details;
-      let available = seatsResponse.result.bus_layout.available;
-      let available_gst = seatsResponse.result.bus_layout.available_gst;
+      let coach_details = seatsResponse.result.bus_layout?.coach_details;
+      let available = seatsResponse.result.bus_layout?.available;
+      let available_gst = seatsResponse.result.bus_layout?.available_gst;
       let ladies_seats =
-        seatsResponse.result.bus_layout.ladies_seats?.split(",");
-      let gents_seats = seatsResponse.result.bus_layout.gents_seats?.split(",");
+        seatsResponse.result.bus_layout?.ladies_seats?.split(",");
+      let gents_seats = seatsResponse.result.bus_layout?.gents_seats?.split(",");
       let ladies_booked_seats =
-        seatsResponse.result.bus_layout.ladies_booked_seats?.split(",");
+        seatsResponse.result.bus_layout?.ladies_booked_seats?.split(",");
       let gents_booked_seats =
-        seatsResponse.result.bus_layout.gents_booked_seats?.split(",");
-      let boarding_stages = seatsResponse.result.bus_layout.boarding_stages;
-      let dropoff_stages = seatsResponse.result.bus_layout.dropoff_stages;
+        seatsResponse.result.bus_layout?.gents_booked_seats?.split(",");
+      let boarding_stages = seatsResponse.result.bus_layout?.boarding_stages;
+      let dropoff_stages = seatsResponse.result.bus_layout?.dropoff_stages;
 
       const boardingPointlocationsAndTimes = boarding_stages
         ?.split("~")
@@ -549,23 +550,36 @@ const BusBookingCard = ({
 
   const fetchSeatData = async () => {
     if (!showSeats === false) {
+      localStorage.removeItem("isVrl");
+      localStorage.removeItem("ReferenceNumber");
+      localStorage.removeItem("isSrs");
+      localStorage.removeItem("scheduleId");
+      localStorage.removeItem("bookingDetails");
       setShowSeats(!showSeats);
       return;
     }
     setSeatLoading(true);
     if (isVrl) {
+      localStorage.setItem("isVrl", true);
+      localStorage.setItem("ReferenceNumber", ReferenceNumber);
+      localStorage.removeItem("isSrs");
+      localStorage.removeItem("scheduleId");
       await fetchVrlSeats();
     }
     if (isSrs) {
+      localStorage.setItem("isSrs", true);
+      localStorage.setItem("scheduleId", scheduleId);
+      localStorage.removeItem("isVrl");
+      localStorage.removeItem("ReferenceNumber");
       await fetchSrsSeats();
     } else if (!isVrl && !isSrs) {
       await fetchSeatSellerSeats();
     }
   };
 
-  const [vrlSeatLayout, setVrlSeatLayout] = useState([]);
-  const [vrlPrices, setVrlPrices] = useState([0]);
-  const [fetchVrlSeat, setFetchVrlSeat] = useState(false);
+  // const [vrlSeatLayout, setVrlSeatLayout] = useState([]);
+  // const [vrlPrices, setVrlPrices] = useState([0]);
+  // const [fetchVrlSeat, setFetchVrlSeat] = useState(false);
   const [vrlPickupLocations, setVrlPickupLocations] = useState(false);
   const [vrlDropLocations, setVrlDropLocations] = useState(false);
 
@@ -625,7 +639,24 @@ const BusBookingCard = ({
     const basePricesArray = fareArray.map(details => parseFloat(details.baseFare).toFixed(2));
     return basePricesArray;
   };
-  
+
+
+  useEffect(() => {
+    const handleSeatSelectionHistory = async () => {
+      const referenceNumber = localStorage.getItem("ReferenceNumber");
+      const id = localStorage.getItem("scheduleId");
+      if (isVrl) {
+        if (referenceNumber.toString() === ReferenceNumber.toString()) {
+          await fetchVrlSeats();
+        }
+      } else if (isSrs) {
+        if (id.toString() === scheduleId.toString()) {
+          await fetchSrsSeats();
+        }
+      }
+    }
+    handleSeatSelectionHistory();
+  }, [ReferenceNumber, isSrs, isVrl, scheduleId])
 
 
   return (
@@ -710,7 +741,7 @@ const BusBookingCard = ({
           <DropDown title="Reviews" text="Lorem" />
         </div> */}
       </div>
-      {showSeats && seatsLeft && seatDetails && (
+      {(showSeats && seatsLeft && seatDetails) && (
         <Seats
           travelTime={travelTime}
           pickUpTime={pickUpTime}
