@@ -176,10 +176,10 @@ const Payment = () => {
                     }/api/busBooking/sendBookingConfirmationEmail`,
                     mailBody
                   );
-
+                  const fullName = updatePaymentDetails.data.reservationSchema[0].paxDetails[0].paxName;
                   //send sms
                   const messageBody = {
-                    fullName: updatePaymentDetails?.data.customerName,
+                    fullName: fullName || updatePaymentDetails?.data.customerName,
                     sourceCity: updatePaymentDetails?.data.sourceCity,
                     destinationCity: updatePaymentDetails?.data.destinationCity,
                     seats: updatePaymentDetails?.data.selectedSeats,
@@ -246,10 +246,10 @@ const Payment = () => {
                     }/api/busBooking/sendBookingConfirmationEmail`,
                     mailBody
                   );
-
+                  const fullName = updatePaymentDetails?.data.srsBlockSeatDetails.book_ticket.seat_details.seat_detail[0].name;
                   //send sms
                   const messageBody = {
-                    fullName: updatePaymentDetails?.data.customerName,
+                    fullName: fullName || updatePaymentDetails?.data.customerName,
                     sourceCity: updatePaymentDetails?.data.sourceCity,
                     destinationCity: updatePaymentDetails?.data.destinationCity,
                     seats: updatePaymentDetails?.data.selectedSeats,
@@ -557,10 +557,10 @@ const Payment = () => {
                     }/api/busBooking/sendBookingConfirmationEmail`,
                     mailBody
                   );
-
+                  const fullName = updatePaymentDetails.data.reservationSchema[0].paxDetails[0].paxName;
                   //send sms
                   const messageBody = {
-                    fullName: updatePaymentDetails?.data.customerName,
+                    fullName: fullName || updatePaymentDetails?.data.customerName,
                     sourceCity: updatePaymentDetails?.data.sourceCity,
                     destinationCity: updatePaymentDetails?.data.destinationCity,
                     seats: updatePaymentDetails?.data.selectedSeats,
@@ -789,9 +789,11 @@ const Payment = () => {
                     mailBody
                   );
 
+                  const fullName = updatePaymentDetails?.data.srsBlockSeatDetails.book_ticket.seat_details.seat_detail[0].name;
+
                   //send sms
                   const messageBody = {
-                    fullName: updatePaymentDetails?.data.customerName,
+                    fullName: fullName || updatePaymentDetails?.data.customerName,
                     sourceCity: updatePaymentDetails?.data.sourceCity,
                     destinationCity: updatePaymentDetails?.data.destinationCity,
                     seats: updatePaymentDetails?.data.selectedSeats,
