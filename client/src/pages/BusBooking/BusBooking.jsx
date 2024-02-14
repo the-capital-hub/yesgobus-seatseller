@@ -574,7 +574,10 @@ const BusBooking = () => {
               />
 
               <ColumnNames
-                noOfBuses={noOfBuses + noOfVrlBuses + noOfSrsBuses}
+                noOfBuses={
+                  // noOfBuses + 
+                  noOfVrlBuses + 
+                  noOfSrsBuses}
               />
 
               {/* Render Bus list */}
