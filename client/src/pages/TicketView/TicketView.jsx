@@ -284,13 +284,13 @@ export default function TicketView() {
             <h3 className="">
               Email:{" "}
               <p className="inline font-normal">
-                {bookingDetails.customerEmail}
+                {bookingDetails?.customerEmail}
               </p>
             </h3>
             <h3>
               Phone Number:{" "}
               <p className="inline font-normal">
-                {bookingDetails.customerPhone}
+                {bookingDetails?.customerPhone}
               </p>
             </h3>
           </div>
