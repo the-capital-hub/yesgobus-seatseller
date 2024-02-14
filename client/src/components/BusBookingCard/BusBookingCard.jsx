@@ -687,7 +687,10 @@ const BusBookingCard = ({
             />
           </div>
         </div>
-        <div className={`card-wrapper-mobile`} onClick={() => fetchSeatData()}>
+        <div className={`card-wrapper-mobile`} onClick={() => {
+          localStorage.removeItem('bookingDetails');
+          fetchSeatData()
+        }}>
           <h6 className="title">
             <span className="text-orange">YESGO</span>BUS
           </h6>

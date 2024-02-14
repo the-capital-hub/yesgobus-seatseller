@@ -787,8 +787,9 @@ const Seats = ({
     ) {
       // Add GST 5 %
       let newGst = parseFloat(bookingDetails.fare) * (5 / 100);
-      bookingDetails.gst = newGst;
-      bookingDetails.totalFare = bookingDetails.totalFare + newGst;
+      // bookingDetails.gst = newGst;
+      bookingDetails.gst = 0;
+      // bookingDetails.totalFare = bookingDetails.totalFare + newGst;
 
       // if AC bus, add platform charge
       // if (isAcBus) {
