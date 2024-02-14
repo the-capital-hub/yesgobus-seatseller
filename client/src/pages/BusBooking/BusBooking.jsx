@@ -85,21 +85,48 @@ const BusBooking = () => {
     queryParams.get("from") || localStorage.getItem("sourceCity");
   const destinationCity =
     queryParams.get("to") || localStorage.getItem("destinationCity");
-  currentDate = queryParams.get("date") || currentDate;
+  // const doj =
+  // queryParams.get("date") || localStorage.getItem("doj");
+  const storedDoj = localStorage.getItem("doj");
+  const queryDate = queryParams.get("date");
+  if (queryDate || storedDoj) {
+    if (queryDate >= currentDate) {
+      currentDate = queryDate;
+    } else if (storedDoj >= currentDate) {
+      currentDate = storedDoj;
+    }
+  }
+  // currentDate = queryParams.get("date") || currentDate;
 
   const [fromLocation, setFromLocation] = useState(sourceCity);
   const [toLocation, setToLocation] = useState(destinationCity);
   const [selectedDate, setSelectedDate] = useState(currentDate);
 
-  const [sourceCityId, setSourceCityId] = useState("");
-  const [destinationCityId, setDestinationCityId] = useState("");
+  // const [sourceCityId, setSourceCityId] = useState("");
+  // const [destinationCityId, setDestinationCityId] = useState("");
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const sourceCity = queryParams.get("from");
     const destinationCity = queryParams.get("to");
-    const doj = queryParams.get("date") || currentDate;
-
+    let currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const day = String(currentDate.getDate()).padStart(2, "0");
+    currentDate = `${year}-${month}-${day}`;
+    let doj = currentDate;
+    const storedDoj = localStorage.getItem("doj");
+    const queryDate = queryParams.get("date");
+    if (queryDate || storedDoj) {
+      const queryDateObj = new Date(queryDate);
+      const storedDojObj = new Date(storedDoj);
+      const currDate = new Date();
+      if (queryDateObj > currDate) {
+        doj = queryDate;
+      } else if (storedDojObj > currDate) {
+        doj = storedDoj;
+      }
+    }
     if (sourceCity && destinationCity) {
       setFromLocation(sourceCity);
       setToLocation(destinationCity);
@@ -141,9 +168,9 @@ const BusBooking = () => {
       alert("Source and destination cities cannot be the same.");
       return;
     }
-
     localStorage.setItem("sourceCity", sourceCity);
     localStorage.setItem("destinationCity", destinationCity);
+    localStorage.setItem("doj", doj);
     setFromLocation(sourceCity);
     setToLocation(destinationCity);
     setSelectedDate(doj);
@@ -298,20 +325,20 @@ const BusBooking = () => {
       }
     }
     try {
-      const response = await axiosInstance.post(
-        `${import.meta.env.VITE_BASE_URL}/api/busBooking/getBusDetails`,
-        {
-          sourceCity: sourceCity.trim(),
-          destinationCity: destinationCity.trim(),
-          doj: doj,
-          ...filters,
-        }
-      );
-      if (response?.data?.data?.length !== 0) {
-        setBusDetails(response?.data?.data);
-        setNoOfBuses(response?.data?.data?.length);
-      }
-      setLoading(false);
+      // const response = await axiosInstance.post(
+      //   `${import.meta.env.VITE_BASE_URL}/api/busBooking/getBusDetails`,
+      //   {
+      //     sourceCity: sourceCity.trim(),
+      //     destinationCity: destinationCity.trim(),
+      //     doj: doj,
+      //     ...filters,
+      //   }
+      // );
+      // if (response?.data?.data?.length !== 0) {
+      //   setBusDetails(response?.data?.data);
+      //   setNoOfBuses(response?.data?.data?.length);
+      // }
+      // setLoading(false);
     } catch (error) {
       // setBusDetails([]);
       // setNoOfBuses(0);
