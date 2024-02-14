@@ -166,7 +166,7 @@ const Seats = ({
         newLadiesSeat.splice(seatIndex, 1);
       }
 
-      return {
+      const updatedBookingDetails = {
         ...prev,
         selectedSeats: newSelected,
         fare: roundToDecimal(parseFloat(newFare), 2),
@@ -176,12 +176,21 @@ const Seats = ({
         seatFares: newSeatFares,
         seatTaxes: newSeatTaxes,
         seatTotalFares: newSeatTotalFares,
-        // ac: newAC,
-        // sleeper: newSleeper,
         ladiesSeat: newLadiesSeat,
       };
+
+      localStorage.setItem('bookingDetails', JSON.stringify(updatedBookingDetails));
+
+      return updatedBookingDetails;
     });
   };
+
+  useEffect(() => {
+    const storedBookingDetails = JSON.parse(localStorage.getItem('bookingDetails'));
+    if (storedBookingDetails) {
+      setBookingDetails(storedBookingDetails);
+    }
+  }, []);
 
   const lowerTierSeats = isVrl
     ? seatDetails.filter((seat) => seat.UpLowBerth === "LB")
@@ -1007,10 +1016,14 @@ const Seats = ({
                 onClick={() => {
                   if (droppingPoint?.bpName) {
                     setBookingDetails((prev) => {
-                      return {
+                      const updatedBookingDetails = {
                         ...prev,
                         droppingPoint,
                       };
+
+                      localStorage.setItem('bookingDetails', JSON.stringify(updatedBookingDetails));
+
+                      return updatedBookingDetails;
                     });
                   }
                 }}
@@ -1055,10 +1068,14 @@ const Seats = ({
               }
               onClick={() =>
                 setBookingDetails((prev) => {
-                  return {
+                  const updatedBookingDetails = {
                     ...prev,
                     boardingPoint,
                   };
+
+                  localStorage.setItem('bookingDetails', JSON.stringify(updatedBookingDetails));
+
+                  return updatedBookingDetails;
                 })
               }
             />
@@ -1106,10 +1123,14 @@ const Seats = ({
                   }
                   onClick={() =>
                     setBookingDetails((prev) => {
-                      return {
+                      const updatedBookingDetails = {
                         ...prev,
                         boardingPoint,
                       };
+
+                      localStorage.setItem('bookingDetails', JSON.stringify(updatedBookingDetails));
+
+                      return updatedBookingDetails;
                     })
                   }
                 />
@@ -1133,10 +1154,14 @@ const Seats = ({
                   onClick={() => {
                     if (droppingPoint?.bpName) {
                       setBookingDetails((prev) => {
-                        return {
+                        const updatedBookingDetails = {
                           ...prev,
                           droppingPoint,
                         };
+
+                        localStorage.setItem('bookingDetails', JSON.stringify(updatedBookingDetails));
+
+                        return updatedBookingDetails;
                       });
                     }
                   }}

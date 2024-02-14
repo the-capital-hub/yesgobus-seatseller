@@ -391,6 +391,7 @@ const Payment = () => {
     }
     setStartCountdown(true);
     setLoadingModalVisible(true);
+    localStorage.removeItem("bookingDetails");
     //seats data
     if (isVrl) {
       try {
