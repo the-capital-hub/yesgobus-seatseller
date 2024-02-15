@@ -18,7 +18,7 @@ import { offer } from "../../assets/payment";
 import axiosInstance from "../../utils/service";
 import { useLocation, useNavigate, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Spin } from "antd";
+import { Popover, Spin, Button as AntButton } from "antd";
 import { Modal } from "antd";
 import { vrlBlockSeat, vrlBookSeat } from "../../api/vrlBusesApis";
 import { srsBlockSeat, srsConfirmBooking } from "../../api/srsBusesApis";
@@ -120,7 +120,8 @@ const Payment = () => {
         setLoading(true);
         // get bookings
         const getBookingDetails = await axiosInstance.get(
-          `${import.meta.env.VITE_BASE_URL
+          `${
+            import.meta.env.VITE_BASE_URL
           }/api/busBooking/getBookingById/${bookingId}`
         );
         if (getBookingDetails.status === 200) {
@@ -129,7 +130,8 @@ const Payment = () => {
 
           // check payment status
           const checkPaymentStatus = await axiosInstance.get(
-            `${import.meta.env.VITE_BASE_URL
+            `${
+              import.meta.env.VITE_BASE_URL
             }/api/payment/checkPaymentStatus/${merchantTransactionId}`
           );
 
@@ -147,7 +149,8 @@ const Payment = () => {
               if (vrlBookSeatResponse.Status === 1) {
                 const { data: updatePaymentDetails } =
                   await axiosInstance.patch(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/updateBooking/${bookingId}`,
                     {
                       bookingStatus: "paid",
@@ -172,14 +175,18 @@ const Payment = () => {
                     contact: updatePaymentDetails?.data?.driverNumber,
                   };
                   const sendMail = await axiosInstance.post(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationEmail`,
                     mailBody
                   );
-                  const fullName = updatePaymentDetails.data.reservationSchema[0].paxDetails[0].paxName;
+                  const fullName =
+                    updatePaymentDetails.data.reservationSchema[0].paxDetails[0]
+                      .paxName;
                   //send sms
                   const messageBody = {
-                    fullName: fullName || updatePaymentDetails?.data.customerName,
+                    fullName:
+                      fullName || updatePaymentDetails?.data.customerName,
                     sourceCity: updatePaymentDetails?.data.sourceCity,
                     destinationCity: updatePaymentDetails?.data.destinationCity,
                     seats: updatePaymentDetails?.data.selectedSeats,
@@ -194,7 +201,8 @@ const Payment = () => {
                     contact: updatePaymentDetails?.data?.driverNumber,
                   };
                   const sendMessage = await axiosInstance.post(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationMessage`,
                     messageBody
                   );
@@ -211,7 +219,8 @@ const Payment = () => {
               if (srsBookSeatResponse.result) {
                 const { data: updatePaymentDetails } =
                   await axiosInstance.patch(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/updateBooking/${bookingId}`,
                     {
                       bookingStatus: "paid",
@@ -242,14 +251,18 @@ const Payment = () => {
                     contact: updatePaymentDetails?.data?.driverNumber,
                   };
                   const sendMail = await axiosInstance.post(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationEmail`,
                     mailBody
                   );
-                  const fullName = updatePaymentDetails?.data.srsBlockSeatDetails.book_ticket.seat_details.seat_detail[0].name;
+                  const fullName =
+                    updatePaymentDetails?.data.srsBlockSeatDetails.book_ticket
+                      .seat_details.seat_detail[0].name;
                   //send sms
                   const messageBody = {
-                    fullName: fullName || updatePaymentDetails?.data.customerName,
+                    fullName:
+                      fullName || updatePaymentDetails?.data.customerName,
                     sourceCity: updatePaymentDetails?.data.sourceCity,
                     destinationCity: updatePaymentDetails?.data.destinationCity,
                     seats: updatePaymentDetails?.data.selectedSeats,
@@ -264,7 +277,8 @@ const Payment = () => {
                     contact: updatePaymentDetails?.data?.driverNumber,
                   };
                   const sendMessage = await axiosInstance.post(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationMessage`,
                     messageBody
                   );
@@ -403,7 +417,8 @@ const Payment = () => {
         const resultSeatString = seatAndGenderArray.join("|");
         const seatDetailsWithName = bookingDetails?.selectedSeats?.map(
           (seat, index) =>
-            `${seat},${userData[`firstName_${index}`]},${userData.mobile},${userData[`age_${index}`]
+            `${seat},${userData[`firstName_${index}`]},${userData.mobile},${
+              userData[`age_${index}`]
             }`
         );
         const resultseatDetailsWithNameString = seatDetailsWithName.join("|");
@@ -493,7 +508,8 @@ const Payment = () => {
           );
 
           const checkAgent = await axiosInstance.get(
-            `${import.meta.env.VITE_BASE_URL}/api/agent/isAgent/${loggedInUser.userId
+            `${import.meta.env.VITE_BASE_URL}/api/agent/isAgent/${
+              loggedInUser.userId
             }`
           );
 
@@ -514,7 +530,8 @@ const Payment = () => {
             setLoading(true);
             // get bookings
             const getBookingDetails = await axiosInstance.get(
-              `${import.meta.env.VITE_BASE_URL}/api/busBooking/getBookingById/${bookResponse.data._id
+              `${import.meta.env.VITE_BASE_URL}/api/busBooking/getBookingById/${
+                bookResponse.data._id
               }`
             );
             if (getBookingDetails?.data?.data.isVrl) {
@@ -528,7 +545,8 @@ const Payment = () => {
               if (vrlBookSeatResponse.Status === 1) {
                 const { data: updatePaymentDetails } =
                   await axiosInstance.patch(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/updateBooking/${bookResponse.data._id}`,
                     {
                       bookingStatus: "paid",
@@ -553,14 +571,18 @@ const Payment = () => {
                     contact: updatePaymentDetails?.data?.driverNumber,
                   };
                   const sendMail = await axiosInstance.post(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationEmail`,
                     mailBody
                   );
-                  const fullName = updatePaymentDetails.data.reservationSchema[0].paxDetails[0].paxName;
+                  const fullName =
+                    updatePaymentDetails.data.reservationSchema[0].paxDetails[0]
+                      .paxName;
                   //send sms
                   const messageBody = {
-                    fullName: fullName || updatePaymentDetails?.data.customerName,
+                    fullName:
+                      fullName || updatePaymentDetails?.data.customerName,
                     sourceCity: updatePaymentDetails?.data.sourceCity,
                     destinationCity: updatePaymentDetails?.data.destinationCity,
                     seats: updatePaymentDetails?.data.selectedSeats,
@@ -575,7 +597,8 @@ const Payment = () => {
                     contact: updatePaymentDetails?.data?.driverNumber,
                   };
                   const sendMessage = await axiosInstance.post(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationMessage`,
                     messageBody
                   );
@@ -603,7 +626,8 @@ const Payment = () => {
           if (response.status === 200) {
             // update merchantTransactionId
             const updatePaymentDetails = await axiosInstance.patch(
-              `${import.meta.env.VITE_BASE_URL}/api/busBooking/updateBooking/${bookResponse.data._id
+              `${import.meta.env.VITE_BASE_URL}/api/busBooking/updateBooking/${
+                bookResponse.data._id
               }`,
               {
                 merchantTransactionId: response.data.data.merchantTransactionId,
@@ -721,7 +745,8 @@ const Payment = () => {
             }
           );
           const checkAgent = await axiosInstance.get(
-            `${import.meta.env.VITE_BASE_URL}/api/agent/isAgent/${loggedInUser.userId
+            `${import.meta.env.VITE_BASE_URL}/api/agent/isAgent/${
+              loggedInUser.userId
             }`
           );
 
@@ -742,7 +767,8 @@ const Payment = () => {
             setLoading(true);
             // get bookings
             const getBookingDetails = await axiosInstance.get(
-              `${import.meta.env.VITE_BASE_URL}/api/busBooking/getBookingById/${bookResponse.data._id
+              `${import.meta.env.VITE_BASE_URL}/api/busBooking/getBookingById/${
+                bookResponse.data._id
               }`
             );
             if (getBookingDetails?.data?.data.isSrs) {
@@ -753,7 +779,8 @@ const Payment = () => {
               if (srsBookSeatResponse.result) {
                 const { data: updatePaymentDetails } =
                   await axiosInstance.patch(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/updateBooking/${bookResponse.data._id}`,
                     {
                       bookingStatus: "paid",
@@ -784,16 +811,20 @@ const Payment = () => {
                     contact: updatePaymentDetails?.data?.driverNumber,
                   };
                   const sendMail = await axiosInstance.post(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationEmail`,
                     mailBody
                   );
 
-                  const fullName = updatePaymentDetails?.data.srsBlockSeatDetails.book_ticket.seat_details.seat_detail[0].name;
+                  const fullName =
+                    updatePaymentDetails?.data.srsBlockSeatDetails.book_ticket
+                      .seat_details.seat_detail[0].name;
 
                   //send sms
                   const messageBody = {
-                    fullName: fullName || updatePaymentDetails?.data.customerName,
+                    fullName:
+                      fullName || updatePaymentDetails?.data.customerName,
                     sourceCity: updatePaymentDetails?.data.sourceCity,
                     destinationCity: updatePaymentDetails?.data.destinationCity,
                     seats: updatePaymentDetails?.data.selectedSeats,
@@ -808,7 +839,8 @@ const Payment = () => {
                     contact: updatePaymentDetails?.data?.driverNumber,
                   };
                   const sendMessage = await axiosInstance.post(
-                    `${import.meta.env.VITE_BASE_URL
+                    `${
+                      import.meta.env.VITE_BASE_URL
                     }/api/busBooking/sendBookingConfirmationMessage`,
                     messageBody
                   );
@@ -836,7 +868,8 @@ const Payment = () => {
           if (response.status === 200) {
             // update merchantTransactionId
             const updatePaymentDetails = await axiosInstance.patch(
-              `${import.meta.env.VITE_BASE_URL}/api/busBooking/updateBooking/${bookResponse.data._id
+              `${import.meta.env.VITE_BASE_URL}/api/busBooking/updateBooking/${
+                bookResponse.data._id
               }`,
               {
                 merchantTransactionId: response.data.data.merchantTransactionId,
@@ -1004,8 +1037,9 @@ const Payment = () => {
       const genderKey = `gender_${index}`;
 
       if (!userData[firstNameKey]?.trim()) {
-        errors[firstNameKey] = `First name for Traveler ${index + 1
-          } is required`;
+        errors[firstNameKey] = `First name for Traveler ${
+          index + 1
+        } is required`;
       }
       if (!userData[lastNameKey]?.trim()) {
         errors[lastNameKey] = `Last name for Traveler ${index + 1} is required`;
@@ -1111,8 +1145,8 @@ const Payment = () => {
                 isVrl
                   ? bookingDetails?.boardingPoint?.time
                   : isSrs
-                    ? bookingDetails?.boardingPoint?.time
-                    : convertMinutesToTime(bookingDetails?.boardingPoint?.time)
+                  ? bookingDetails?.boardingPoint?.time
+                  : convertMinutesToTime(bookingDetails?.boardingPoint?.time)
               }
               // locationOne={bookingDetails.boardingPoint.location}
               locationTwo={bookingDetails?.boardingPoint?.bpName}
@@ -1123,8 +1157,8 @@ const Payment = () => {
                 isVrl
                   ? bookingDetails?.droppingPoint?.time
                   : isSrs
-                    ? bookingDetails?.droppingPoint?.time
-                    : convertMinutesToTime(bookingDetails?.droppingPoint?.time)
+                  ? bookingDetails?.droppingPoint?.time
+                  : convertMinutesToTime(bookingDetails?.droppingPoint?.time)
               }
               // locationOne={bookingDetails.droppingPoint.location}
               locationTwo={bookingDetails?.droppingPoint?.bpName}
@@ -1224,7 +1258,7 @@ const Payment = () => {
           </div>
 
           {/* Agent Details */}
-          {!loggedInUser.isAgent &&
+          {!loggedInUser.isAgent && (
             <div className="details">
               <h4>Enter Agent Code (Optional)</h4>
               <div className="detailsContainer">
@@ -1243,8 +1277,7 @@ const Payment = () => {
                 />
               </div>
             </div>
-          }
-
+          )}
 
           {/* Picode Details */}
           {/* <div className="details">
@@ -1304,12 +1337,13 @@ const Payment = () => {
             <h2>Price</h2>
             <hr />
             <div className="prices">
-              <div className="price">
+              {/* <div className="price">
                 <p>Total Basefare</p>
                 <p>{"₹" + parseFloat(bookingDetails?.fare).toFixed(2)}</p>
               </div>
-              <hr />
-              {bookingDetails?.serviceTax !== 0 && (
+              <hr /> */}
+
+              {/* {bookingDetails?.serviceTax !== 0 && (
                 <>
                   <div className="price">
                     <p>Service Tax</p>
@@ -1317,9 +1351,9 @@ const Payment = () => {
                   </div>
                   <hr />
                 </>
-              )}
+              )} */}
 
-              {bookingDetails?.operatorTax !== 0 && (
+              {/* {bookingDetails?.operatorTax !== 0 && (
                 <>
                   <div className="price">
                     <p>Operator Tax</p>
@@ -1327,7 +1361,7 @@ const Payment = () => {
                   </div>
                   <hr />
                 </>
-              )}
+              )} */}
 
               {/* GST */}
               {/* <div className="price">
@@ -1341,6 +1375,72 @@ const Payment = () => {
                 <p>₹{parseFloat(bookingDetails?.totalFare).toFixed(2)}</p>
               </div>
               <hr />
+
+              {/* Show Fare Breakdown */}
+              <Popover
+                content={() => {
+                  return (
+                    <>
+                      <div className="price flex items-center justify-between">
+                        <p>Total Basefare</p>
+                        <p>
+                          {"₹" + parseFloat(bookingDetails?.fare).toFixed(2)}
+                        </p>
+                      </div>
+                      <hr className="border-none h-[1px] bg-[#dadada]" />
+                      {bookingDetails?.serviceTax !== 0 && (
+                        <>
+                          <div className="price flex items-center justify-between">
+                            <p>Service Tax</p>
+                            <p>
+                              ₹
+                              {parseFloat(bookingDetails?.serviceTax).toFixed(
+                                2
+                              )}
+                            </p>
+                          </div>
+                          <hr className="border-none h-[1px] bg-[#dadada]" />
+                        </>
+                      )}
+
+                      {bookingDetails?.operatorTax !== 0 && (
+                        <>
+                          <div className="price flex items-center justify-between">
+                            <p>Operator Tax</p>
+                            <p>
+                              ₹
+                              {parseFloat(bookingDetails?.operatorTax).toFixed(
+                                2
+                              )}
+                            </p>
+                          </div>
+                          <hr className="border-none h-[1px] bg-[#dadada]" />
+                        </>
+                      )}
+
+                      <div className="price flex items-center justify-between">
+                        <p>Total</p>
+                        <p>
+                          ₹{parseFloat(bookingDetails?.totalFare).toFixed(2)}
+                        </p>
+                      </div>
+                      <hr className="border-none h-[1px] bg-[#dadada]" />
+                    </>
+                  );
+                }}
+                title="Fare Breakdown"
+                trigger="click"
+                overlayStyle={{
+                  minWidth: "250px",
+                }}
+                placement="bottom"
+              >
+                <AntButton type="link" style={{ paddingInline: "0" }}>
+                  <span className="text-primary hover:underline">
+                    Show Fare Breakdown
+                  </span>
+                </AntButton>
+              </Popover>
             </div>
           </div>
 
