@@ -3,26 +3,43 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { generateRandomNumber } from "../utils/generateRandomNumber.js";
 import Agent from "../modals/agents.modal.js";
+import axios from "axios";
 
 export const signUp = async (userData) => {
   try {
     const existingUser = await User.findOne({
-      $or: [{ email: userData.email }, { phoneNumber: userData.phoneNumber }],
+      $or: [{ email: userData.email }, { phoneNumber: userData.phoneNumber }]
     });
+    console.log(existingUser)
     if (!existingUser) {
       const userId = generateRandomNumber(8);
-      const hashedPassword = bcrypt.hashSync(userData.password, 5);
+      //const hashedPassword = bcrypt.hashSync(userData.password, 5);
       const newUser = new User({
         ...userData,
         userId: userId,
-        password: hashedPassword,
+        //password: hashedPassword,
       });
       await newUser.save();
-
+      const response = await axios.post(
+        "https://auth.otpless.app/auth/otp/v1/send",
+        {
+          phoneNumber: userData.phoneNumber,
+          otpLength: 6,
+          channel: "SMS",
+          expiry: 600,
+        },
+        {
+          headers: {
+            clientId: process.env.CLIENT_ID,
+            clientSecret: process.env.CLIENT_SECRET,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       return {
         status: 200,
-        message: "SignUp Successful",
-        data: newUser,
+        message: "OTP send Successful",
+        data: response.data,
       };
     } else {
       return {
@@ -31,7 +48,6 @@ export const signUp = async (userData) => {
       };
     }
   } catch (err) {
-    console.log(err);
     return {
       status: 500,
       message: err.message || "Internal server error",
@@ -39,10 +55,10 @@ export const signUp = async (userData) => {
   }
 };
 
-export const signIn = async (emailMobile, password) => {
+export const signIn = async (mobileNumber) => {
   try {
     const existingAgent = await Agent.findOne({
-      $or: [{ email: emailMobile }, { phNum: emailMobile }],
+      $or: [{ email: mobileNumber }, { phNum: mobileNumber }],
       status: true,
     });
     let existingUser = "";
@@ -53,35 +69,37 @@ export const signIn = async (emailMobile, password) => {
       });
     } else {
       existingUser = await User.findOne({
-        $or: [{ email: emailMobile }, { phoneNumber: emailMobile }],
+        $or: [{ email: mobileNumber }, { phoneNumber: mobileNumber }],
       });
     }
-
     if (!existingUser) {
       return {
         status: 401,
         message: "User not found",
       };
     }
-    const isPasswordValid = bcrypt.compareSync(password, existingUser.password);
-    if (!isPasswordValid) {
-      return {
-        status: 401,
-        message: "Invalid password",
-      };
-    }
-    const token = jwt.sign({ userId: existingUser._id }, process.env.JWT_KEY);
-    existingUser.password = undefined;
-    const agent = await Agent.findOne({
-      userId: existingUser.userId
-    });
-    existingUser.isAgent = agent ? true : false;
+    const response = await axios.post(
+      "https://auth.otpless.app/auth/otp/v1/send",
+      {
+        phoneNumber: mobileNumber,
+        otpLength: 6,
+        channel: "SMS",
+        expiry: 600,
+      },
+      {
+        headers: {
+          clientId: process.env.CLIENT_ID,
+          clientSecret: process.env.CLIENT_SECRET,
+          "Content-Type": "application/json",
+        },
+      }
+    );
     return {
       status: 200,
-      message: "Successfully signed in",
-      data: existingUser,
-      token: token,
+      data: response.data,
+      message: "Signup Successfully",
     };
+
   } catch (err) {
     console.log(err);
     return {
