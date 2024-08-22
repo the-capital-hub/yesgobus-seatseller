@@ -22,6 +22,21 @@ export const PrivacyContent = [
     ],
   },
   {
+    heading: "Privacy Policy for YesGo Cab Driver",
+    text: "YesGo Cab Driver app is committed to protecting your privacy. This policy explains how we collect, use, and share information provided through our cab driver application.",
+    list: [
+      "We collect personal information such as your name, contact details, driver’s license, vehicle information, payment details, and location data. We also collect device and usage information, including trip history, earnings, and ratings.",
+      "We use your information to facilitate and improve our services, process payments, provide support, communicate with you, monitor performance, enhance safety, and comply with legal obligations.",
+      "We may share your information with service providers, riders, law enforcement, and in connection with business transfers. We only share data necessary to perform these functions and protect our users' safety and rights.",
+      "We implement security measures to protect your data and retain it only as long as necessary to fulfill our purposes, including legal compliance and dispute resolution.",
+      "You have the right to access, correct, delete your personal information, or withdraw consent where applicable. Contact us at the details below to exercise these rights.",
+      "You have the right to access, correct, delete your personal information, or withdraw consent where applicable. Contact us at the details below to exercise these rights.",
+      "You have the right to access, correct, delete your personal information, or withdraw consent where applicable. Contact us at the details below to exercise these rights.",
+      "If you have any questions or concerns, please contact us at yesgobus99@gmail.com, YesGo, Phone: +91-9964376733.",
+      "We may update this policy from time to time. Any changes will be posted on our App, and continued use after updates constitutes acceptance of the revised policy."
+    ],
+  },
+  {
     heading: "Data Security",
     text: "We take the security of your personal information seriously. We implement industry-standard security measures to protect your data from unauthorized access, disclosure, alteration, and destruction.",
   },
